@@ -46,54 +46,62 @@ int main(int argc, char** argv) {
     cin >> k[i];
   }
 
+  set<ll> powers;
+
   ll s = 0; // The sum of building power station.
   rep(i, n) {
     s += c[i];
+    powers.insert(i);
   }
 
-  // nearest[i] .. the sorted map of points from i.
-  vector< map<P, ll> > nearests(n);
+  priority_queue<triple, vector<triple>, greater<triple> > q; // increasing order
+
   rep(i, n) {
     rep(j, n) {
-      if (j == i) { continue; }
+      if (i == j) { continue; }
       ll dist = abs(xs[i] - xs[j]) + abs(ys[i] - ys[j]);
-      P p(dist, j);
-      nearests[i][p] = j;
+      ll cost = dist * (k[i] + k[j]);
+      q.emplace(cost, i, j);
     }
   }
-  // Here, nearest[i] is sorted map. { dist => i }. increasing
-
-  // For Debug
-  // rep(i, n) {
-  //   cout << "i: " << i << endl;
-  //   for (auto x : nearests[i]) {
-  //     cout << "j: " << x.second << ", dist: " << x.first.first << endl;
-  //   }
-  // }
 
   vector<P> wires;
-  vector<ll> power_indices;
 
-  // Check if wire or power station
-  rep(i, n) {
-    auto it = nearests[i].begin();
-    ll j = (*it).second; // nearest index.
-    ll dist = (*it).first.first;
-    ll wire_cost = dist * (k[i] * k[j]);
-    if (c[i] > wire_cost) {
-      // Use wire
+  // We check from paths with minimum cost.
+  while (!q.empty()) {
+    ll cost, i, j;
+    tie(cost, i, j) = q.top(); q.pop();
+
+    ll c_cost = -1;
+    ll c_id = -1;
+    if (powers.count(i) > 0) { // i uses power
+      if (c_cost < c[i]) {
+        c_cost = c[i];
+        c_id = i;
+      }
+    }
+    if (powers.count(j) > 0) { // j uses power
+      if (c_cost < c[j]) {
+        c_cost = c[j];
+        c_id = j;
+      }
+    }
+
+    if (c_cost == -1) { continue; } // i and j do not use power now.
+
+    if (c_cost > cost) {
+      // Now, we use wire instead of c[c_id]
+      s -= c_cost;
+      s += cost;
       wires.emplace_back(i, j);
-      s -= c[i];
-      s += wire_cost;
-    } else {
-      power_indices.push_back(i);
+      powers.erase(c_id);
     }
   }
 
   cout << s << endl;
-  cout << power_indices.size() << endl;
-  for (auto x : power_indices) {
-    cout << x + 1<< " ";
+  cout << powers.size() << endl;
+  for (auto x : powers) {
+    cout << x + 1 << " ";
   }
   cout << endl;
 
