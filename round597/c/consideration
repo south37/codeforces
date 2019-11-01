@@ -1,0 +1,70 @@
+##
+w -> uu
+m -> nn
+
+## e.g.1
+ouuokarinn
+= uu, nn
+= (w or uu) x (m or nn)
+= 2 x 2 = 4
+
+## e.g.2
+banana
+= 1
+
+## e.g. 3
+nnn
+= (nnn), (n, nn), (nn, n)
+= 3
+
+## e.g. 4
+- if m or w is included, then answer is 0.
+
+## consideration
+- find the `uu` and `nn`
+  - u sequence of longer or equal to 2.
+  - n sequence of longer or equal to 2.
+
+- consider the 2 case
+  - 2 (w or uu)
+- consider the 3 case
+  - (uuu) or (uu, u) or (u, uu) = 3
+- consider the 4 case
+  - (u,u,u,u)
+  - u, w, u
+  - w, w
+  - w, u, u
+  - u, u, w
+  = 5
+  = w, cnt(u, u) + cnt(u, u), w + (u, u, u, u) + (u, w, u)
+  - pattern of numbers
+    - [2/n, n]
+    - 2, 3, 4
+      - 2: [w, w] 1 pattern
+      - 3: [w, u, u] 3 pattern (3C1)
+      - 4: [u, u, u, u] 1 pattern
+      = 4
+- consider the 5 case
+  - pattern of numbers ([n/2, n])
+    - 3, 4, 5 (left is 切り上げ)
+    - 3: [w, w, u] -> 3 pattern (3C2)
+    - 4: [w, u, u, u] -> 4 pattern (4C1)
+    - 5: [u, u, u, u, u] -> 1 pattern (5C0)
+    = 8
+- consider the 6 case
+  - pattern of numbers ([n/2, n])
+    - 3, 4, 5, 6 (left is 切り上げ)
+    - 3: [w, w, w] -> 1 pattern (3C3)
+    - 4: [w, w, u, u] -> 6 pattern (4C2)
+    - 5: [w, u, u, u, u] -> 5 pattern (5C1)
+    - 6: [u, u, u, u, u, u] -> 1 pattern (6C0)
+    = 8
+
+f(3) ..
+
+int s = 0;
+rep(i, n) {
+  for (int j = n + d; j + d-1 < n; ++j) {
+    ++s;
+  }
+}
