@@ -1,0 +1,9 @@
+##
+
+- ax + by で represetatable か?
+  -
+
+- prime each other
+  - if a and b have gcd > 1, then it can not be represetatable.
+  - e.g. 2, 4, then odd can not represetatable.
+
