@@ -86,7 +86,13 @@ void solve() {
   rep(i, rest[2]) { rest_s += 'S'; }
 
   // For Debug
+  // cout << "w: ";
+  // rep(i, 3) {
+  //   cout << w[i];
+  // }
+  // cout << endl;
   // cout << "rest_s: " << rest_s << endl;
+
   ll rest_i = 0; // index for rest
 
   ll sum_w = w[0] + w[1] + w[2];
@@ -103,7 +109,7 @@ void solve() {
         cout << 'R';
         --w[0];
       } else {
-        cout << rest[rest_i];
+        cout << rest_s[rest_i];
         ++rest_i;
       }
     }
