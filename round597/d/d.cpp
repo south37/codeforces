@@ -57,8 +57,7 @@ int main(int argc, char** argv) {
   priority_queue<triple, vector<triple>, greater<triple> > q; // increasing order
 
   rep(i, n) {
-    rep(j, n) {
-      if (i == j) { continue; }
+    for (int j = i + 1; i < n; ++j) {
       ll dist = abs(xs[i] - xs[j]) + abs(ys[i] - ys[j]);
       ll cost = dist * (k[i] + k[j]);
       q.emplace(cost, i, j);
