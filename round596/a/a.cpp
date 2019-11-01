@@ -39,6 +39,10 @@ int main(int argc, char** argv) {
     cout << da << " " << db << endl;
     return 0;
   }
+  if (da == 9 && db == 1) {
+    cout << 9 << " " << 10 << endl;
+    return 0;
+  }
 
   cout << -1 << endl;
   return 0;
