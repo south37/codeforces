@@ -1,0 +1,36 @@
+- a: r 0 (beats s 2)
+- b: p 1 (beats r 0)
+- c: s 2 (beats p 1)
+
+- here, we map r, p, s to 0, 1, 2
+  - 0 > 2
+  - 1 > 0
+  - 2 > 1
+
+a = cnt[0] // r
+b = cnt[1] // p
+c = cnt[2] // s
+
+b_cnt // the count of bob.
+
+// cnt[0] <-> b_cnt[2] : alice 2, bobe 1 (alice win)
+// cnt[1] <-> b_cnt[0] : alice 2, bobe 1 (alice win)
+// cnt[2] <-> b_cnt[1] : alice 2, bobe 1 (alice win)
+
+## e.g. 1
+- cnt: [1, 1, 1]
+- b_cnt: [1, 1, 1]
+- win: 3
+
+## e.g. 2
+-
+
+## answer
+- w = min(cnt[0], b_cnt[0]) + min(cnt[1], b_cnt[1]) + min(cnt[2], b_cnt[2])
+    = w[0] + w[1] + w[2]
+- the rest is N - w.
+  - (cnt[0]-w[0], cnt[1]-w[1], cnt[2]-w[2])
+  - we randomly choose one from this.
+
+if w > [N/2], then alice wins.
+else, alice loses.
