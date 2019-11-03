@@ -16,7 +16,7 @@ using namespace std;
 
 #define COUT(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << endl
 
-#define rep(i, n) for(int i = 0; i < n; ++i)
+#define rep(i, n) for(ll i = 0; i < n; ++i)
 #define all(s) s.begin(), s.end()
 
 typedef long long ll;
@@ -29,7 +29,7 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 int main(int argc, char** argv) {
-  int N;
+  ll N;
   cin >> N;
 
   cout << N << endl;
