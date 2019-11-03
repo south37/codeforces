@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
     edges.emplace(c[i], 0, i+1);
   }
 
-  ll ans; // The sum of cost
+  ll ans = 0; // The sum of cost
   set<ll> powers; // The indices of powers
   vector<P> wires; // The pairs of wires
 
