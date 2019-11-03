@@ -28,6 +28,71 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+class UnionFind {
+public:
+  UnionFind(ll n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+
+  bool same(ll x, ll y) {
+    return root(x) == root(y);
+  }
+  void unite(ll x, ll y) {
+    x = root(x); y = root(y);
+    if (x == y) return;
+
+    --_size;
+
+    if (rnk[x] < rnk[y]) { swap(x, y); }
+    par[y] = x;
+    cnt[x] += cnt[y];
+    if (rnk[x] == rnk[y]) { ++rnk[x]; }
+  }
+  ll root(ll x) {
+    if (par[x] < 0) {
+      return x;
+    } else {
+      return par[x] = root(par[x]);
+    }
+  }
+  ll count(ll x) {
+    return cnt[root(x)];
+  }
+  ll size() {
+    return _size;
+  }
+
+private:
+  vector<ll> par;
+  vector<ll> rnk;
+  vector<ll> cnt; // The number of vertices in each connected components.
+  ll _size; // The number of connected components. Decreases by unite.
+};
+
+// int main(int argc, char** argv) {
+//   ll N, M;
+//   cin >> N >> M;
+//   UnionFind tree(N);
+//   rep(i, M) {
+//     ll p, a, b;
+//     cin >> p >> a >> b;
+//     if (p == 0) { // Connect
+//       tree.unite(a, b);
+//     } else { // Judge
+//       if (tree.same(a, b)) {
+//         cout << "Yes" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       } else {
+//         cout << "No" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       }
+//     }
+//   }
+// }
+
+
 int main(int argc, char** argv) {
   ll n;
   cin >> n;
@@ -46,66 +111,49 @@ int main(int argc, char** argv) {
     cin >> k[i];
   }
 
-  set<ll> powers;
-
-  ll s = 0; // The sum of building power station.
-  rep(i, n) {
-    s += c[i];
-    powers.insert(i);
-  }
-
-  priority_queue<triple, vector<triple>, greater<triple> > q; // increasing order
+  priority_queue<triple, vector<triple>, greater<triple>> edges; // increasing order
 
   rep(i, n) {
     for (int j = i + 1; j < n; ++j) {
-      ll dist = abs(xs[i] - xs[j]) + abs(ys[i] - ys[j]);
-      ll cost = dist * (k[i] + k[j]);
-      q.emplace(cost, i, j);
+      ll cost = (k[i] + k[j]) * (abs(xs[i] - xs[j]) + abs(ys[i] - ys[j]));
+      edges.emplace(cost, i+1, j+1);
     }
   }
+  // We add (c[i], 0, i+1) as the edges.
+  rep(i, n) {
+    edges.emplace(c[i], 0, i+1);
+  }
 
-  vector<P> wires;
+  ll ans; // The sum of cost
+  set<ll> powers; // The indices of powers
+  vector<P> wires; // The pairs of wires
 
-  // We check from paths with minimum cost.
-  while (!q.empty()) {
+  // We use Kruskal's algorithm to find the minimum spanning tree.
+  UnionFind tree(n + 1);
+  while (!edges.empty()) {
+    auto e = edges.top(); edges.pop();
     ll cost, i, j;
-    tie(cost, i, j) = q.top(); q.pop();
+    tie(cost, i, j) = e;
+    if (!tree.same(i, j)) {
+      tree.unite(i, j);
 
-    ll c_cost = -1;
-    ll c_id = -1;
-    if (powers.count(i) > 0) { // i uses power
-      if (c_cost < c[i]) {
-        c_cost = c[i];
-        c_id = i;
+      ans += cost;
+      if (i == 0) { // power
+        powers.insert(j);
+      } else {
+        wires.emplace_back(i, j);
       }
-    }
-    if (powers.count(j) > 0) { // j uses power
-      if (c_cost < c[j]) {
-        c_cost = c[j];
-        c_id = j;
-      }
-    }
-
-    if (c_cost == -1) { continue; } // i and j do not use power now.
-
-    if (c_cost > cost) {
-      // Now, we use wire instead of c[c_id]
-      s -= c_cost;
-      s += cost;
-      wires.emplace_back(i, j);
-      powers.erase(c_id);
     }
   }
 
-  cout << s << endl;
+  cout << ans << endl;
   cout << powers.size() << endl;
-  for (auto x : powers) {
-    cout << x + 1 << " ";
+  for (auto p : powers) {
+    cout << p << " ";
   }
   cout << endl;
-
   cout << wires.size() << endl;
   for (auto x : wires) {
-    cout << x.first + 1 << " " << x.second + 1 << endl;
+    cout << x.first << " " << x.second << endl;
   }
 }
