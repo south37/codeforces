@@ -16,7 +16,24 @@ using namespace std;
 
 #define COUT(x) cout << #x << " = " << (x) << " (L" << __LINE__ << ")" << endl
 
-#define rep(i, n) for(int i = 0; i < n; ++i)
+template<class T> void printvec(const vector<T>& v) {
+  for (auto x : v) { cout << x << " "; }
+  cout << endl;
+}
+template<class T> void printtree(const vector< vector<T> >& tree) {
+  for (long long i = 0; i < tree.size(); ++i) {
+    cout << i + 1 << ": ";
+    printvec(tree[i]);
+  }
+}
+template<class T, class U> void printmap(const map<T, U>& mp) {
+  for (auto x : mp) { cout << x.first << "=>" << x.second << endl; }
+}
+
+template<class T> inline bool chmax(T& a, T b) { if (a < b) { a = b; return true; } return false; }
+template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return true; } return false; }
+
+#define rep(i, n) for(ll i = 0; i < n; ++i)
 #define all(s) s.begin(), s.end()
 
 typedef long long ll;
@@ -29,7 +46,7 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 int main(int argc, char** argv) {
-  int N;
+  ll N;
   cin >> N;
 
   cout << N << endl;
