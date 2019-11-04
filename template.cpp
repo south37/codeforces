@@ -22,8 +22,7 @@ template<class T> void printvec(const vector<T>& v) {
 }
 template<class T> void printtree(const vector< vector<T> >& tree) {
   for (long long i = 0; i < tree.size(); ++i) {
-    cout << i + 1 << ": ";
-    printvec(tree[i]);
+    cout << i + 1 << ": "; printvec(tree[i]);
   }
 }
 template<class T, class U> void printmap(const map<T, U>& mp) {
