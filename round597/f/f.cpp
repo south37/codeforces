@@ -46,7 +46,8 @@ const ll MOD = 1000000007;  // 1e9 + 7
 
 // The number of integers y where (0 <= y < b) and (a+y = a^y)
 //
-// g(a,b) = h(a,b) + g(x,b-lsb(b))
+// g(a,b) = h(a,b) + g(a,b-lsb(b))
+//        = h(a,b) + h(a,b-lsb(b)) + h(a, (b-lsb(b))-lsb(b-lsb(b))) + ...
 // h(a,b): the number of integers y where (b-lsb(b) <= y < b) and (a+y=a^y)
 ll g(ll a, ll b) {
   ll ret = 0;
