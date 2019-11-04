@@ -50,8 +50,8 @@ int main(int argc, char** argv) {
 
   for (ll i = 1; i <= 31; ++i) { // 10**9 ~ 2 ** 30
     ll k = n - p * i; // try k.
-    cout << "i: " << i << endl;
-    cout << "k: " << k << endl;
+    // cout << "i: " << i << endl;
+    // cout << "k: " << k << endl;
     if (k <= 0) { continue; } // We check only positive k
 
     // Count to represent k.
@@ -65,9 +65,9 @@ int main(int argc, char** argv) {
       }
       ++j;
     }
-    cout << "cnt: " << mn << endl;
+    // cout << "cnt: " << mn << endl;
 
-    if (mn > 0 && mn <= i && i <= mx) {
+    if (mn <= i && i <= mx) {
       cout << i << endl;
       return 0;
     }
