@@ -1,0 +1,9 @@
+## consideration
+- we should use prime factors
+- Use map to find the "pair"
+  - 24 -> 2**3 * 3 -> pair is 9 (= 3*2)
+  - set pair to hash table.
+    - a -> b (remain)
+        -> c (3 - remain)
+    - cnt += h[c]
+    - ++h[b]
