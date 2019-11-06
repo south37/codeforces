@@ -52,7 +52,7 @@ vector<ll> ans; // the result operation
 vector< vector<ll> > c; // c[i] .. children of i
 ll it = 0;
 
-int dfs(int v) {
+ll dfs(ll v) {
   h[v] = 1;
   rep(i, c[v].size()) {
     h[v] = max(h[v], dfs(c[v][i])+1);
@@ -60,10 +60,11 @@ int dfs(int v) {
   return h[v];
 }
 
-void dfs1(int v) {
+void dfs1(ll v) {
   b[it++] = v;
-  int ln = 0;
+  ll ln = 0;
   rep(i, c[v].size()) {
+    // cout << v << ' ' << c[v][i] << ':' << h[c[v][i]] << endl;
     rep(j, ln) {
       ans.push_back(c[v][i]);
     }
@@ -82,9 +83,10 @@ int main(int argc, char** argv) {
     cin >> p[i];
     c[p[i]].push_back(i);
   }
+  h.resize(n);
   dfs(0);
   rep(i, n) {
-    sort(all(c[i]), [&](int a, int b) { return h[a] < h[b] });
+    sort(all(c[i]), [&](ll a, ll b) { return h[a] < h[b]; });
   }
   b.resize(n);
   dfs1(0);
