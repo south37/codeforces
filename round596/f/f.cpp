@@ -47,7 +47,10 @@ const ll MOD = 1000000007;  // 1e9 + 7
 
 vector<ll> p; // p[i] .. parent of i
 vector<ll> h; // h[i] .. height of i
+vector<ll> b; // the first bamboo state
+vector<ll> ans; // the result operation
 vector< vector<ll> > c; // c[i] .. children of i
+ll it = 0;
 
 int dfs(int v) {
   h[v] = 1;
@@ -55,6 +58,18 @@ int dfs(int v) {
     h[v] = max(h[v], dfs(c[v][i])+1);
   }
   return h[v];
+}
+
+void dfs1(int v) {
+  b[it++] = v;
+  int ln = 0;
+  rep(i, c[v].size()) {
+    rep(j, ln) {
+      ans.push_back(c[v][i]);
+    }
+    dfs1(c[v][i]);
+    ln = h[c[v][i]];
+  }
 }
 
 int main(int argc, char** argv) {
@@ -68,7 +83,18 @@ int main(int argc, char** argv) {
     c[p[i]].push_back(i);
   }
   dfs(0);
-
-
-  cout << N << endl;
+  rep(i, n) {
+    sort(all(c[i]), [&](int a, int b) { return h[a] < h[b] });
+  }
+  b.resize(n);
+  dfs1(0);
+  rep(i, n) {
+    cout << b[i] << ' ';
+  }
+  cout << endl;
+  cout << ans.size() << endl;
+  rep(i, ans.size()) {
+    cout << ans[i] << ' ';
+  }
+  cout << endl;
 }
