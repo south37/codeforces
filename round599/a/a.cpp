@@ -45,8 +45,6 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 int main(int argc, char** argv) {
-  ll N;
-  cin >> N;
-
-  cout << N << endl;
+  ll n;
+  cin >> n;
 }
