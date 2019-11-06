@@ -44,7 +44,52 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-int main(int argc, char** argv) {
+void solve() {
   ll n;
   cin >> n;
+  string s, t;
+  cin >> s;
+  cin >> t;
+  ll cnt = 0; // mistake
+  rep(i, n) {
+    if (s[i] != t[i]) { ++cnt; }
+  }
+  if (cnt == 0) {
+    cout << "Yes" << endl;
+    return;
+  }
+  if (cnt == 2) {
+    ll i1 = -1;
+    ll i2 = -1;
+    rep(i, n) {
+      if (s[i] != t[i]) {
+        if (i1 == -1) {
+          i1 = i;
+        } else {
+          i2 = i;
+        }
+      }
+    }
+
+    // Now, we compare s[i1], t[i1], ..
+    // s[i1] <=> t[i2]
+    if (s[i1] == s[i2] && t[i1] == t[i2]) {
+      cout << "Yes" << endl;
+      return;
+    } else {
+      cout << "No" << endl;
+      return;
+    }
+  }
+
+  cout << "No" << endl;;
+  return;
+}
+
+int main(int argc, char** argv) {
+  ll t;
+  cin >> t;
+  rep(i, t) {
+    solve();
+  }
 }

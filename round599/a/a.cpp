@@ -44,7 +44,38 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-int main(int argc, char** argv) {
+void solve() {
   ll n;
   cin >> n;
+  vector<ll> a(n);
+  rep(i, n) {
+    cin >> a[i];
+  }
+  sort(all(a));
+  reverse(all(a));
+  // printvec(a);
+
+  ll maximum = INF;
+  ll ans = 0;
+  rep(i, n) {
+    // Now, i + 1 is used.
+    maximum = min(maximum, a[i]);
+    if (maximum >= i+1) { // can make square
+      // cout << i + 1 << ": " << maximum << endl;
+
+      if (maximum > ans) {
+        ans = i + 1;
+      }
+    }
+  }
+
+  cout << ans << endl;
+}
+
+int main(int argc, char** argv) {
+  ll k;
+  cin >> k;
+  rep(i, k) {
+    solve();
+  }
 }
