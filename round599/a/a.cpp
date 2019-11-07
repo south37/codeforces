@@ -55,8 +55,8 @@ void solve() {
   reverse(all(a));
   // printvec(a);
 
-  ll maximum = INF;
-  ll ans = 0;
+  ll maximum = INF; // decreasing
+  ll ans = 0; // increasing
   rep(i, n) {
     // Now, i + 1 is used.
     chmin(maximum, a[i]);
