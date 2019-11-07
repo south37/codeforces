@@ -133,6 +133,8 @@ int main(int argc, char** argv) {
     }
     bool found = false;
     for (auto x : d) {
+      r.erase(x.first);
+
       // cout << "key: " << x.first << endl;
       // cout << "count(key): " << z.count(x.first) << endl;
       // cout << "d(key): " << x.second << endl;
@@ -141,22 +143,19 @@ int main(int argc, char** argv) {
         roots.erase(x.first);
         roots.insert(z.root(x.first));
         found = true;
-        break;
-      } else { // same.
-        r.erase(x.first);
       }
     }
-    if (!found) {
-      if (r.size() > 0) {
-        int nv = *r.begin(); // The unite target.
-        // cout << "nv: " << nv << endl;
-        // cout << "v: " << v << endl;
-        z.unite(nv, v);
-        roots.erase(nv);
-        roots.insert(z.root(nv));
-      } else {
-        roots.insert(v);
-      }
+    for (auto nv : r) {
+      // cout << "nv: " << nv << endl;
+      // cout << "v: " << v << endl;
+      z.unite(nv, v);
+      roots.erase(nv);
+      roots.insert(z.root(nv));
+      found = true;
+    }
+
+    if (!found) { // no unite occured
+      roots.insert(v);
     }
   }
 
