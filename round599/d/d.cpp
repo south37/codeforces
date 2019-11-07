@@ -128,20 +128,14 @@ int main(int argc, char** argv) {
     set<ll> r = roots; // copy
     map<ll, ll> d; // distribution. root => cnt
     for (auto u : tree[v]) {
-      //cout << "(u, v) = (" << u << ", " << v << ")" << endl;
       ++d[z.root(u)];
     }
     for (auto x : d) {
-      // cout << "key: " << x.first << endl;
-      // cout << "count(key): " << z.count(x.first) << endl;
-      // cout << "d(key): " << x.second << endl;
       if (x.second == z.count(x.first)) { // The numbber of 1-edges is equal to the number of all components of x.first
         r.erase(x.first);
       }
     }
     for (auto nv : r) {
-      // cout << "nv: " << nv << endl;
-      // cout << "v: " << v << endl;
       z.unite(nv, v);
       roots.erase(nv);
     }
