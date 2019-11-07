@@ -111,10 +111,55 @@ private:
 int main(int argc, char** argv) {
   ll n, m;
   cin >> n >> m;
-  UnionFind connected_tree(n);
+  vector< vector<ll> > tree(n);
   rep(i, m) {
     ll x, y;
     cin >> x >> y;
-    connected_tree.unite(x, y);
+    --x; --y;
+    if (x > y) { swap(x, y); }
+    // Now, x < y
+    tree[y].push_back(x);
   }
+
+  UnionFind z(n);
+  set<ll> roots;
+  roots.insert(0);
+  for (int v = 1; v < n; ++v) {
+    set<ll> r = roots; // copy
+    map<ll, ll> d; // distribution. root => cnt
+    for (auto u : tree[v]) {
+      //cout << "(u, v) = (" << u << ", " << v << ")" << endl;
+      ++d[z.root(u)];
+    }
+    bool found = false;
+    for (auto x : d) {
+      // cout << "key: " << x.first << endl;
+      // cout << "count(key): " << z.count(x.first) << endl;
+      // cout << "d(key): " << x.second << endl;
+      if (x.second < z.count(x.first)) { // 1-edges are less than all components of x.first
+        z.unite(x.first, v);
+        roots.erase(x.first);
+        roots.insert(z.root(x.first));
+        found = true;
+        break;
+      } else { // same.
+        r.erase(x.first);
+      }
+    }
+    if (!found) {
+      if (r.size() > 0) {
+        int nv = *r.begin(); // The unite target.
+        // cout << "nv: " << nv << endl;
+        // cout << "v: " << v << endl;
+        z.unite(nv, v);
+        roots.erase(nv);
+        roots.insert(z.root(nv));
+      } else {
+        roots.insert(v);
+      }
+    }
+  }
+
+  ll k = z.size();
+  cout << k - 1 << endl;
 }
