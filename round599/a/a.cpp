@@ -59,13 +59,10 @@ void solve() {
   ll ans = 0;
   rep(i, n) {
     // Now, i + 1 is used.
-    maximum = min(maximum, a[i]);
-    if (maximum >= i+1) { // can make square
+    chmin(maximum, a[i]);
+    if (maximum >= i+1) { // can make square of i+1
       // cout << i + 1 << ": " << maximum << endl;
-
-      if (maximum > ans) {
-        ans = i + 1;
-      }
+      chmax(ans, i+1);
     }
   }
 
