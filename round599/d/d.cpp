@@ -131,18 +131,12 @@ int main(int argc, char** argv) {
       //cout << "(u, v) = (" << u << ", " << v << ")" << endl;
       ++d[z.root(u)];
     }
-    bool found = false;
     for (auto x : d) {
-      r.erase(x.first);
-
       // cout << "key: " << x.first << endl;
       // cout << "count(key): " << z.count(x.first) << endl;
       // cout << "d(key): " << x.second << endl;
-      if (x.second < z.count(x.first)) { // 1-edges are less than all components of x.first
-        z.unite(x.first, v);
-        roots.erase(x.first);
-        roots.insert(z.root(x.first));
-        found = true;
+      if (x.second == z.count(x.first)) { // The numbber of 1-edges is equal to the number of all components of x.first
+        r.erase(x.first);
       }
     }
     for (auto nv : r) {
@@ -150,13 +144,9 @@ int main(int argc, char** argv) {
       // cout << "v: " << v << endl;
       z.unite(nv, v);
       roots.erase(nv);
-      roots.insert(z.root(nv));
-      found = true;
     }
 
-    if (!found) { // no unite occured
-      roots.insert(v);
-    }
+    roots.insert(z.root(v));
   }
 
   ll k = z.size();
