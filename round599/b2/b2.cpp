@@ -34,6 +34,8 @@ template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return true
 
 #define rep(i, n) for(ll i = 0; i < n; ++i)
 #define all(s) s.begin(), s.end()
+#define fr first
+#define sc second
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -52,77 +54,55 @@ void solve() {
   string s, t;
   cin >> s;
   cin >> t;
-  vector<ll> s_dist(26);
-  vector<ll> t_dist(26);
-  vector<ll> diff_dist(26);
 
-  vector<ll> s_indices; // The different indicces of s
-  vector<ll> t_indices; // The different indicces of s
-  vector< vector<ll> > s_d(26);
-  vector< vector<ll> > t_d(26);
-
-  ll cnt = 0; // the count of different position
+  // Check the distribtion
+  vector<ll> cnt(26);
   rep(i, n) {
-    if (s[i] == t[i]) {
-      // skip
-      // we consider only different positions.
-    } else {
-      ++cnt;
-      s_indices.push_back(i);
-      t_indices.push_back(i);
-      ++s_dist[s[i] - 'a'];
-      ++t_dist[t[i] - 'a'];
-      s_d[s[i] - 'a'].push_back(i);
-      t_d[t[i] - 'a'].push_back(i);
-    }
+    ++cnt[s[i]-'a'];
+    ++cnt[t[i]-'a'];
   }
-  if (cnt == 0) { // completely same
-    cout << "Yes" << endl;
-    cout << 0 << endl;
-    cout << endl;
-    return;
-  }
-  // Now, cnt positions are different.
-
   rep(i, 26) {
-    diff_dist[i] = s_dist[i] - t_dist[i];
-  }
-  // cout << "s_dist: "; printvec(s_dist);
-  // cout << "t_dist: "; printvec(t_dist);
-
-  ll diff = 0; // the half of different counts.
-  rep(i, 26) {
-    if (diff_dist[i] % 2 != 0) { // each diff must be even
+    if (cnt[i] % 2 != 0) {
       cout << "No" << endl;
       return;
     }
-    diff += abs(diff_dist[i]) / 2;
   }
-  diff /= 2;
+  // Now, distribtion is OK.
 
-  // Now, we treat half diff as the proceeding.
-  // "cnt" is the operation we must be done, and "cnt-diff" is the plus alpha.
-  if (cnt - diff <= 2 * n) {
-    cout << "Yes" << endl;
-    cout << cnt + diff << endl;
-    // At first, we use diff to make same distribution.
-    rep(i, 26) {
-      for (int j = i + 1; i < 26; ++j) {
-        while ((diff_dist[i] > 0) && (diff_dist[j] < 0)) { // e.g. s['a'] > t['a'] && s['b'] < t['b']
-          // swap s[i] and t[j]
-          s_d[i]
+  vector<P> ans;
+  rep(i, n) {
+    if (s[i] == t[i]) {
+      // Do nothing
+      continue;
+    } else {
+      bool flag = false; // swap by s[i] == s[j]
+      for (int j = i + 1; j < n; ++j) {
+        if (s[j] == s[i]) {
+          ans.emplace_back(j, i);
+          swap(s[j], t[i]);
+          flag = true;
+          break;
+        }
+      }
+
+      if (!flag) { // Must swap by s[i] == t[j]
+        for (int j = i + 1; j < n; ++j) {
+          if (t[j] == s[i]) {
+            ans.emplace_back(j, j);
+            ans.emplace_back(j, i);
+            swap(s[j], t[j]);
+            swap(s[j], t[i]);
+            break;
+          }
         }
       }
     }
+  }
 
-    // cout << cnt-diff << endl;
-    // cout << "cnt: " << cnt << endl;
-    // cout << "diff: " << diff << endl;
-    cout << "TODO Impl" << endl;
-    //
-  } else {
-    cout << "No" << endl;
-    return;
+  cout << "Yes" << endl;
+  cout << ans.size() << endl;
+  for (auto p : ans) {
+    cout << p.fr+1 << " " << p.sc+1 << endl;
   }
 }
 
