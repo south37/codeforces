@@ -46,8 +46,6 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-
-
 void solve() {
   ll n;
   cin >> n;
