@@ -67,7 +67,7 @@ void solve() {
 
   set<char> ans;
   for (auto v : cnts) {
-    if (v.sc % 2 != 0) { // may broken.
+    if (v.sc % 2 != 0) { // works correctly.
       ans.insert(v.fr);
     }
   }
