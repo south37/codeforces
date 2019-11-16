@@ -48,12 +48,120 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+class UnionFind {
+public:
+  UnionFind(ll n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+
+  bool same(ll x, ll y) {
+    return root(x) == root(y);
+  }
+  void unite(ll x, ll y) {
+    x = root(x); y = root(y);
+    if (x == y) return;
+
+    --_size;
+
+    if (rnk[x] < rnk[y]) { swap(x, y); }
+    par[y] = x;
+    cnt[x] += cnt[y];
+    if (rnk[x] == rnk[y]) { ++rnk[x]; }
+  }
+  ll root(ll x) {
+    if (par[x] < 0) {
+      return x;
+    } else {
+      return par[x] = root(par[x]);
+    }
+  }
+  ll count(ll x) {
+    return cnt[root(x)];
+  }
+  ll size() {
+    return _size;
+  }
+
+private:
+  vector<ll> par;
+  vector<ll> rnk;
+  vector<ll> cnt; // The number of vertices in each connected components.
+  ll _size; // The number of connected components. Decreases by unite.
+};
+
+// int main(int argc, char** argv) {
+//   ll N, M;
+//   cin >> N >> M;
+//   UnionFind tree(N);
+//   rep(i, M) {
+//     ll p, a, b;
+//     cin >> p >> a >> b;
+//     if (p == 0) { // Connect
+//       tree.unite(a, b);
+//     } else { // Judge
+//       if (tree.same(a, b)) {
+//         cout << "Yes" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       } else {
+//         cout << "No" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       }
+//     }
+//   }
+// }
+
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
-  cin >> n;
+  ll n, m;
+  cin >> n >> m;
+  UnionFind uf(n);
+  rep(i, m) {
+    ll u, v;
+    cin >> u >> v;
+    --u; --v; // 0-indexed
+    // cout << "u: " << u << endl;
+    // cout << "v: " << v << endl;
+    uf.unite(u, v);
+  }
+
+  // Now, uf represents the connected components.
+  // ll i = 0;
+  // map<ll, set<ll>> vertices; // Contains the vertices of each connected components.
+  // rep(i, n) {
+  //   vertices[uf.find(i)].insert(i);
+  // }
+  // ll prev_cnt = uf.size();
+  // cout << "prev_cnt: " << prev_cnt << endl;
+
+  // Next, we unite if necessary.
+  ll ans = 0;
+  rep(i, n) {
+    ll j = i;
+    while (j < n) {
+      while (j < n && uf.root(j) == uf.root(j+1)) {
+        ++j;
+      }
+
+      // cout << "j-i+1: " << j-i+1 << endl;
+      // cout << "i: " << i << endl;
+      // cout << "uf.count(i): " << uf.count(i) << endl;
+      // cout << endl;
+      // Now, uf[j+1] is not same with uf[j]
+      if ((j - i + 1) == uf.count(i)) { // whole conncted. ok
+        break;
+      } else {
+        uf.unite(j, j + 1);
+        ++ans;
+      }
+    }
+    i = j;
+  }
+
+  cout << ans << endl;
 }
