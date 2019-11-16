@@ -54,6 +54,52 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
-  cin >> n;
+  ll n, m;
+  cin >> n >> m;
+  vector<ll> a(n);
+  rep(i, n) {
+    cin >> a[i];
+  }
+  sort(all(a));
+  // cout << "a: "; printvec(a);
+  // Now, a is sorted in increasing order.
+  // We want to select first k. But, we eat each by m in decreasing order.
+
+  // We want to pre-calculate "each m" summention.
+
+  vector<ll> s(n+1); // summention. s[i] .. sum of [0, i)
+  rep(i, n) {
+    s[i+1] = s[i] + a[i];
+  }
+  // cout << "s: "; printvec(s);
+
+  // Now, diff[i] = s[i+1] - s[i+1-m]. diff[i] = 0 if i <= ...
+  vector<ll> diff(n, 0);
+  rep(i, n) {
+    if (i+1-m >= 0) {
+      diff[i] = s[i+1] - s[i+1-m];
+    } else {
+      diff[i] = s[i+1]; // i+1-m is lower, so we treat them as 0
+    }
+  }
+  // cout << "diff: "; printvec(diff);
+
+  vector<ll> diff_sum(n); // The summention.
+  rep(i, m) { // count in each m
+    ll d = 0;
+    while (i + d * m < n) {
+      if (d >= 1) {
+        diff_sum[i + d * m] = s[i + d * m + 1] + diff_sum[i + (d-1) * m];
+      } else {
+        diff_sum[i + d * m] = diff[i + d * m];
+      }
+      ++d;
+    }
+  }
+  // cout << "diff_sum: "; printvec(diff_sum);
+
+  rep(k, n) {
+    cout << diff_sum[k] << " ";
+  }
+  cout << endl;
 }
