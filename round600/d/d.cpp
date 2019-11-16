@@ -144,8 +144,8 @@ int main(int argc, char** argv) {
   ll i = 0;
   while (i < n) {
     ll j = i;
-    while (j < n) {
-      while (j < n && uf.root(j) == uf.root(j+1)) {
+    while (j < n - 1) {
+      while (j < n - 1 && uf.root(j) == uf.root(j+1)) {
         ++j;
       }
 
