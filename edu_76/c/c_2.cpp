@@ -57,13 +57,14 @@ void solve() {
   }
   vector<ll> lst(n + 1, -1);
   ll ans = INF;
+
   rep(i, n) {
-    if (lst[a[i]] != -1) {
+    if (lst[a[i]] != -1) { // already appered
       chmin(ans, i - lst[a[i]] + 1);
     }
     lst[a[i]] = i;
   }
-  if(ans == INF) {
+  if (ans == INF) {
     cout << -1 << endl;
   } else {
     cout << ans << endl;
