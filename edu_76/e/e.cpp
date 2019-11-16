@@ -58,14 +58,25 @@ int main(int argc, char** argv) {
   cin >> n1 >> n2 >> n3;
   ll n = n1 + n2 + n3;
   vector<int> who(n, -1);
-  rep(p, 3) {
-    rep(i, n) {
-      int a;
-      cin >> a;
-      --a;
-      who[a] = p;
-    }
+  rep(iter, n1) {
+    int a;
+    cin >> a;
+    --a;
+    who[a] = 0;
   }
+  rep(iter, n2) {
+    int a;
+    cin >> a;
+    --a;
+    who[a] = 1;
+  }
+  rep(iter, n3) {
+    int a;
+    cin >> a;
+    --a;
+    who[a] = 2;
+  }
+  // printvec(who);
 
   vector<int> prefix_sums[3];
   rep(p, 3) {
@@ -78,4 +89,19 @@ int main(int argc, char** argv) {
   vector<int> dp[4]; // 3 + 1 = 4
   dp[3].assign(n + 1, INF);
   dp[3][n] = 0;
+
+  for (int p = 2; p >= 0; --p) {
+    dp[p].assign(n + 1, INF);
+    dp[p][n] = 0;
+    int minimum = INF;
+
+    for (int i = n; i >= 0; --i) {
+      chmin(minimum, i - prefix_sums[p][i] + dp[p + 1][i]);
+      if (i < n) {
+        dp[p][i] = minimum - i + prefix_sums[p][i];
+      }
+    }
+  }
+
+  cout << dp[0][0] << endl;
 }
