@@ -74,16 +74,16 @@ void solve() {
     ++res;
     ll npos = pos; // The next position.
     ll mx = 0; // The maximum power of monsters.
-    while (true) {
+    while (npos < n) {
       chmax(mx, a[npos]);
       if (mx > bst[npos - pos + 1]) { break; } // We can't beat a monster by bst[dist].
       ++npos;
     }
-    cout << "a[npos]: " << a[npos] << endl;
-    cout << "npos: " << npos << endl;
-    cout << "mx: " << mx << endl;
-    cout << "bst[npos - pos + 1]: " << bst[npos - pos + 1] << endl;
-    cout << "npos - pos + 1: " << npos - pos + 1 << endl;
+    // cout << "a[npos]: " << a[npos] << endl;
+    // cout << "npos: " << npos << endl;
+    // cout << "mx: " << mx << endl;
+    // cout << "bst[npos - pos + 1]: " << bst[npos - pos + 1] << endl;
+    // cout << "npos - pos + 1: " << npos - pos + 1 << endl;
     if (pos == npos) { // we can't beat any monster.
       cout << -1 << endl;
       return;
