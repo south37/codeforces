@@ -141,7 +141,8 @@ int main(int argc, char** argv) {
 
   // Next, we unite if necessary.
   ll ans = 0;
-  rep(i, n) {
+  ll i = 0;
+  while (i < n) {
     ll j = i;
     while (j < n) {
       while (j < n && uf.root(j) == uf.root(j+1)) {
@@ -160,7 +161,7 @@ int main(int argc, char** argv) {
         ++ans;
       }
     }
-    i = j;
+    i = j + 1;
   }
 
   cout << ans << endl;
