@@ -85,6 +85,9 @@ int main(int argc, char** argv) {
       prefix_sums[p][i+1] = prefix_sums[p][i] + (who[i] == p ? 1 : 0);
     }
   }
+  // cout << "ps[0]: "; printvec(prefix_sums[0]);
+  // cout << "ps[1]: "; printvec(prefix_sums[1]);
+  // cout << "ps[2]: "; printvec(prefix_sums[2]);
 
   vector<int> dp[4]; // 3 + 1 = 4
   dp[3].assign(n + 1, INF);
@@ -96,12 +99,24 @@ int main(int argc, char** argv) {
     int minimum = INF;
 
     for (int i = n; i >= 0; --i) {
+      // prefix_sums[p][i]: .. The number equal or lower than i which are in p.
+      // i - prefix_sums[p][i]: .. The number equal or lower than i which are not in p. rest[p][i].
+      // dp[p][i] .. The minimum operation when we set all number equal or larger than i to rooms p' where p' >= p.
+      // minimum expresses the boundary of p' and p'+1. minimum = i' - prefix_sums[p][i'] + dp[p+1][i'] where i' is the boundary.
+
       chmin(minimum, i - prefix_sums[p][i] + dp[p + 1][i]);
+      // cout << "p: " << p << endl;
+      // cout << "i: " << i << endl;
+      // cout << "minimum: " << minimum << endl;
+      // cout << "i-prefix_sums[p][i]: " << i - prefix_sums[p][i] << endl;
       if (i < n) {
-        dp[p][i] = minimum - i + prefix_sums[p][i];
+        dp[p][i] = minimum - i + prefix_sums[p][i]; // minimum - (i - prefix_sums[p][i]). dp[p+1][i'] + (rest[p][i'] - rest[p][i]).
       }
     }
   }
+  // cout << "dp[0]: "; printvec(dp[0]);
+  // cout << "dp[1]: "; printvec(dp[1]);
+  // cout << "dp[2]: "; printvec(dp[2]);
 
   cout << dp[0][0] << endl;
 }
