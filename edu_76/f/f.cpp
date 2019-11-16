@@ -48,12 +48,90 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+const ll V = 5000000; // V > pow(2, 15)
+
+ll lst[V]; // Contains the information of sequences. last value of Trie-tree is a key, information is a value.
+map<ll, ll> nxt[V]; // Trie-tree.
+ll t = 1; // The counter. incremented in get_nxt.
+
+ll n;
+
+ll get_nxt(ll v, ll x) {
+  if (!nxt[v].count(x)) {
+    nxt[v][x] = t++;
+  }
+  return nxt[v][x];
+}
+
+void add(const vector<ll> diff, ll x) {
+  ll v = 0;
+  for (auto i : diff) {
+    v = get_nxt(v, i);
+  }
+  lst[v] = x;
+}
+
+// Return the diff of each elements with x in arr.
+vector<ll> get_diff(const vector<ll>& arr, ll x) {
+  vector<ll> cnt(n);
+  rep(i, n) {
+    cnt[i] = __builtin_popcountll(arr[i] ^ x); // The number of 1 bits.
+  }
+  vector<ll> diff(n-1);
+  rep(i, n-1) {
+    diff[i] = cnt[i+1]-cnt[0];
+  }
+  return diff;
+}
+
+ll try_find(const vector<ll>& diff) {
+  ll v = 0;
+  // Check the existence of diff in nxt. nxt contains the information of sequences.
+  for (auto i : diff) {
+    if (!nxt[v].count(i)) {
+      return -1;
+    }
+    v = nxt[v];
+  }
+  return lst[v];
+}
+
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
   cin >> n;
+  vector<ll> a(n);
+  rep(i, n) {
+    cin >> a[i];
+  }
+  vector<ll> a1(n);
+  vector<ll> a2(n);
+  rep(i, n) {
+    a1[i] = (a[i] >> 15); // The left 15 bit
+    ll mask = ~(-1 << 15);
+    a2[i] = a[i] & mask;
+  }
+  rep(i, 1<<15) {
+    vector<ll> d = get_diff(a1, i);
+    add(d, i);
+  }
+
+  rep(i, 1<<15) {
+    vector<ll> d = get_diff(a2, i);
+    rep(j, n-1) {
+      d[j] *= -1;
+    }
+    ll x = try_find(d);
+    if (x != -1) {
+      ll res = (x << 15) ^ i;
+      cout << res << endl;
+      return 0;
+    }
+  }
+
+  cout << -1 << endl;
+  return 0;
 }
