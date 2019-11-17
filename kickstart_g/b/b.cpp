@@ -203,11 +203,11 @@ void solve() {
   // Now, lefts and rights are sorted
   for (auto v : lefts) {
     left_set[v] = left_counter++;
-    // left_insert_map[left_set[v]] = v; // For Debug
+    left_insert_map[left_set[v]] = v; // For Debug
   }
   for (auto v : rights) {
     right_set[v] = left_counter + (right_counter++);
-    // right_insert_map[right_set[v]] = v; // For Debug
+    right_insert_map[right_set[v]] = v; // For Debug
   }
   // Now, left_set and right_set are created
 
@@ -241,6 +241,35 @@ void solve() {
   if (rank == -1) {
     cout << "Invalid!";
   } else {
+    // Now, we have result array. We want to eliminate the redundent elements.
+
+    // map<P, ll> m; // The count and id pair for each points.
+    // set<ll> ans_lefts;
+    // set<ll> right_lefts;
+    //
+    // rep(i, res.size()) {
+    //   if (res[i] == 1) {
+    //     if (i <= 2*(n-1)) { // left.
+    //       ans_lefts.insert(left_insert_map[i]);
+    //     } else { // right
+    //       ans_rights.insert(right_insert_map[i]);
+    //     }
+    //   }
+    // }
+    // rep(i, n) {
+    //   rep(j, n) {
+    //     // memo: left_set[i-j]
+    //     // memo: right_set[i+j]
+    //     if (ans_lefts.count(i-j) > 0) {
+    //       ++m[left_set[i-j]];
+    //     }
+    //     if (ans_rights.count(i+j) > 0) {
+    //       ++m[right_set[i+j]];
+    //     }
+    //   }
+    // }
+    // Now, all
+
     // Now, res contains the operation.
     ll ans = 0;
     rep(i, res.size()) {
@@ -256,6 +285,7 @@ void solve() {
         // }
       }
     }
+
     cout << ans;
   }
 }
