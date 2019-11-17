@@ -265,7 +265,20 @@ void solve() {
         }
       }
     }
-    cout << min(even_cnt, (n*2 - even_cnt)) + min(odd_cnt, ((n-1)*2 - odd_cnt));
+    // total is 2*(n-1)+1 * 2 = 4 * n - 2
+    // e.g. n=5 -> 18
+    ll even_limit;
+    ll odd_limit;
+    if (n % 2 != 0) {
+      even_limit = 2*n;
+      odd_limit = 2*n-2;
+    } else {
+      even_limit = 2*n-1;
+      odd_limit = 2*n-1;
+    }
+    // cout << "even_cnt: " << even_cnt << endl;
+    // cout << "odd_cnt: " << odd_cnt << endl;
+    cout << min(even_cnt, (even_limit - even_cnt)) + min(odd_cnt, (odd_limit - odd_cnt));
   }
 }
 
