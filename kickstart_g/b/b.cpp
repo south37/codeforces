@@ -48,7 +48,165 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+const int MAX_ROW = 10010; // To be set appropriately.
+const int MAX_COL = 500; // To be set appropriately.
+
+class BitMatrix {
+public:
+  BitMatrix(int m = 1, int n = 1) : H(m), W(n) {}
+  inline bitset<MAX_COL>& operator [] (int i) { return val[i]; }
+
+  int H, W;
+
+private:
+  bitset<MAX_COL> val[MAX_ROW];
+};
+
+ostream& operator << (ostream& s, BitMatrix A) {
+  s << endl;
+  rep(i, A.H) {
+    rep(j, A.W) {
+      s << A[i][j] << ", ";
+    }
+    s << endl;
+  }
+  return s;
+}
+
+int GaussJordan(BitMatrix &A, bool is_extended = false) {
+  int rank = 0;
+  rep(col, A.W) {
+    if (is_extended && col == A.W - 1) { break; }
+    int pivot = -1;
+    for (int row = rank; row < A.H; ++row) {
+      if (A[row][col]) {
+        pivot = row;
+        break;
+      }
+    }
+    if (pivot == -1) continue;
+    swap(A[pivot], A[rank]);
+    rep(row, A.H) {
+      if (row != rank && A[row][col]) {
+        A[row] ^= A[rank];
+      }
+    }
+    ++rank;
+  }
+  return rank;
+}
+
+int linear_equation(BitMatrix A, vector<int> b, vector<int> &res) {
+  int m = A.H, n = A.W;
+  BitMatrix M(m, n + 1);
+  rep(i, m) {
+    rep(j, n) {
+      M[i][j] = A[i][j];
+    }
+    M[i][n] = b[i];
+  }
+  int rank = GaussJordan(M, true);
+
+  // check if it has no solution
+  for (int row = rank; row < m; ++row) {
+    if (M[row][n]) { return -1; }
+  }
+
+  // answer
+  res.assign(n, 0);
+  rep(i, rank) {
+    res[i] = M[i][n];
+  }
+  return rank;
+}
+
+// int main(int argc, char** argv) {
+//   int N;
+//   cin >> N;
+//   vector<ll> a(N);
+//   rep(i, N) {
+//     cin >> a[i];
+//   }
+//
+//   const int DIGIT = 61;
+//   BitMatrix A(DIGIT, N);
+//   rep(d, DIGIT) {
+//     rep(i, N) {
+//       if (a[i] & (1LL << d)) {
+//         A[d][i] = 1;
+//       }
+//     }
+//   }
+//
+//   int rank = GaussJordan(A);
+//   cout << (1LL << rank) << endl;
+// }
+
 void solve() {
+  ll n;
+  cin >> n;
+  vector<string> s(n);
+  rep(i, n) {
+    cin >> s[i];
+  }
+
+  // For Debug
+  cout << endl;
+  rep(i, n) {
+    cout << s[i] << endl;
+  }
+  // Now, s[i][j] means the position.
+  // We maske n*n vector. this vector contains the whole information of board.
+  // We want to try (n-1)*2+1 operation. This is equation. after this operation, we want to make all board to be black.
+  // So, the operation means the change of elements in vector.
+
+  // white(.) is 0, black(#) is 1.
+
+  BitMatrix A(n*n, 4*n+2);
+  vector<int> b(n*n), res;
+
+  rep(i, n) {
+    rep(j, n) {
+      ll current = (s[i][j] == '.') ? 0 : 1;
+      b[i*n+j] = 1 - current; // We want to swap if first is 0(white).
+      // For Debug
+      if (current == 0) {
+        cout << "(i,j)="<<"("<<i<<","<<j<<")="<<endl;
+      }
+    }
+  }
+  // We make 2 * "2*(n-1)+1" equations.
+  // Which has the uniquness by "i-j" when left ans "i+j" when right
+  ll left_counter = 0;
+  map<ll, ll> left_set;  // "\"
+  ll right_counter = 2*(n-1)+1; // The initial value.
+  map<ll, ll> right_set;  // "\"
+  rep(i, n) {
+    rep(j, n) {
+      if (left_set.count(i-j) == 0) { // Make left equation
+        left_set[i-j] = left_counter++;
+      }
+      A[i*n+j][left_set[i-j]] = 1; // Set 1 because
+
+      if (right_set.count(i+j) == 0) { // Make right equation
+        right_set[i+j] = right_counter++;
+      }
+      A[i*n+j][right_set[i+j]] = 1; // Set 1 because
+    }
+  }
+  // Now, all equation are created. We solve it by GaussJordan.
+
+  int rank = linear_equation(A, b, res);
+  if (rank == -1) {
+    cout << "Invalid!";
+  } else {
+    // Now, res contains the operation.
+    ll ans = 0;
+    for (auto i : res) {
+      if (i == 1) { ++ans; }
+    }
+    cout << ans;
+  }
 }
 
 int main(int argc, char** argv) {
@@ -62,5 +220,6 @@ int main(int argc, char** argv) {
   rep(i, t) {
     cout << "Case #"<<i+1<<": ";
     solve();
+    cout << endl;
   }
 }
