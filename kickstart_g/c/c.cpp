@@ -49,6 +49,17 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  vector<ll> a(9);
+  rep(i, 9) {
+    cin >> a[i];
+  }
+
+  ll sum = 0;
+  rep(i, n) {
+    sum += (i+1) * a[i];
+    sum %= 11;
+  }
+  // Now, sum contains the total
 }
 
 int main(int argc, char** argv) {
