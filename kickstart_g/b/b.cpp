@@ -151,10 +151,10 @@ void solve() {
   }
 
   // For Debug
-  cout << endl;
-  rep(i, n) {
-    cout << s[i] << endl;
-  }
+  // cout << endl;
+  // rep(i, n) {
+  //   cout << s[i] << endl;
+  // }
   // Now, s[i][j] means the position.
   // We maske n*n vector. this vector contains the whole information of board.
   // We want to try (n-1)*2+1 operation. This is equation. after this operation, we want to make all board to be black.
@@ -170,27 +170,68 @@ void solve() {
       ll current = (s[i][j] == '.') ? 0 : 1;
       b[i*n+j] = 1 - current; // We want to swap if first is 0(white).
       // For Debug
-      if (current == 0) {
-        cout << "(i,j)="<<"("<<i<<","<<j<<")="<<endl;
-      }
+      // if (current == 0) {
+      //   cout << "(i,j)="<<"("<<i<<","<<j<<")="<<endl;
+      // }
     }
   }
+
+  // For Debug
+  map<ll, ll> left_insert_map;
+  map<ll, ll> right_insert_map;
+
   // We make 2 * "2*(n-1)+1" equations.
   // Which has the uniquness by "i-j" when left ans "i+j" when right
   ll left_counter = 0;
   map<ll, ll> left_set;  // "\"
-  ll right_counter = 2*(n-1)+1; // The initial value.
+  ll right_counter = 0; // The initial value.
   map<ll, ll> right_set;  // "\"
+  // We use i-j in increasing order.
+
+  set<ll> lefts; // "\"
+  set<ll> rights;  // "/"
   rep(i, n) {
     rep(j, n) {
-      if (left_set.count(i-j) == 0) { // Make left equation
-        left_set[i-j] = left_counter++;
+      if (lefts.count(i-j) == 0) { // Make left equation
+        lefts.insert(i-j);
       }
+      if (rights.count(i+j) == 0) { // Make right equation
+        rights.insert(i+j);
+      }
+    }
+  }
+  // Now, lefts and rights are sorted
+  for (auto v : lefts) {
+    left_set[v] = left_counter++;
+    // left_insert_map[left_set[v]] = v; // For Debug
+  }
+  for (auto v : rights) {
+    right_set[v] = left_counter + (right_counter++);
+    // right_insert_map[right_set[v]] = v; // For Debug
+  }
+  // Now, left_set and right_set are created
+
+  // cout << "For Debug:" << endl;
+  // cout << "lefts:";
+  // for (auto v: lefts) { cout << v << " "; }
+  // cout << endl;
+  // cout << "rights:";
+  // for (auto v: rights) { cout << v << " "; }
+  // cout << endl;
+  // cout << "left_counter + right_counter: " << left_counter + right_counter << endl;
+
+  rep(i, n) {
+    rep(j, n) {
+      // if (left_set.count(i-j) == 0) { // Make left equation
+      //   left_set[i-j] = left_counter++;
+      //   left_insert_map[left_set[i-j]] = i-j;
+      // }
       A[i*n+j][left_set[i-j]] = 1; // Set 1 because
 
-      if (right_set.count(i+j) == 0) { // Make right equation
-        right_set[i+j] = right_counter++;
-      }
+      // if (right_set.count(i+j) == 0) { // Make right equation
+      //   right_set[i+j] = right_counter++;
+      //   right_insert_map[right_set[i+j]] = i+j;
+      // }
       A[i*n+j][right_set[i+j]] = 1; // Set 1 because
     }
   }
@@ -202,8 +243,18 @@ void solve() {
   } else {
     // Now, res contains the operation.
     ll ans = 0;
-    for (auto i : res) {
-      if (i == 1) { ++ans; }
+    rep(i, res.size()) {
+      if (res[i] == 1) {
+        ++ans;
+        // For Debug
+        // if (i <= 2*(n-1)) {
+        //   cout << "operation(\\) i: " << i << endl;
+        //   cout << "i-j: " << left_insert_map[i] << endl;
+        // } else {
+        //   cout << "operation(/) i: " << i << endl;
+        //   cout << "i+j: " << right_insert_map[i] << endl;
+        // }
+      }
     }
     cout << ans;
   }
