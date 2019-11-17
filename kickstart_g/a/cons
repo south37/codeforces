@@ -1,0 +1,30 @@
+##
+- at i, we want to know the "number of papers under j <= i".
+  - because, maximum number means the h-index.
+
+## e.g.1
+- 5, 1, 2
+
+- 1: 5
+  - h-index: 1
+- 2:
+ - 5
+ - 1
+  - h-index: 1
+- 2:
+ - 5
+ - 1
+  - h-index: 1
+
+## naive aproach
+- count all pattern in each step.
+  - if index is i, then all the count of papers under j where j in [0, i-1]
+    - if j
+
+## what we need?
+- we want to know "the count under x"
+  - its value changes when j is inserted.
+
+##
+- maximum value (increasing)
+  -
