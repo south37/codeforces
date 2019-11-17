@@ -241,52 +241,31 @@ void solve() {
   if (rank == -1) {
     cout << "Invalid!";
   } else {
-    // Now, we have result array. We want to eliminate the redundent elements.
-
-    // map<P, ll> m; // The count and id pair for each points.
-    // set<ll> ans_lefts;
-    // set<ll> right_lefts;
-    //
-    // rep(i, res.size()) {
-    //   if (res[i] == 1) {
-    //     if (i <= 2*(n-1)) { // left.
-    //       ans_lefts.insert(left_insert_map[i]);
-    //     } else { // right
-    //       ans_rights.insert(right_insert_map[i]);
-    //     }
-    //   }
-    // }
-    // rep(i, n) {
-    //   rep(j, n) {
-    //     // memo: left_set[i-j]
-    //     // memo: right_set[i+j]
-    //     if (ans_lefts.count(i-j) > 0) {
-    //       ++m[left_set[i-j]];
-    //     }
-    //     if (ans_rights.count(i+j) > 0) {
-    //       ++m[right_set[i+j]];
-    //     }
-    //   }
-    // }
-    // Now, all
-
     // Now, res contains the operation.
-    ll ans = 0;
+    ll even_cnt = 0; // even. limit is 10 if n = 5.
+    ll odd_cnt = 0; // odd. limit is 8 if n = 5.
     rep(i, res.size()) {
       if (res[i] == 1) {
-        ++ans;
-        // For Debug
-        // if (i <= 2*(n-1)) {
-        //   cout << "operation(\\) i: " << i << endl;
-        //   cout << "i-j: " << left_insert_map[i] << endl;
-        // } else {
-        //   cout << "operation(/) i: " << i << endl;
-        //   cout << "i+j: " << right_insert_map[i] << endl;
-        // }
+        if (i <= 2*(n-1)) {
+          // cout << "operation(\\) i: " << i << endl;
+          // cout << "i-j: " << left_insert_map[i] << endl;
+          if (left_insert_map[i] % 2 == 0) { //even
+            ++even_cnt;
+          } else {
+            ++odd_cnt;
+          }
+        } else {
+          // cout << "operation(/) i: " << i << endl;
+          // cout << "i+j: " << right_insert_map[i] << endl;
+          if (right_insert_map[i] % 2 == 0) { //even
+            ++even_cnt;
+          } else {
+            ++odd_cnt;
+          }
+        }
       }
     }
-
-    cout << ans;
+    cout << min(even_cnt, (n*2 - even_cnt)) + min(odd_cnt, ((n-1)*2 - odd_cnt));
   }
 }
 
