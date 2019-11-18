@@ -48,30 +48,44 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-  vector<ll> a(9);
-  rep(i, 9) {
-    cin >> a[i];
-  }
+const int N = 505, mod = 0;
+int cnt[10], dp[N][11], odp[N][11];
 
-  ll sum = 0;
-  rep(i, n) {
-    sum += (i+1) * a[i];
-    sum %= 11;
+void solve() {
+  int sum = 0;
+  for (int j = 1; j < 10; ++j) {
+    cin >> cnt[j];
+    if (cnt[j] > 20) {
+      cnt[j] = 20 + (cnt[j] & 1);
+    }
+    sum += cnt[j];
   }
-  // Now, sum contains the total
+  memset(dp, 0, sizeof dp);
+  dp[0][0] = 1;
+  for (int j = 1; j < 10; ++j) {
+    memcpy(odp, dp, sizeof dp);
+    memset(dp, 0, sizeof dp);
+    for (int pick = 0; pick <= cnt[j]; ++pick) {
+      for (int lpick = 0; lpick + pick < N; ++lpick) {
+    	  for (int lmod = 0; lmod < 11; ++lmod) {
+    	    int nmod = (lmod + pick * j + (11 - j) * (cnt[j] - pick)) % 11;
+    	    dp[lpick + pick][nmod] |= odp[lpick][lmod];
+    	  }
+    	}
+    }
+  }
+  if (dp[sum / 2][0]) {
+    cout << "YES\n";
+  } else {
+    cout << "NO\n";
+  }
 }
 
-int main(int argc, char** argv) {
-  cin.tie(NULL);
-  cout.tie(NULL);
-  ios_base::sync_with_stdio(false);
-  //cout << setprecision(10) << fixed;
-
-  ll t;
+int main() {
+  int t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #"<<i+1<<": ";
+    cout << "Case #" << i+1 << ": ";
     solve();
   }
 }
