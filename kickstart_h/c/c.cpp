@@ -1,3 +1,6 @@
+// problem. https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050edd/00000000001a286d
+// solution. https://codingcompetitions.withgoogle.com/kickstart/submissions/0000000000050edd/TWFobW91ZGlhbg
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -49,7 +52,8 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 const int N = 505, mod = 0;
-int cnt[10], dp[N][11], odp[N][11];
+int cnt[10];
+bool dp[N][11], odp[N][11];
 
 void solve() {
   int sum = 0;
@@ -67,11 +71,17 @@ void solve() {
     memset(dp, 0, sizeof dp);
     for (int pick = 0; pick <= cnt[j]; ++pick) {
       for (int lpick = 0; lpick + pick < N; ++lpick) {
-    	  for (int lmod = 0; lmod < 11; ++lmod) {
-    	    int nmod = (lmod + pick * j + (11 - j) * (cnt[j] - pick)) % 11;
-    	    dp[lpick + pick][nmod] |= odp[lpick][lmod];
-    	  }
-    	}
+        for (int lmod = 0; lmod < 11; ++lmod) {
+          // pick          .. The count of "+" in j
+          // cnt[j] - pick .. The count of "-" in j
+          // lpick         .. The picked count in left of j.
+          //
+          // We try all case. If we can make true, the result is true.
+          // dp[i][j] .. The capability of "i" pick and "j" mod.
+          int nmod = (lmod + pick * j + (11 - j) * (cnt[j] - pick)) % 11;
+          dp[lpick + pick][nmod] |= odp[lpick][lmod];
+        }
+      }
     }
   }
   if (dp[sum / 2][0]) {
