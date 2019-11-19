@@ -57,9 +57,53 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+  vector<ll> a(n);
+  rep(i, n) {
+    cin >> a[i];
   }
+
+  vector<ll> indices;
+  rep(i, n) {
+    if (a[i] == 1) {
+      indices.push_back(i);
+    }
+  }
+  ll m = indices.size();
+  if (m == 0) { // no 1
+    cout << 0 << endl;
+    return 0;
+  }
+
+  if (m == 1) {
+    cout << -1 << endl;
+    return 0;
+  }
+
+  // We want to calculate the minimum divisor k.
+  ll i = 2;
+  ll maximum_divisor = -1;
+  while (i * i <= m) {
+    if (m % i == 0) {
+      maximum_divisor = i;
+    }
+    ++i;
+  }
+  if (maximum_divisor == -1) { // n is prime
+    maximum_divisor = m;
+  }
+
+  // Now, we have maximum_divisor. We calculate from end.
+  ll ans = 0;
+  ll j = 0;
+  while (j < indices.size()) {
+    rep(iter, maximum_divisor - 1) {
+      ans += indices[j + iter + 1]  - indices[j + iter];
+    }
+    j += maximum_divisor;
+  }
+
+  cout << ans << endl;
+  return 0;
 }
