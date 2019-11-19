@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
   ll j = 0;
   while (j < indices.size()) {
     rep(iter, maximum_divisor - 1) {
-      ans += indices[j + iter + 1]  - indices[j + iter];
+      ans += indices[j + maximum_divisor - 1]  - indices[j + iter];
     }
     j += maximum_divisor;
   }
