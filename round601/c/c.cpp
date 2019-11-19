@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
     P p = mp(min(ends[i], pre_ends[j]), max(ends[i], pre_ends[j]));
     if (m.count(p)) {
       // cout << "(ends[i], pre_ends[j]):" << ends[i]<<", "<<pre_ends[j]<<endl;
-      ok_pairs.push_back(p);
+      ok_pairs.push_back(mp(ends[i], pre_ends[j])); // Set in ends, pre_ends order.
     }
   }
   assert(ok_pairs.size() == 2);
