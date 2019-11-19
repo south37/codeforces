@@ -49,6 +49,31 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll a, b;
+  cin >> a >> b;
+  ll diff = abs(b-a);
+  if (diff == 0) {
+    cout << 0 << endl;
+    return;
+  }
+  ll t = diff / 5;
+  ll remain = diff % 5;
+
+  ll ans = t;
+  if (remain == 0) {
+    // do nothing
+  } else if (remain == 1) {
+    ans += 1;
+  } else if (remain == 2) {
+    ans += 1;
+  } else if (remain == 3) {
+    ans += 2;
+  } else if (remain == 4) {
+    ans += 2;
+  }
+
+  cout << ans << endl;
+  return;
 }
 
 int main(int argc, char** argv) {
