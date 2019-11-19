@@ -51,7 +51,7 @@ const ll MOD = 1000000007;  // 1e9 + 7
 void solve() {
   ll n, m;
   cin >> n >> m;
-  vector<P> a(n);
+  vector<P> a(n); // The pair of (cost, id)
   rep(i, n) {
     cin >> a[i].fr;
     a[i].sc = i;
