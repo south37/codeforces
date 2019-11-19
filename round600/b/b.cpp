@@ -1,4 +1,4 @@
-// base. https://pastebin.com/TCAqg38G
+// base. https://pastebin.com/whyCzpvV
 
 #include <algorithm>
 #include <bitset>
@@ -50,40 +50,60 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
+const ll borne = (int)(1e6) + 6;
+const int WAIT=0, ENTERED=1, LEFT=2;
+int state[borne];
+
+bool solve() {
   ll n;
   cin >> n;
-  ll n2 = n+2; // set 0 to `0` and `n+1`. so length is n+2.
-  vector<ll> a(n2);
-  vector<ll> b(n2);
-  for (int i = 1; i <= n; ++i) {
+  vector<ll> a(n);
+  rep(i, n) {
     cin >> a[i];
   }
-  for (int i = 1; i <= n; ++i) {
-    cin >> b[i];
-  }
-  vector<ll> diff(n2);
-  for (int i = 1; i <= n; ++i) {
-    diff[i] = b[i] - a[i];
+
+  vector<int> cur;
+  vector<int> res;
+  int ofs = 0; // The number in office
+
+  rep(i, n) {
+    int ev = a[i];
+    int guy = abs(ev);
+    cur.push_back(guy);
+    if (ev > 0) { // enter
+      if (state[guy] != WAIT) {
+        return false;
+      }
+      state[guy] = ENTERED;
+      ++ofs;
+    } else { // leave
+      if (state[guy] != ENTERED) {
+        return false;
+      }
+      state[guy] = LEFT;
+      --ofs;
+    }
+    // End day when the number in office is 0
+    if (ofs == 0) {
+      res.push_back(cur.size());
+      for (int x : cur) {
+        state[x] = WAIT;
+      }
+      cur.clear();
+    }
   }
 
-  int cnt = 0;
-  rep(i, n2-1) {
-    if (diff[i] < 0) {
-      cout << "NO" << endl;
-      return;
-    }
-    if (diff[i] != diff[i+1]) {
-      ++cnt;
+  ll sz = res.size();
+  cout << sz << endl;
+  rep(i, sz) {
+    cout << res[i];
+    if (i + 1 < sz) {
+      cout << " ";
+    } else {
+      cout << endl;
     }
   }
-  if (cnt <= 2) {
-    cout << "YES" << endl;
-    return;
-  } else {
-    cout << "NO" << endl;
-    return;
-  }
+  return true;
 }
 
 int main(int argc, char** argv) {
@@ -92,9 +112,7 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  if (!solve()) {
+    cout << -1 << endl;
   }
 }
