@@ -67,6 +67,8 @@ bool solve() {
   int ofs = 0; // The number in office
 
   rep(i, n) {
+    // cout << "i: " << i << endl;
+    // cout << "a[i]: " << a[i] << endl;
     int ev = a[i];
     int guy = abs(ev);
     cur.push_back(guy);
@@ -91,6 +93,10 @@ bool solve() {
       }
       cur.clear();
     }
+  }
+
+  if (!cur.empty()) {
+    return false;
   }
 
   ll sz = res.size();
