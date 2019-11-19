@@ -49,6 +49,91 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n, m;
+  cin >> n >> m;
+  vector<P> a(n);
+  rep(i, n) {
+    cin >> a[i].fr;
+    a[i].sc = i;
+  }
+  sort(all(a));
+  // Now, a is increasing order of cost.
+
+  if (n == 2) { // If n = 2, we can not create
+    cout << -1 << endl;
+    return;
+  }
+  if (n == 3) {
+    if (m < 3) { // ng
+      cout << -1 << endl;
+      return;
+    }
+
+    ll sum = 0;
+    vector<P> pairs;
+    sum += 2 * a[0].fr;
+    sum += 2 * a[1].fr;
+    sum += 2 * a[2].fr;
+    pairs.emplace_back(a[0].sc, a[1].sc);
+    pairs.emplace_back(a[1].sc, a[2].sc);
+    pairs.emplace_back(a[2].sc, a[0].sc);
+    rep(iter, m - 3) {
+      pairs.emplace_back(a[0].sc, a[1].sc);
+      sum += a[0].fr;
+      sum += a[1].fr;
+    }
+
+    cout << sum << endl;
+    rep(i, pairs.size()) {
+      cout << pairs[i].fr + 1 << " " << pairs[i].sc + 1 << endl;
+    }
+    return;
+  }
+
+  if (m >= 2*n-4) {
+    // ok
+  } else {
+    cout << -1 << endl;
+    return;
+  }
+
+  // Now, n = 4. we use first 2 as all pairs.
+  vector<pair<P, P>> ans; // The pairs.
+  for (int i = 2; i < n; ++i) { // [2, n-1]
+    ans.emplace_back(a[i], a[0]);
+    ans.emplace_back(a[i], a[1]);
+  }
+  if (ans.size() > m) {
+    cout << -1 << endl;
+    return;
+  }
+
+  // cout << "Debug" << endl;
+  // cout << "ans.size(): " << ans.size() << endl;
+  // cout << "m-ans.size(): " << m-ans.size() << endl;
+
+  ll rest = m - ans.size();
+  rep(iter, rest) {
+    ans.emplace_back(a[0], a[1]);
+  }
+
+  // cout << "ans.size(): " << ans.size() << endl;
+  // cout << "m-ans.size(): " << m-ans.size() << endl;
+
+  // Now, ans contains all information
+  ll sum = 0;
+  vector<P> pairs;
+  rep(i, ans.size()) {
+    sum += ans[i].fr.fr;
+    sum += ans[i].sc.fr;
+    pairs.emplace_back(ans[i].fr.sc, ans[i].sc.sc);
+  }
+
+  cout << sum << endl;
+  rep(i, pairs.size()) {
+    cout << pairs[i].fr + 1 << " " << pairs[i].sc + 1 << endl;
+  }
+  return;
 }
 
 int main(int argc, char** argv) {
