@@ -112,7 +112,9 @@ int main(int argc, char** argv) {
   ans.push_back(ok_pairs[0].sc);
   ll ff = ok_pairs[0].fr;
   ll ss = ok_pairs[0].sc;
-  while (ans.size() < n) {
+  rep(iter, n-2) {
+    bool found = false;
+
     P p = mp(min(ff, ss), max(ff, ss));
     for (auto x : m[p]) { // 2 candidates
       if (used[x]) { continue; }
@@ -122,7 +124,10 @@ int main(int argc, char** argv) {
       ff = ss;
       ss = x;
       ans.push_back(x);
+      found = true;
     }
+
+    assert(found);
   }
 
   // Now, ans.size() == n
