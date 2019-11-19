@@ -66,17 +66,20 @@ void solve() {
 
 
   vector<pair<P,P>> ans;
-  if (n == 3) {
-    ans.emplace_back(a[0], a[1]);
-    ans.emplace_back(a[1], a[2]);
-    ans.emplace_back(a[2], a[0]);
-  } else { //n >= 4
-    // Now, n = 4. we use first 2 as all pairs.
-    for (int i = 2; i < n; ++i) { // [2, n-1]
-      ans.emplace_back(a[i], a[0]);
-      ans.emplace_back(a[i], a[1]);
-    }
+  rep(i, n) {
+    ans.emplace_back(a[i], a[(i+1)%n]);
   }
+  // if (n == 3) {
+  //   ans.emplace_back(a[0], a[1]);
+  //   ans.emplace_back(a[1], a[2]);
+  //   ans.emplace_back(a[2], a[0]);
+  // } else { //n >= 4
+  //   // Now, n = 4. we use first 2 as all pairs.
+  //   for (int i = 2; i < n; ++i) { // [2, n-1]
+  //     ans.emplace_back(a[i], a[0]);
+  //     ans.emplace_back(a[i], a[1]);
+  //   }
+  // }
 
   if (ans.size() > m) {
     cout << -1 << endl;
