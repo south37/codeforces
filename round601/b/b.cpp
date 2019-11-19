@@ -90,12 +90,12 @@ void solve() {
     return;
   }
 
-  if (m >= 2*n-4) {
-    // ok
-  } else {
-    cout << -1 << endl;
-    return;
-  }
+  // if (m >= 2*n-4) {
+  //   // ok
+  // } else {
+  //   cout << -1 << endl;
+  //   return;
+  // }
 
   // Now, n = 4. we use first 2 as all pairs.
   vector<pair<P, P>> ans; // The pairs.
