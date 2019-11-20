@@ -43,7 +43,7 @@ template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return true
 
 typedef long long ll;
 typedef unsigned long long ull;
-typedef pair<ll, ll> P;
+typedef pair<int, int> P;
 typedef tuple<ll, ll, ll> triple;
 typedef double D;
 
@@ -54,6 +54,21 @@ const int borne = 201*1000;
 ll n, m;
 
 vector<int> graph[borne];
+bool visited[borne];
+vector<P> ivComp; // The (weaker, biggre) pairs of each connected components.
+
+// Calculate the weaker and the bigger of connected components.
+void dfs(int v, int& weaker, int&bigger) {
+  visited[v] = true;
+  weaker = min(weaker, v);
+  bigger = max(bigger, v);
+
+  for (int u : graph[v]) {
+    if (!visited[u]) {
+      dfs(u, weaker, bigger);
+    }
+  }
+}
 
 int main(int argc, char** argv) {
   cin.tie(NULL);
@@ -70,10 +85,25 @@ int main(int argc, char** argv) {
     graph[v].push_back(u);
   }
   rep(i, n) { // loop of node
-    if (!vu[i]) {
+    if (!visited[i]) {
       int weaker = i, bigger = i;
-      dfs(node, weaker, bigger);
+      dfs(i, weaker, bigger);
       ivComp.emplace_back(weaker, bigger);
     }
   }
+
+  // Now, ivComp is already sorted.
+
+  int curEnd = -1;
+  int rep = 0;
+
+  // We check the all intersections.
+  for (auto comp : ivComp) {
+    if (comp.fr <= curEnd) {
+      ++rep;
+    }
+    chmax(curEnd, comp.sc);
+  }
+
+  cout << rep << endl;
 }
