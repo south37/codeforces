@@ -45,8 +45,112 @@ typedef pair<ll, ll> P;
 typedef tuple<ll, ll, ll> triple;
 typedef double D;
 
-const ll INF = 1e9;
+const ll INF = 1e18;
 const ll MOD = 1000000007;  // 1e9 + 7
+
+class UnionFind {
+public:
+  UnionFind(ll n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+
+  bool same(ll x, ll y) {
+    return root(x) == root(y);
+  }
+  void unite(ll x, ll y) {
+    x = root(x); y = root(y);
+    if (x == y) return;
+
+    --_size;
+
+    if (rnk[x] < rnk[y]) { swap(x, y); }
+    par[y] = x;
+    cnt[x] += cnt[y];
+    if (rnk[x] == rnk[y]) { ++rnk[x]; }
+  }
+  ll root(ll x) {
+    if (par[x] < 0) {
+      return x;
+    } else {
+      return par[x] = root(par[x]);
+    }
+  }
+  ll count(ll x) {
+    return cnt[root(x)];
+  }
+  ll size() {
+    return _size;
+  }
+
+private:
+  vector<ll> par;
+  vector<ll> rnk;
+  vector<ll> cnt; // The number of vertices in each connected components.
+  ll _size; // The number of connected components. Decreases by unite.
+};
+
+// int main(int argc, char** argv) {
+//   ll N, M;
+//   cin >> N >> M;
+//   UnionFind tree(N);
+//   rep(i, M) {
+//     ll p, a, b;
+//     cin >> p >> a >> b;
+//     if (p == 0) { // Connect
+//       tree.unite(a, b);
+//     } else { // Judge
+//       if (tree.same(a, b)) {
+//         cout << "Yes" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       } else {
+//         cout << "No" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       }
+//     }
+//   }
+// }
+
+// Dijkstra
+ll n, m, k, q;
+
+vector< vector<P> > adj; // (node) => The list of (node, weight)
+vector<ll> dis; // The distance from nearest centrals.
+
+void dijkstra() {
+  priority_queue<P> pq;
+  rep(i, n) { // loop for nodes
+    if (i < k) {
+      pq.emplace(0, i);
+    } else {
+      dis[n] = INF;
+    }
+  }
+
+  while (!pq.empty()) {
+    P p = pq.top(); pq.pop();
+    ll d = -p.fr;
+    ll nod = p.sc;
+
+    if (d != dis[nod]) { continue; } // dis[nod] was already updated.
+  }
+}
+
+// Token and Edges
+
+vector<ll> baseTok; // The table of (token) => (node)
+vector< vector<ll> > tokenIn; // The table of (node) => [token1, token2, ...]
+
+struct Edge {
+  ll weight, n1, n2;
+};
+
+bool operator<(Edge a, Edge b) {
+  return a.weight < b.weight;
+}
+
+vector<Edge> edges;
 
 int main(int argc, char** argv) {
   cin.tie(NULL);
@@ -54,6 +158,35 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
-  cin >> n;
+  cin >> n >> m >> k >> q;
+  adj.resize(n);
+  dis.resize(n);
+
+  rep(i, m) {
+    ll n1, n2, w;
+    cin >> n1 >> n2 >> w;
+    --n1; --n2; // 0-indexed
+    adj[n1].emplace_back(n2, w);
+    adj[n2].emplace_back(n1, w);
+    edges.push_back({ w, n1, n2 });
+  }
+
+  baseTok.resize(2*q+5);
+  tokenIn.resize(n+5);
+
+  rep(query, q) {
+    ll a, b;
+    cin >> a >> b;
+    --a; --b; // 0-indexed
+    ll tk1 = 2*query; ll tk2 = 2*query+1;
+
+    baseTok[tk1] = a;
+    baseTok[tk2] = b;
+
+    tokenIn[a].push_back(tk1);
+    tokenIn[b].push_back(tk2);
+  }
+
+  // Calculate the shortest path from nearest centrals.
+  dijkstra();
 }
