@@ -266,6 +266,8 @@ int main(int argc, char** argv) {
 
   // Calculate the shortest path from nearest centrals.
   dijkstra();
+  cout << "dist: "; printvec(dist);
+  cout << "closest: "; printvec(closest);
 
   // We update the weight of edge by using dist.
   // new weight = old weight + dist[n1] + dist[n2]
