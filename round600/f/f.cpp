@@ -112,35 +112,44 @@ private:
 //   }
 // }
 
-// Dijkstra
-ll n, m, k, q;
+// Gloval variables
+ll n, m, k, q; // nodes, edges, centrals, queries
 
 vector< vector<P> > adj; // (node) => The list of (node, weight)
-vector<ll> dis; // The distance from nearest centrals.
+vector<ll> dist; // The distance from nearest centrals.
+vector<ll> baseTok; // The table of (token) => (node)
+vector< vector<ll> > tokenIn; // The table of (node) => [token1, token2, ...]
+
+// Dijkstra
 
 void dijkstra() {
-  priority_queue<P> pq;
+  priority_queue<P> q;
   rep(i, n) { // loop for nodes
     if (i < k) {
-      pq.emplace(0, i);
+      q.emplace(0, i);
     } else {
-      dis[n] = INF;
+      dist[n] = INF;
     }
   }
 
-  while (!pq.empty()) {
-    P p = pq.top(); pq.pop();
-    ll d = -p.fr;
-    ll nod = p.sc;
+  while (!q.empty()) {
+    P p = q.top(); q.pop();
+    ll curD = -p.fr;
+    ll v = p.sc;
+    if (curD != dist[v]) { continue; } // dist[v] was already updated, so ignore it.
 
-    if (d != dis[nod]) { continue; } // dis[nod] was already updated.
+    for (auto x : adj[v]) {
+      ll u = x.fr;
+      ll newD = curD + x.sc; // new distance
+      if (newD < dist[u]) {
+        dist[u] = newD;
+        q.emplace(- newD, u);
+      }
+    }
   }
 }
 
 // Token and Edges
-
-vector<ll> baseTok; // The table of (token) => (node)
-vector< vector<ll> > tokenIn; // The table of (node) => [token1, token2, ...]
 
 struct Edge {
   ll weight, n1, n2;
@@ -160,7 +169,7 @@ int main(int argc, char** argv) {
 
   cin >> n >> m >> k >> q;
   adj.resize(n);
-  dis.resize(n);
+  dist.resize(n);
 
   rep(i, m) {
     ll n1, n2, w;
@@ -189,4 +198,5 @@ int main(int argc, char** argv) {
 
   // Calculate the shortest path from nearest centrals.
   dijkstra();
+
 }
