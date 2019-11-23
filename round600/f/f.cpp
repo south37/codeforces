@@ -1,3 +1,6 @@
+// base. https://pastebin.com/xrm0MU71
+// tutorial. https://codeforces.com/blog/entry/71489
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -55,13 +58,14 @@ public:
   bool same(ll x, ll y) {
     return root(x) == root(y);
   }
+  // We use x if count(x) == count(y). if count(x) < count(y), we use y.
   void unite(ll x, ll y) {
     x = root(x); y = root(y);
     if (x == y) return;
 
     --_size;
 
-    if (rnk[x] < rnk[y]) { swap(x, y); }
+    if (cnt[x] < cnt[y]) { swap(x, y); } // We check cnt
     par[y] = x;
     cnt[x] += cnt[y];
     if (rnk[x] == rnk[y]) { ++rnk[x]; }
@@ -112,7 +116,7 @@ private:
 //   }
 // }
 
-// Gloval variables
+// Global Variables
 ll n, m, k, q; // nodes, edges, centrals, queries
 
 vector< vector<P> > adj; // (node) => The list of (node, weight)
@@ -120,7 +124,8 @@ vector<ll> dist; // The distance from nearest centrals.
 vector<ll> baseTok; // The table of (token) => (node)
 vector< vector<ll> > tokenIn; // The table of (node) => [token1, token2, ...]
 
-// Dijkstra
+// Dijkstra.
+// calculate the dist.
 
 void dijkstra() {
   priority_queue<P> q;
@@ -128,9 +133,12 @@ void dijkstra() {
     if (i < k) {
       q.emplace(0, i);
     } else {
-      dist[n] = INF;
+      dist[i] = INF;
     }
   }
+  // cout << "n: " << n << endl;
+  // cout << "k: " << k << endl;
+  // cout << "dist in dijkstra: "; printvec(dist);
 
   while (!q.empty()) {
     P p = q.top(); q.pop();
@@ -168,6 +176,7 @@ int main(int argc, char** argv) {
   //cout << setprecision(10) << fixed;
 
   cin >> n >> m >> k >> q;
+
   adj.resize(n);
   dist.resize(n);
 
@@ -199,4 +208,50 @@ int main(int argc, char** argv) {
   // Calculate the shortest path from nearest centrals.
   dijkstra();
 
+  // We update the weight of edge by using dist.
+  // new weight = old weight + dist[n1] + dist[n2]
+  for (auto &e : edges) {
+    e.weight += dist[e.n1] + dist[e.n2];
+  }
+
+  // Now, the weights of edges are updated.
+  // We want to find the shortest path in terms of maximum weight in each path.
+
+  // We use offline method here.
+
+  vector<ll> ans(q); // ans contains the result of each query.
+
+  sort(all(edges)); // Sort edges in increasing order.
+
+  UnionFind uf(n);
+  for (auto e : edges) {
+    if (uf.same(e.n1, e.n2)) { continue; } // already connected.
+
+    // Here, e.n1 and e.n2 is not connected yet.
+    ll small = uf.root(e.n1);
+    ll large = uf.root(e.n2);
+    if (uf.count(small) > uf.count(large)) { swap(small, large); }
+
+    // Now, the root of e.n1 and e.n2 are small and large. They are not
+    // connected yet. small is lower rank, so small is merged to large
+
+    // Next, we search "a token pair" which is connected by this edge.
+    for (int token : tokenIn[small]) {
+      int oth = token^1; // The other side of this token.
+      int query = token/2;
+      int oth_n = baseTok[oth];
+      if (uf.root(oth_n) == large) { // found. small and large are connected.
+        ans[query] = e.weight;
+      }
+      tokenIn[large].push_back(token);
+    }
+    tokenIn[small].clear(); tokenIn[small].shrink_to_fit();
+
+    uf.unite(large, small);
+  }
+
+  // Now, ans is calculated.
+  for (auto x : ans) {
+    cout << x << endl;
+  }
 }
