@@ -118,7 +118,7 @@ private:
 
 // The edge start -> end with weight.
 struct Edge {
-  Edge(ll w, ll s, ll e) : weight(e), start(s), end(e) {};
+  Edge(ll w, ll s, ll e) : weight(w), start(s), end(e) {};
   ll weight, start, end;
 };
 
@@ -266,8 +266,6 @@ int main(int argc, char** argv) {
 
   // Calculate the shortest path from nearest centrals.
   dijkstra();
-  cout << "dist: "; printvec(dist);
-  cout << "closest: "; printvec(closest);
 
   // We update the weight of edge by using dist.
   // new weight = old weight + dist[n1] + dist[n2]
@@ -279,6 +277,11 @@ int main(int argc, char** argv) {
       }
     }
   }
+  // cout << "paths:";
+  // for (auto e : paths) {
+  //   cout << "("<<e.start<<", "<<e.end<<", "<<e.weight<<")" << ' ';
+  // }
+  // cout << endl;
 
   // Now, the weights of paths are calculated.
   // We want to find the shortest path in terms of maximum weight in each path.
@@ -293,6 +296,14 @@ int main(int argc, char** argv) {
       specTree[e.end].emplace_back(e.weight, e.end, e.start);
     }
   }
+  // cout << "specTree: ";
+  // for (long long i = 0; i < specTree.size(); ++i) {
+  //   cout << i << ": ";
+  //   for (auto e : specTree[i]) {
+  //     cout << "("<<e.start<<", "<<e.end<<", "<<e.weight<<")" << ' ';
+  //   }
+  //   cout << endl;
+  // }
 
   // Calculate LCA.
   // Make 0 to the root of tree.
