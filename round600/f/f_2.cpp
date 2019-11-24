@@ -252,8 +252,8 @@ int main(int argc, char** argv) {
   dist.resize(n);
   closest.resize(n);
   specTree.resize(n);
-  ancester.assign(k, vector<ll>(LOGN, -1));
-  weightToAnc.assign(k, vector<ll>(LOGN));
+  ancester.assign(k, vector<ll>(LOGN + 5, -1));
+  weightToAnc.assign(k, vector<ll>(LOGN + 5));
   depth.resize(k);
 
   rep(i, m) {
