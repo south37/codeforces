@@ -51,8 +51,10 @@ const ll MOD = 1000000007;  // 1e9 + 7
 vector<ll> v; // The indices of a[i] where a[i] == 1
 
 ll cost(ll p) {
+  // cout << "p: " << p << endl;
+
   ll res = 0;
-  rep(i, v.size()){
+  for (ll i = 0; i < v.size(); i += p) {
     ll median = v[i + (p-1)/2];
     rep(j, p) {
       res += abs(v[i+j] - median);
@@ -85,6 +87,8 @@ int main(int argc, char** argv) {
     cout << -1 << endl;
     return 0;
   }
+
+  // cout << "v.size(): " << v.size() << endl;
 
   ll i = 2;
   ll tmp = v.size();
