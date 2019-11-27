@@ -93,7 +93,9 @@ bool cond(ll min_a) {
       }
     }
   }
-  cost += 2*(prev_r - prev_l+1);
+  if (prev_l != -1) { // danger exists.
+    cost += 2*(prev_r - prev_l+1);
+  }
   // cout << "cost: " << cost << endl;
   // cout << "t: " << t << endl;
   // cout << endl;
