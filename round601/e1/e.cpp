@@ -56,10 +56,14 @@ ll cost(ll p) {
   ll res = 0;
   for (ll i = 0; i < v.size(); i += p) {
     ll median = v[i + (p-1)/2];
+    // cout << "median: " << median << endl;
     rep(j, p) {
+      // cout << "i+j: " << i+j << endl;
+      // cout << "v[i+j]: " << v[i+j] << endl;
       res += abs(v[i+j] - median);
     }
   }
+  // cout << "res: " << res << endl;
   return res;
 }
 
@@ -89,6 +93,7 @@ int main(int argc, char** argv) {
   }
 
   // cout << "v.size(): " << v.size() << endl;
+  // cout << "v: "; printvec(v);
 
   ll i = 2;
   ll tmp = v.size();
@@ -100,7 +105,7 @@ int main(int argc, char** argv) {
     }
     ++i;
   }
-  if (tmp > 0) {
+  if (tmp > 1) { // We consider
     pf.insert(tmp);
   }
 
