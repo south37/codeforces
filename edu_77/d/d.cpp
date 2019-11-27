@@ -65,9 +65,6 @@ bool cond(ll min_a) {
     tie(r, l, d) = rld[i];
 
     if (d <= min_a) { continue; } // consider only min_a < d case.
-    // cout << "r: " << r << endl;
-    // cout << "l: " << l << endl;
-    // cout << "d: " << d << endl;
 
     // Here, we consider the rld[i].
     if (prev_l == -1) {
@@ -75,10 +72,17 @@ bool cond(ll min_a) {
       prev_r = r;
       continue;
     } else { // Here, we compare.
-      ll diff1 = (r-l) + (prev_r-prev_l);
-      ll diff2 = max(prev_r, r) - min(prev_l, l);
-      if (diff1 < diff2) { // divide is ok.
-        cost += 2*(prev_r-prev_l); // Add the cost.
+      ll diff1 = (r-l+1) + (prev_r-prev_l+1);
+      ll diff2 = max(prev_r, r) - min(prev_l, l) + 1;
+      // cout << "r: " << r << endl;
+      // cout << "l: " << l << endl;
+      // cout << "prev_r: " << prev_r << endl;
+      // cout << "prev_l: " << prev_l << endl;
+      // cout << "(r-l+1) + (prev_r-prev_l+1): " << (r-l+1) + (prev_r-prev_l+1) << endl;
+      // cout << "max(prev_r, r) - min(prev_l, l)+1" << max(prev_r, r) - min(prev_l, l)+1 << endl;
+
+      if (diff1 <= diff2) { // divide is ok.
+        cost += 2*(prev_r-prev_l+1); // Add the cost.
         prev_r = r;
         prev_l = l;
         continue;
@@ -89,9 +93,10 @@ bool cond(ll min_a) {
       }
     }
   }
-  cost += 2*(prev_r - prev_l);
+  cost += 2*(prev_r - prev_l+1);
   // cout << "cost: " << cost << endl;
   // cout << "t: " << t << endl;
+  // cout << endl;
   // cout << "(cost <= t): " << (cost <= t) << endl;
 
   return (cost <= t);
