@@ -69,7 +69,7 @@ void solve() {
   }
 
   // Now, a must be equal to b. a and b must be 3 x.
-  if ((a == b) && ((a % 3) == 0)) { // ok
+  if ((a == b) && ((a % 3) == 0) && (a >= 0)) { // ok
     cout << "YES" << endl;
     return;
   } else {
