@@ -57,9 +57,25 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+
+  rep(i, n) {
+    ll c; ll sum;
+    cin >> c >> sum;
+
+    ll m = sum/c;
+    ll remain = sum%c;
+
+    ll ans = 0;
+    rep(j, c) {
+      if (j < remain) { // remain count
+        ans += (m+1)*(m+1);
+      } else {
+        ans += m*m;
+      }
+    }
+
+    cout << ans << endl;
   }
 }

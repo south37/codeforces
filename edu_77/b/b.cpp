@@ -49,6 +49,33 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll a, b;
+  cin >> a >> b;
+
+  ll diff = a-b;
+  // cout << "a: " << a << endl;
+  // cout << "b: " << b << endl;
+  // cout << "diff: " << diff << endl;
+
+  // We must check diff.
+  if (diff == 0) {
+    // Do nothing
+  } else if (diff > 0) {
+    a = a - 2 * diff;
+    b = b - diff;
+  } else { // diff < 0
+    a = a - abs(diff);
+    b = b - 2 * abs(diff);
+  }
+
+  // Now, a must be equal to b. a and b must be 3 x.
+  if ((a == b) && ((a % 3) == 0)) { // ok
+    cout << "YES" << endl;
+    return;
+  } else {
+    cout << "NO" << endl;
+    return;
+  }
 }
 
 int main(int argc, char** argv) {
