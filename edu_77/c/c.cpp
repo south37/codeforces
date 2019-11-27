@@ -48,7 +48,38 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
+ll gcd(ll a, ll b) {
+  if (a < b) { swap(a, b); }
+  if (b == 0) { return a; }
+  return gcd(b, a % b);
+}
+
+
+// We want to know the relation of r and b.
+bool solve() {
+  ll a, b, k;
+  cin >> a >> b >> k;
+
+  if (a > b) { swap(a, b); };
+
+  // cout << "a: " << a << endl;
+  // cout << "b: " << b << endl;
+  // cout << "k: " << k << endl;
+
+  // Now, a <= b
+  ll divisor = gcd(a, b);
+  a /= divisor;
+  b /= divisor;
+
+  // cout << "a': " << a << endl;
+  // cout << "b': " << b << endl;
+
+  if (b <= 2) {
+    return true;
+  }
+
+  // Now, b > 2
+  return ((b-2)/a + 1) < k;
 }
 
 int main(int argc, char** argv) {
@@ -60,6 +91,10 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    solve();
+    if (solve()) {
+      cout << "OBEY" << endl;
+    } else {
+      cout << "REBEL" << endl;
+    }
   }
 }
