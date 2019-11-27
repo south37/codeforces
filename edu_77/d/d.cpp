@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
   }
 
   ll r = max_a;
-  ll l = min_a-1;
+  ll l = 0;
   // (l, r]
   // [ng, ng, ... , ok, ok]
   while (r - l > 1) {
