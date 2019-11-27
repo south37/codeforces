@@ -48,7 +48,53 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
+ll m, n, k, t;
+vector<ll> a;
+vector<triple> rld; // (r, l, d);
+
+bool cond(ll min_a) {
+  ll cost = n + 1; // The default cost.
+
+  ll prev_l = -1;
+  ll prev_r = -1;
+
+  // cout << "min_a: " << min_a << endl;
+
+  rep(i, k) {
+    ll r, l, d;
+    tie(r, l, d) = rld[i];
+
+    if (d <= min_a) { continue; } // consider only min_a < d case.
+    // cout << "r: " << r << endl;
+    // cout << "l: " << l << endl;
+    // cout << "d: " << d << endl;
+
+    // Here, we consider the rld[i].
+    if (prev_l == -1) {
+      prev_l = l;
+      prev_r = r;
+      continue;
+    } else { // Here, we compare.
+      ll diff1 = (r-l) + (prev_r-prev_l);
+      ll diff2 = max(prev_r, r) - min(prev_l, l);
+      if (diff1 < diff2) { // divide is ok.
+        cost += 2*(prev_r-prev_l); // Add the cost.
+        prev_r = r;
+        prev_l = l;
+        continue;
+      } else {
+        prev_r = max(prev_r, r);
+        prev_l = min(prev_l, l);
+        continue;
+      }
+    }
+  }
+  cost += 2*(prev_r - prev_l);
+  // cout << "cost: " << cost << endl;
+  // cout << "t: " << t << endl;
+  // cout << "(cost <= t): " << (cost <= t) << endl;
+
+  return (cost <= t);
 }
 
 int main(int argc, char** argv) {
@@ -57,9 +103,56 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  cin >> m >> n >> k >> t;
+
+  a.resize(m);
+  rep(i, m) {
+    cin >> a[i];
   }
+  sort(all(a)); // Now, a is increasing order.
+
+  // cout << "a: "; printvec(a);
+
+  rep(i, k) {
+    ll l, r, d;
+    cin >> l >> r >> d;
+    rld.emplace_back(r, l, d);
+  }
+  sort(all(rld));
+
+  // We find min a by binary search.
+  ll max_a = a[a.size()-1];
+  ll min_a = a[0];
+
+  if (!cond(max_a)) { // fail with max soldier
+    cout << 0 << endl;
+    return 0;
+  }
+
+  ll r = max_a;
+  ll l = min_a-1;
+  // (l, r]
+  // [ng, ng, ... , ok, ok]
+  while (r - l > 1) {
+    ll m = (r+l)/2;
+    if (cond(m)) { // ok
+      r = m;
+    } else {
+      l = m;
+    }
+  }
+
+  // cout << "r: " << r << endl;
+  // cout << "l: " << l << endl;
+
+  // Now, l is the maximum cond.
+  ll ans = 0;
+  rep(i, m) {
+    // cout << "a[i]: " << a[i] << endl;
+    if (a[i] >= r) {
+      ++ans;
+    }
+  }
+
+  cout << ans << endl;
 }
