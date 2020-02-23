@@ -67,23 +67,24 @@ int main(int argc, char** argv) {
   vector<ll> leftCont(n);
   {
     stack<pair<ll, ll>> st; // the stack of { value, cnt }
+    ll prevSum = 0;
     rep(i, n) {
-      if (i == 0) {
-        leftCont[i] = m[i];
-        st.push({ m[i], 1 });
-      } else {
-        ll prevSum = leftCont[i-1];
-        ll cnt = 0;
-        if (!st.empty() && st.top().first >= m[i]) {
-          pair<ll, ll> p = st.top();
-          cnt += p.second;
-          prevSum -= p.first * p.second; // minus the popped sum
-        }
-        /// Here, st.empty() or st.top().first < m[i]
-        st.push({ m[i], cnt + 1 });
-        leftCont[i] = prevSum + m[i] * (cnt + 1);
+      ll cnt = 0;
+      if (!st.empty() && st.top().first >= m[i]) {
+        pair<ll, ll> p = st.top();
+        cnt += p.second;
+        prevSum -= p.first * p.second; // minus the popped sum
       }
+      /// Here, st.empty() or st.top().first < m[i]
+      st.push({ m[i], cnt + 1 });
+      leftCont[i] = prevSum + m[i] * (cnt + 1);
+      prevSum = leftCont[i];
     }
+
+    // Debug
+    // cout << "stack:" << endl;
+    // cout << st.size() << endl;
+    // cout << st.top().first << "," << st.top().second << endl;
   }
   // Here, we calculated the sum from left in each i. the sum is in [0, i].
 
@@ -91,23 +92,24 @@ int main(int argc, char** argv) {
   vector<ll> rightCont(n);
   {
     stack<pair<ll, ll>> st; // the stack of { value, cnt }
+    ll prevSum = 0;
     for (int i = n-1; i >= 0; --i) {
-      if (i == n-1) {
-        rightCont[i] = m[i];
-        st.push({ m[i], 1 });
-      } else {
-        ll prevSum = rightCont[i+1];
-        ll cnt = 0;
-        if (!st.empty() && st.top().first >= m[i]) {
-          pair<ll, ll> p = st.top();
-          cnt += p.second;
-          prevSum -= p.first * p.second; // minus the popped sum
-        }
-        /// Here, st.empty() or st.top().first < m[i]
-        st.push({ m[i], cnt + 1 });
-        rightCont[i] = prevSum + m[i] * (cnt + 1);
+      ll cnt = 0;
+      if (!st.empty() && st.top().first >= m[i]) {
+        pair<ll, ll> p = st.top();
+        cnt += p.second;
+        prevSum -= p.first * p.second; // minus the popped sum
       }
+      /// Here, st.empty() or st.top().first < m[i]
+      st.push({ m[i], cnt + 1 });
+      rightCont[i] = prevSum + m[i] * (cnt + 1);
+      prevSum = rightCont[i];
     }
+
+    // Debug
+    // cout << "stack2:" << endl;
+    // cout << st.size() << endl;
+    // cout << st.top().first << "," << st.top().second << endl;
   }
 
   ll maxI = -1;
@@ -120,8 +122,8 @@ int main(int argc, char** argv) {
       maxI = i;
     }
   }
-  cout << "maxI: " << maxI << endl;
-  cout << "maxHeight: " << maxHeight << endl;
+  // cout << "maxI: " << maxI << endl;
+  // cout << "maxHeight: " << maxHeight << endl;
 
   // Here, maxI is the i with maximum height.
 
