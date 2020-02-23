@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
   }
 
   ll maxI = -1;
-  ll maxHeight = 0;
+  ll maxHeight = -1;
   rep(i, n) {
     // Here, we check the sum when we use i as top.
     ll cand = leftCont[i] + rightCont[i] - m[i];
@@ -120,6 +120,8 @@ int main(int argc, char** argv) {
       maxI = i;
     }
   }
+  cout << "maxI: " << maxI << endl;
+  cout << "maxHeight: " << maxHeight << endl;
 
   // Here, maxI is the i with maximum height.
 
@@ -144,37 +146,4 @@ int main(int argc, char** argv) {
     if (i != n-1) { cout << " "; }
   }
   cout << endl;
-
-  // vector<ll> ansVec;
-  // rep(i, n) {
-  //   vector<ll> candVec(n);
-  //   ll cand = 0;
-
-  //   // Here, we fix the largest value as i.
-  //   ll highest = m[i];
-  //   for (int j = i; j < n; ++j) {
-  //     ll height = min(highest, m[j]);
-  //     cand += height;
-  //     candVec[j] = height;
-  //     highest = min(highest, height);
-  //   }
-  //   highest = m[i];
-  //   for (int j = i-1; j >= 0; --j) {
-  //     ll height = min(highest, m[j]);
-  //     cand += height;
-  //     candVec[j] = height;
-  //     highest = min(highest, height);
-  //   }
-
-  //   if (cand > ans) {
-  //     ans = cand;
-  //     ansVec = candVec;
-  //   }
-  // }
-
-  // rep(i, n) {
-  //   cout << ansVec[i];
-  //   if (i != n-1) { cout << " "; }
-  // }
-  // cout << endl;
 }
