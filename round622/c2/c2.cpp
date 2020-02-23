@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
       ll cnt = 0;
       if (!st.empty() && st.top().first >= m[i]) {
         pair<ll, ll> p = st.top();
+        st.pop();
         cnt += p.second;
         prevSum -= p.first * p.second; // minus the popped sum
       }
@@ -97,6 +98,7 @@ int main(int argc, char** argv) {
       ll cnt = 0;
       if (!st.empty() && st.top().first >= m[i]) {
         pair<ll, ll> p = st.top();
+        st.pop();
         cnt += p.second;
         prevSum -= p.first * p.second; // minus the popped sum
       }
