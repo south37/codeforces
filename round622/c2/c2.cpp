@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     ll prevSum = 0;
     rep(i, n) {
       ll cnt = 0;
-      if (!st.empty() && st.top().first >= m[i]) {
+      while (!st.empty() && st.top().first >= m[i]) {
         pair<ll, ll> p = st.top();
         st.pop();
         cnt += p.second;
@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
     ll prevSum = 0;
     for (int i = n-1; i >= 0; --i) {
       ll cnt = 0;
-      if (!st.empty() && st.top().first >= m[i]) {
+      while (!st.empty() && st.top().first >= m[i]) {
         pair<ll, ll> p = st.top();
         st.pop();
         cnt += p.second;
