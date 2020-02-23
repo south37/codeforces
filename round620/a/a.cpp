@@ -49,6 +49,15 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll x, y, a, b;
+  cin >> x >> y >> a >> b;
+  ll diff = y - x;
+  ll unit = a + b;
+  if (diff % unit == 0) {
+    cout << diff / unit << endl;
+  } else {
+    cout << -1 << endl;
+  }
 }
 
 int main(int argc, char** argv) {
