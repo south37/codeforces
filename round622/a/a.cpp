@@ -49,6 +49,44 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll a, b, c;
+  cin >> a >> b >> c;
+
+  int ans = 0;
+  rep(pattern, 1<<7) {
+    int ta = a, tb = b, tc = c;
+    int cand = 0;
+    if ((pattern >> 0) & 1 && ta > 0) {
+      --ta;
+      ++cand;
+    }
+    if ((pattern >> 1) & 1 && tb > 0) {
+      --tb;
+      ++cand;
+    }
+    if ((pattern >> 2) & 1 && tc > 0) {
+      --tc;
+      ++cand;
+    }
+    if ((pattern >> 3) & 1 && ta > 0 && tb > 0) {
+      --ta; --tb;
+      ++cand;
+    }
+    if ((pattern >> 4) & 1 && tb > 0 && tc > 0) {
+      --tb; --tc;
+      ++cand;
+    }
+    if ((pattern >> 5) & 1 && ta > 0 && tc > 0) {
+      --ta; --tc;
+      ++cand;
+    }
+    if ((pattern >> 6) & 1 && ta > 0 && tb > 0 && tc > 0) {
+      --ta; --tb; --tc;
+      ++cand;
+    }
+    ans = max(ans, cand);
+  }
+  cout << ans << endl;
 }
 
 int main(int argc, char** argv) {

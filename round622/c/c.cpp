@@ -48,18 +48,50 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-}
-
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+  vector<ll> m(n);
+  rep(i, n) {
+    cin >> m[i];
   }
+  // Search the largest i.
+  ll ans = 0;
+  vector<ll> ansVec;
+  rep(i, n) {
+    vector<ll> candVec(n);
+    ll cand = 0;
+
+    // Here, we fix the largest value as i.
+    ll highest = m[i];
+    for (int j = i; j < n; ++j) {
+      ll height = min(highest, m[j]);
+      cand += height;
+      candVec[j] = height;
+      highest = min(highest, height);
+    }
+    highest = m[i];
+    for (int j = i-1; j >= 0; --j) {
+      ll height = min(highest, m[j]);
+      cand += height;
+      candVec[j] = height;
+      highest = min(highest, height);
+    }
+
+    if (cand > ans) {
+      ans = cand;
+      ansVec = candVec;
+    }
+  }
+
+  rep(i, n) {
+    cout << ansVec[i];
+    if (i != n-1) { cout << " "; }
+  }
+  cout << endl;
 }
