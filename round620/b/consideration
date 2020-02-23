@@ -1,0 +1,9 @@
+##
+-even
+  - no center
+  - should find "same histgram" pairs.
+-odd
+  - same with even + "palindrom histgram" one.
+  - the one is "each character's freq is 2. only 1 is 1".
+
+
