@@ -49,46 +49,9 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 bool isPalindrom(const string& s) {
-  map<char, int> hist;
-  for (char c : s) {
-    ++hist[c];
-  }
-  bool oddFound = false;
-  for (auto& p : hist) {
-    if (p.second % 2 == 1) {
-      if (oddFound) { return false; } // odd can be seen only once
-      oddFound = true;
-    }
-  }
-  return true;
-}
-
-string toPalindrom(const string& s) {
-  int n = s.size();
-  // If n is odd, only 1 character is odd. other is even.
-  map<char, int> hist;
-  for (char c : s) {
-    ++hist[c];
-  }
-  char odd;
-  string ans;
-  for (auto& p : hist) {
-    if (p.second % 2 == 1) {
-      odd = p.first;
-      if (p.second > 1) {
-        ans += string(p.second/2, p.first);
-      }
-    } else {
-      ans += string(p.second/2, p.first);
-    }
-  }
-  string suffix = ans;
-  reverse(all(suffix));
-  if (n % 2 == 1) {
-    ans += odd;
-  }
-  ans += suffix;
-  return ans;
+  string reversed = s; // copy
+  reverse(all(reversed));
+  return reversed == s;
 }
 
 int main(int argc, char** argv) {
@@ -101,22 +64,21 @@ int main(int argc, char** argv) {
   cin >> n >> m;
   map<string, int> cnts;
   vector<string> inputs(n);
+  map<string, int> ansCnts; // tha counts of pairs.
+  // In each step, we check the existence of reversed string.
   rep(i, n) {
     cin >> inputs[i];
-    sort(all(inputs[i]));
-    ++cnts[inputs[i]];
-  }
-  // Here, we use pair in each string.
-
-  map<string, int> ansCnts;
-  for (auto& p : cnts) {
-    if (p.second >= 2) { // cnt >= 2
-      int usedCnt = (p.second / 2); // should be even.
-      ansCnts[p.first] = usedCnt;
-      cnts[p.first] -= usedCnt * 2;
+    if (cnts.find(inputs[i]) != cnts.end()) { // found
+      ++ansCnts[inputs[i]];
+      --cnts[inputs[i]];
+    } else {
+      string reversed = inputs[i]; // copy
+      reverse(all(reversed));
+      ++cnts[reversed];
     }
   }
-  // Here, ansCnts has the information about ans.
+  // Here, we have all pairs in ansCnts and remaining in cnts.
+
   string ansPrefix;
   for (auto& p : ansCnts) {
     int cnt = p.second;
@@ -130,7 +92,7 @@ int main(int argc, char** argv) {
   for (auto& p : cnts) {
     if (p.second > 0) {
       if (isPalindrom(p.first)) {
-        ans += toPalindrom(p.first);
+        ans += p.first;
         break; // we use only one palindrom
       }
     }
