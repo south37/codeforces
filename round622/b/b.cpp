@@ -49,6 +49,19 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n, a, b;
+  cin >> n >> a >> b;
+  // calc the count of a+b.
+  if (a > b) { swap(a, b); }
+  ll maxCnt = min(n-a, b-1) + min(n-b, a-1) + 1;
+
+  ll d = min(n-a-1, b-1);
+  ll k = (b-1) - d; // minimum from i<b
+  ll d2 = min(n-b-1, a-1);
+  ll k2 = (a-1) - d2; // minimum from i<a
+  ll minCnt = max(k, k2) + 1;
+
+  cout << minCnt << " " << maxCnt << endl;
 }
 
 int main(int argc, char** argv) {
