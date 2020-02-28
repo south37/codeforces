@@ -1,3 +1,5 @@
+// ref. https://codeforces.com/contest/1313/submission/71672133
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -57,9 +59,53 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n, m, k;
+  cin >> n >> m >> k;
+  vector<vector<ll>> t(2*n, vector<ll>(3)); // vector of triple
+  rep(i, n) {
+    ll l, r;
+    cin >> l >> r;
+    t[2*i]   = {     l,  1, i };
+    t[2*i+1] = { r + 1, -1, i };
   }
+  sort(all(t));
+  vector<ll> states(1<<k, 0);
+  vector<ll> newstates(1<<k, 0);
+  ll sz = 0; // the size of streams
+  ll pi = t[0][2], ni; // pre index, next index
+  ll pp = t[0][0], np; // pre pos, next pos
+  vector<ll> streams; // effective stream of spells
+  rep(i, 2*n) {
+    ni = t[i][2];
+    np = t[i][0];
+    if (t[i][1] == -1) { // close
+      --sz; // decrease streams
+      ll gi = 0; // target index
+      while (streams[gi] != ni) { ++gi; }
+      // Here, streams[gi] == ni
+      rep(b, 1<<sz) {
+        ll exp1 = ((b>>gi)<<(gi+1)) + (b%(1<<gi)); // xxx0xxx. 0 is at gi.
+        ll exp2 = exp1 + (1<<gi); // xxx1xxx. 1 is at gi.
+        newstates[b] = max(
+            states[exp1] + (__builtin_popcount(exp1)%2) * (np-pp),
+            states[exp2] + (__builtin_popcount(exp2)%2) * (np-pp));
+      }
+      states = newstates;
+      streams.erase(streams.begin() + gi);
+    } else { // open
+      streams.push_back(ni);
+      rep(b, 1<<sz) {
+        // Set same value to b and b+(1<<sz). They are used in closed.
+        newstates[b] = states[b        ] + (__builtin_popcount(b)%2) * (np-pp);
+        newstates[b] = states[b+(1<<sz)] + (__builtin_popcount(b)%2) * (np-pp);
+      }
+      states = newstates;
+      ++sz;
+    }
+    // Update pi, pp
+    pi = ni;
+    pp = np;
+  }
+  // At last, all streams are closed, so state becomes 0.
+  cout << states[0] << " ";
 }
