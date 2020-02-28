@@ -87,10 +87,10 @@ int main(int argc, char** argv) {
         ll exp1 = ((b>>gi)<<(gi+1)) + (b%(1<<gi)); // xxx0xxx. 0 is at gi.
         ll exp2 = exp1 + (1<<gi); // xxx1xxx. 1 is at gi.
         newstates[b] = max(
-            states[exp1] + (__builtin_popcount(exp1)%2) * (np-pp),
-            states[exp2] + (__builtin_popcount(exp2)%2) * (np-pp));
+          states[exp1] + (__builtin_popcount(exp1)%2) * (np-pp),
+          states[exp2] + (__builtin_popcount(exp2)%2) * (np-pp));
       }
-      states = newstates;
+      swap(states, newstates);
       streams.erase(streams.begin() + gi);
     } else { // open
       streams.push_back(ni);
@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
         newstates[b        ] = states[b] + (__builtin_popcount(b)%2) * (np-pp);
         newstates[b+(1<<sz)] = states[b] + (__builtin_popcount(b)%2) * (np-pp);
       }
-      states = newstates;
+      swap(states, newstates);
       ++sz;
     }
     // Update pi, pp
