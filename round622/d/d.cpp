@@ -96,8 +96,8 @@ int main(int argc, char** argv) {
       streams.push_back(ni);
       rep(b, 1<<sz) {
         // Set same value to b and b+(1<<sz). They are used in closed.
-        newstates[b] = states[b        ] + (__builtin_popcount(b)%2) * (np-pp);
-        newstates[b] = states[b+(1<<sz)] + (__builtin_popcount(b)%2) * (np-pp);
+        newstates[b        ] = states[b] + (__builtin_popcount(b)%2) * (np-pp);
+        newstates[b+(1<<sz)] = states[b] + (__builtin_popcount(b)%2) * (np-pp);
       }
       states = newstates;
       ++sz;
