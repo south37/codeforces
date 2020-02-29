@@ -70,8 +70,8 @@ vector<ll> build_z(const string& s) {
   return z;
 }
 
-// BIT (Fenwick Tree) with 0-indexed query
-// https://youtu.be/lyHk98daDJo?t=7960
+// BIT (Fenwick Tree)
+// In this implementation, sum(i) returns the sum of [i, n]
 template<typename T>
 struct BIT {
   ll n;
@@ -130,8 +130,8 @@ int main(int argc, char** argv) {
   // printvec(z1);
   // printvec(z2);
 
-  vector<ll> a(n+1);
-  vector<ll> b(n+1);
+  vector<ll> a(n+1); // a[i+1] .. the length of common prefix of a[i, n] and s[1,m-1]
+  vector<ll> b(n+1); // b[i+1] .. the length of common suffix of b[1, i] and s[2,m]
 
   for (int i = 1; i <= n; ++i) {
     a[i] = min(m-1, z_a[i+m]);
@@ -141,7 +141,8 @@ int main(int argc, char** argv) {
   BIT<ll> bit1(m);
   BIT<ll> bit2(m);
 
-  ll ans = 0;
+  // m-b[i] <= a[i] <=> a[i]+b[i]-m >= 0
+  ll ans = 0; // the sum of sigma_l1 sigma_r2 max(a[l1] + b[r2] - m + 1, 0)
   for (int i = 1; i <= n; ++i){
     if (a[i]) {
       bit1.add(a[i], a[i]);
