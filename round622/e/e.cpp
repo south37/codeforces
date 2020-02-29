@@ -78,14 +78,16 @@ struct BIT {
   vector<T> d;
   BIT(ll n=0) : n(n), d(n+1) {}
   void add(ll i, T x=1) {
-    for (; i <= n; i += i&-i) {
+    while (i) {
       d[i] += x;
+      i -= i&-i;
     }
   }
   T sum(ll i) {
     T x = 0;
-    for (; i; i -= i&-i) {
+    while (i <= n) {
       x += d[i];
+      i += i&-i;
     }
     return x;
   }
@@ -108,18 +110,13 @@ struct BIT {
 //   cout << bit.sum(9) << endl; // 55
 // }
 
-ll m;
-ll t1[1000010],t2[1000010];
-void add(ll*t,int p,ll num){while(p)t[p]+=num,p-=p&-p;}
-ll sum(ll*t,int p){ll ret=0;if(!p)++p;while(p<=m)ret+=t[p],p+=p&-p;return ret;}
-
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
+  ll n, m;
   cin >> n >> m;
   string as, bs, s;
   cin >> as;
@@ -140,11 +137,23 @@ int main(int argc, char** argv) {
     a[i] = min(m-1, z_a[i+m]);
     b[i] = min(m-1, z_b[n+m-i+1]);
   }
-  ll ans=0;
-  for(int i=1;i<=n;++i){
-    if(a[i])add(t1,a[i],a[i]),add(t2,a[i],1);
-    if(i>=m&&a[i-m+1])add(t1,a[i-m+1],-a[i-m+1]),add(t2,a[i-m+1],-1);
-    if(b[i])ans+=sum(t1,m-b[i])+(b[i]-m+1)*sum(t2,m-b[i]);
+
+  BIT<ll> bit1(m);
+  BIT<ll> bit2(m);
+
+  ll ans = 0;
+  for (int i = 1; i <= n; ++i){
+    if (a[i]) {
+      bit1.add(a[i], a[i]);
+      bit2.add(a[i], 1);
+    }
+    if (i >= m&& a[i-m+1]) {
+      bit1.add(a[i-m+1],-a[i-m+1]);
+      bit2.add(a[i-m+1],-1);
+    }
+    if (b[i]) {
+      ans += bit1.sum(m-b[i]) + (b[i]-m+1) * bit2.sum(m-b[i]);
+    }
   }
   cout << ans << endl;
   return 0;
