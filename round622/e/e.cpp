@@ -78,13 +78,11 @@ struct BIT {
   vector<T> d;
   BIT(ll n=0) : n(n), d(n+1) {}
   void add(ll i, T x=1) {
-    i++; // 0-indexed to 1-indexed
     for (; i <= n; i += i&-i) {
       d[i] += x;
     }
   }
   T sum(ll i) {
-    i++; // 0-indexed to 1-indexed
     T x = 0;
     for (; i; i -= i&-i) {
       x += d[i];
@@ -110,47 +108,44 @@ struct BIT {
 //   cout << bit.sum(9) << endl; // 55
 // }
 
+ll m;
+ll t1[1000010],t2[1000010];
+void add(ll*t,int p,ll num){while(p)t[p]+=num,p-=p&-p;}
+ll sum(ll*t,int p){ll ret=0;if(!p)++p;while(p<=m)ret+=t[p],p+=p&-p;return ret;}
+
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n, m;
+  ll n;
   cin >> n >> m;
-  string a, b, s;
-  cin >> a;
-  cin >> b;
+  string as, bs, s;
+  cin >> as;
+  cin >> bs;
   cin >> s;
 
-  vector<ll> z_a = build_z(s + '#' + a);
-  reverse(all(b));
+  vector<ll> z_a = build_z(s + '#' + as);
+  reverse(all(bs));
   reverse(all(s));
-  vector<ll> z_b = build_z(s + '#' + b);
-  vector<ll> dpa(n); // dpa[i] .. the length of common prefix of a[i, n] and s[1,m-1]
-  vector<ll> dpb(n); // dpb[i] .. the length of common suffix of b[1, i] and s[2,m]
-  rep(i, n) {
-    dpa[i] = z_a[m+1+i];
-    dpb[i] = z_b[m+1+(n-1-i)];
-    dpa[i] = min<ll>(dpa[i], m-1);
-    dpb[i] = min<ll>(dpb[i], m-1);
+  vector<ll> z_b = build_z(s + '#' + bs);
+  // printvec(z1);
+  // printvec(z2);
+
+  vector<ll> a(n+1);
+  vector<ll> b(n+1);
+
+  for (int i = 1; i <= n; ++i) {
+    a[i] = min(m-1, z_a[i+m]);
+    b[i] = min(m-1, z_b[n+m-i+1]);
   }
-  BIT<ll> bit1(n);
-  BIT<ll> bit2(n);
-  // m-dpb[i] > a <=> m-dpb[i]-a > 0
-  ll ans = 0; // the sum of sigma_l1 sigma_r2 max(a[l1] + dpb[r2] - m + 1, 0)
-  rep(i, n) {
-    if (dpa[i]) {
-      bit1.add(dpa[i], dpa[i]);
-      bit2.add(dpa[i], 1);
-    }
-    if (i >= m && dpa[i-m]) {
-      bit1.add(dpa[i-m], -dpa[i-m]);
-      bit2.add(dpa[i-m], -1);
-    }
-    if (dpb[i]) {
-      ans += bit1.sum(m-dpb[i]-1) + (dpb[i]-m+1) * bit2.sum(m-dpb[i]-1);
-    }
+  ll ans=0;
+  for(int i=1;i<=n;++i){
+    if(a[i])add(t1,a[i],a[i]),add(t2,a[i],1);
+    if(i>=m&&a[i-m+1])add(t1,a[i-m+1],-a[i-m+1]),add(t2,a[i-m+1],-1);
+    if(b[i])ans+=sum(t1,m-b[i])+(b[i]-m+1)*sum(t2,m-b[i]);
   }
   cout << ans << endl;
+  return 0;
 }
