@@ -115,13 +115,12 @@ struct mint {
 // }
 
 // Segment Tree
-template <typename T>
 class SegTree {
 public:
   SegTree(int _n) {
     n = 1;
     while (n < _n) { n *= 2; }
-    dat = vector<T>(2 * n - 1, vector<ll>(MOD));
+    dat = vector<vector<ll>>(2 * n - 1, vector<ll>(MOD));
   }
 
   void update(int k, ll a) {
@@ -142,21 +141,21 @@ public:
   }
 
   // Calculate the min of [a, b)
-  T query(int a, int b) {
+  vector<ll> query(int a, int b) {
     return _query(a, b, 0, 0, n);
   }
 
   // Calculate the min of [a, b)
   // k is the index (dat[k]). This is matched to [l, r)
-  T _query(int a, int b, int k, int l, int r) {
+  vector<ll> _query(int a, int b, int k, int l, int r) {
     // The intersection of [a, b) and [r, l) is blank.
     if (r <= a || b <= l) { return vector<ll>(MOD); }
 
     if (a <= l && r <= b) {  // [r, l) is completely included in [a, b)
       return dat[k];
     } else {
-      vector<ll>& vl = _query(a, b, k * 2 + 1, l, (l + r) / 2);
-      vector<ll>& vr = _query(a, b, k * 2 + 2, (l + r) / 2, r);
+      vector<ll> vl = _query(a, b, k * 2 + 1, l, (l + r) / 2);
+      vector<ll> vr = _query(a, b, k * 2 + 2, (l + r) / 2, r);
       vector<ll> ans(MOD);
       rep(i, MOD) {
         ans[i] = vl[i] + vr[i];
@@ -203,20 +202,22 @@ int main(int argc, char** argv) {
 
   mint ans(1);
 
-  vector<ll, pair<ll, mint>> ccc(m, { -1, 0 });
-  rep(i, m) {
+  vector<pair<ll, mint>> ccc(m, pair<ll, mint>(-1, mint(0)));
+  SegTree st(n+5);
+
+  rep(i, n) {
     ll c = a[i] % MOD;
-    mint contrib(0);
+    mint contrib(1);
     vector<ll> dist;
 
     if (ccc[c].first == -1) { // blank
       // apply [0, i) to cont;
-      vector<ll> dist = st.query(0, i); // TODO: impl st.query
+      dist = st.query(0, i); // TODO: impl st.query
     } else {
       ll prevI = ccc[c].first;
       contrib = ccc[c].second; // copy
       // apply [prevI, i) to cont;
-      vector<ll> dist = st.query(prevI, i); // TODO: impl st.query
+      dist = st.query(prevI, i); // TODO: impl st.query
     }
     rep(j, m) {
       if (dist[j] == 0) { continue; }
