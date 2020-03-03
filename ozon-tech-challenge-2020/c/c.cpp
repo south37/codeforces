@@ -139,7 +139,8 @@ int main(int argc, char** argv) {
   }
   // printmap(Rcnts);
 
-  mint ans(1);
+  vector<vector<ll>> cntsMap(MOD, vector<ll>(MOD)); // { m => [... ] }
+
   // scan from a0
   rep(i, n) {
     mint contrib(1);
@@ -151,12 +152,24 @@ int main(int argc, char** argv) {
     // from right
     rep(j, m) {
       if (Rcnts[j] == 0) { continue; }
-      mint contrib2(j - c);
-      contrib2 *= Rcnts[j];
-      contrib *= contrib2;
+      cntsMap[c][j] += Rcnts[j];
     }
+  }
+  // Here, cntsMap contains the all information
+  // cntsMap[i][j] .. count of i < j
 
-    ans *= contrib;
+  mint ans(1);
+  rep(i, MOD) {
+    // printvec(cntsMap[i]);
+
+    mint cont(1);
+    rep(j, MOD) {
+      if (cntsMap[i][j] == 0) { continue; } // skip 0
+      mint cont2(j - i);
+      cont2 *= cntsMap[i][j];
+      cont *= cont2;
+    }
+    ans *= cont;
   }
 
   cout << ans.x << endl;
