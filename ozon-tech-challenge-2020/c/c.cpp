@@ -132,43 +132,31 @@ int main(int argc, char** argv) {
   // printvec(a);
 
   // Here, we calculate the a[i] mod m
-  map<ll, ll> Rcnts; // the map of counts.
+  vector<ll> Rcnts(m); // containst the count of 0..m-1
   rep(i, n) {
     ll c = a[i] % m;
     ++Rcnts[c];
   }
   // printmap(Rcnts);
 
-  // map<ll, ll> Lcnts; // the map of counts.
   mint ans(1);
   // scan from a0
   rep(i, n) {
     mint contrib(1);
     ll c = a[i] % m;
     --Rcnts[c];
-    if (Rcnts[c] == 0) { // reach to 0
-      Rcnts.erase(c);
-    }
     // printmap(Rcnts);
     // cout << "c: "<< c << endl;
 
     // from right
-    for (const pair<ll, ll>& p : Rcnts) {
-      mint contrib2(p.first - c);
-      contrib2 *= p.second;
+    rep(j, m) {
+      if (Rcnts[j] == 0) { continue; }
+      mint contrib2(j - c);
+      contrib2 *= Rcnts[j];
       contrib *= contrib2;
     }
 
-    // // from left
-    // for (const pair<ll, ll>& p : Lcnts) {
-    //   mint contrib2(c - p.first);
-    //   contrib2 *= p.second;
-    //   contrib *= contrib2;
-    // }
-
     ans *= contrib;
-
-    // ++Lcnts[c];
   }
 
   cout << ans.x << endl;
