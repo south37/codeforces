@@ -48,18 +48,33 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-}
-
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n, m, p;
+  cin >> n >> m >> p;
+  vector<ll> a(n);
+  vector<ll> b(m);
+  rep(i, n) {
+    scanf("%lld", &a[i]);
+  }
+  rep(i, m) {
+    scanf("%lld", &b[i]);
+  }
+
+  // printvec(a);
+  // printvec(b);
+
+  ll a_mod = a[0] % p;
+  ll b_mod = b[0] % p;
+  if (a_mod != 0 && b_mod != 0) { // t == 0
+    cout << 1 << endl;
+  } else if ((a_mod != 0 && b_mod == 0) || (a_mod == 0 && b_mod != 0)) { // t == 1
+    cout << 2 << endl;
+  } else { // a_mod == 0 && b_mod == 0
+    cout << 3 << endl;
   }
 }
