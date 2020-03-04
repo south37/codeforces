@@ -91,17 +91,17 @@ int main(int argc, char** argv) {
   }
   // printvec(degree);
 
-  set<ll> leaves;
+  vector<ll> leaves;
   set<ll> purged; // purged nodes
 
   rep(i, n) {
     if (degree[i] == 1) {
-      leaves.insert(i);
+      leaves.push_back(i);
     }
   }
   while (leaves.size() > 1) {
-    ll u = *leaves.begin(); leaves.erase(u);
-    ll v = *leaves.begin(); leaves.erase(v);
+    ll u = leaves.back(); leaves.pop_back();
+    ll v = leaves.back(); leaves.pop_back();
     ll w = ask(u, v);
     if (w == u || w == v) {
       answer(w);
@@ -114,12 +114,12 @@ int main(int argc, char** argv) {
     for (int nu : g[u]) {
       if (purged.find(nu) != purged.end()) { continue; } // skip purged nodes
       --degree[nu];
-      if (degree[nu] <= 1) { leaves.insert(nu); }
+      if (degree[nu] == 1) { leaves.push_back(nu); }
     }
     for (int nv : g[v]) {
       if (purged.find(nv) != purged.end()) { continue; } // skip purged nodes
       --degree[nv];
-      if (degree[nv] <= 1) { leaves.insert(nv); }
+      if (degree[nv] == 1) { leaves.push_back(nv); }
     }
   }
   assert(leaves.size() == 1);
