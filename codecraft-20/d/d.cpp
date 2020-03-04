@@ -117,7 +117,6 @@ bool dfs(int r, int c, pair<ll, ll> dest) {
     return true;
   }
 
-  if (states[r][c] == 1) { return false; } // cycle found
   if (states[r][c] == 3) { return false; }
   if (states[r][c] == 2) { return input[r][c] == dest; }
 
@@ -128,6 +127,7 @@ bool dfs(int r, int c, pair<ll, ll> dest) {
     int nextR = r + dr[i];
     int nextC = c + dc[i];
     if (nextR < 0 || nextR >= n || nextC < 0 || nextC >= n) { continue; }
+    if (states[nextR][nextC] == 1) { continue; } // skip cycle
 
     // cout << "nextR, nextC " << nextR << "," << nextC << endl;
     // cout << "dest " << dest.first << "," << dest.second << endl;
