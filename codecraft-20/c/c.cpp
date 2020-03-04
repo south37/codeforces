@@ -59,22 +59,34 @@ int main(int argc, char** argv) {
   vector<ll> a(n);
   vector<ll> b(m);
   rep(i, n) {
-    scanf("%lld", &a[i]);
+    // scanf("%lld", &a[i]);
+    cin >> a[i];
   }
   rep(i, m) {
-    scanf("%lld", &b[i]);
+    // scanf("%lld", &b[i]);
+    cin >> b[i];
   }
 
   // printvec(a);
   // printvec(b);
 
-  ll a_mod = a[0] % p;
-  ll b_mod = b[0] % p;
-  if (a_mod != 0 && b_mod != 0) { // t == 0
-    cout << 0 << endl;
-  } else if ((a_mod != 0 && b_mod == 0) || (a_mod == 0 && b_mod != 0)) { // t == 1
-    cout << 1 << endl;
-  } else { // a_mod == 0 && b_mod == 0
-    cout << 2 << endl;
+  ll a_zero = 0;
+  rep(i, n) {
+    if (a[i] % p == 0) { // continue
+      ++a_zero;
+    } else {
+      break;
+    }
   }
+  ll b_zero = 0;
+  rep(i, m) {
+    if (b[i] % p == 0) { // continue
+      ++b_zero;
+    } else {
+      break;
+    }
+  }
+
+  // Here, we calculated a0 and b0
+  cout << a_zero + b_zero << endl;
 }
