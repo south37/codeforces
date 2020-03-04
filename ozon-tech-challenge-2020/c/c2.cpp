@@ -1,3 +1,5 @@
+// ref. https://codeforces.com/blog/entry/74459
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -114,75 +116,6 @@ struct mint {
 //   cout << p2.x << endl; // 10 (-3 % 13)
 // }
 
-// Segment Tree
-class SegTree {
-public:
-  SegTree(int _n) {
-    n = 1;
-    while (n < _n) { n *= 2; }
-    dat = vector<vector<ll>>(2 * n - 1, vector<ll>(MOD));
-  }
-
-  void update(int k, ll a) {
-    k += n - 1;
-    dat[k] = vector<ll>(MOD);
-    dat[k][a] = 1;
-
-    while (k > 0) {
-      k = (k - 1) / 2;
-      auto& l = dat[k * 2 + 1];
-      auto& r = dat[k * 2 + 2];
-      dat[k].assign(MOD, 0);
-      rep(i, MOD) {
-        dat[k][i] = l[i] + r[i];
-      }
-      // dat[k] = min(dat[k * 2 + 1], dat[k * 2 + 2]);
-    }
-  }
-
-  // Calculate the min of [a, b)
-  vector<ll> query(int a, int b) {
-    return _query(a, b, 0, 0, n);
-  }
-
-  // Calculate the min of [a, b)
-  // k is the index (dat[k]). This is matched to [l, r)
-  vector<ll> _query(int a, int b, int k, int l, int r) {
-    // The intersection of [a, b) and [r, l) is blank.
-    if (r <= a || b <= l) { return vector<ll>(MOD); }
-
-    if (a <= l && r <= b) {  // [r, l) is completely included in [a, b)
-      return dat[k];
-    } else {
-      vector<ll> vl = _query(a, b, k * 2 + 1, l, (l + r) / 2);
-      vector<ll> vr = _query(a, b, k * 2 + 2, (l + r) / 2, r);
-      vector<ll> ans(MOD);
-      rep(i, MOD) {
-        ans[i] = vl[i] + vr[i];
-      }
-      return ans;
-    }
-  }
-
-private:
-  int n; // The size of source data. The power of 2.
-  vector<vector<ll>> dat; // The data. The size if 2*n-1. The last n elements(dat[n..2*n-2]) are leaves(source data). The first n-1 elements are nodes.
-};
-
-// int main(int argc, char** argv) {
-//   int arr[] = { 1, 3, 2, 7, 9, 11 };
-//   int n = 6;
-//
-//   SegTree<int> st(n);
-//   rep(i, n) {
-//     st.update(i, arr[i]);
-//   }
-//
-//   cout << st.query(1, 5) << endl;
-//   cout << st.query(0, 4) << endl;
-//   cout << st.query(3, 5) << endl;
-// }
-
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
@@ -197,42 +130,18 @@ int main(int argc, char** argv) {
   rep(i, n) {
     cin >> a[i];
   }
-  sort(all(a));
-  // printvec(a);
 
-  mint ans(1);
-
-  vector<pair<ll, mint>> ccc(m, pair<ll, mint>(-1, mint(0)));
-  SegTree st(n+5);
-
-  rep(i, n) {
-    ll c = a[i] % MOD;
-    mint contrib(1);
-    vector<ll> dist;
-
-    if (ccc[c].first == -1) { // blank
-      // apply [0, i) to cont;
-      dist = st.query(0, i); // TODO: impl st.query
-    } else {
-      ll prevI = ccc[c].first;
-      contrib = ccc[c].second; // copy
-      // apply [prevI, i) to cont;
-      dist = st.query(prevI, i); // TODO: impl st.query
-    }
-    rep(j, m) {
-      if (dist[j] == 0) { continue; }
-      mint cont2(c - j);
-      j *= dist[j];
-      contrib *= cont2;
-    }
-
-    // Here, contrib is calculated.
-
-    ans *= contrib;
-    ccc[c] = { i, contrib };
-
-    st.update(i, c);
+  // If n > 0, then there must exist ai, aj where ai mod m == aj mod m.
+  if (n > m) {
+    cout << 0 << endl;
+    return 0;
   }
 
+  mint ans(1);
+  rep(i, n) {
+    rep(j, i) {
+      ans *= abs(a[i] - a[j]);
+    }
+  }
   cout << ans.x << endl;
 }
