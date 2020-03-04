@@ -48,7 +48,22 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
+vector<vector<ll>> g; // tree
+vector<ll> degree; // degree of each node
+
+ll ask(ll u, ll v) {
+  cout << "? " << u + 1 << " " << v + 1 << endl;
+  cout.flush();
+  ll w;
+  cin >> w;
+  assert(w != -1);
+  return w - 1; // 0-indexed
+}
+
+void answer(ll r) {
+  cout << "! " << r + 1 << endl;
+  cout.flush();
+  exit(0);
 }
 
 int main(int argc, char** argv) {
@@ -57,9 +72,54 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+  g.resize(n);
+  degree.resize(n);
+
+  rep(i, n-1) {
+    ll x, y;
+    cin >> x >> y;
+    --x; --y; // 0-indexed
+    g[x].push_back(y);
+    g[y].push_back(x);
+    ++degree[x];
+    ++degree[y];
   }
+
+  vector<ll> leaves;
+  set<ll> purged; // purged nodes
+
+  rep(i, n) {
+    if (degree[i] == 1) {
+      leaves.push_back(i);
+    }
+  }
+  while (leaves.size() > 1) {
+    ll u = leaves.back(); leaves.pop_back();
+    ll v = leaves.back(); leaves.pop_back();
+    ll w = ask(u, v);
+    if (w == u || w == v) {
+      answer(w);
+    }
+
+    // purge u and v
+    purged.insert(u);
+    purged.insert(v);
+
+    for (int nu : g[u]) {
+      if (purged.find(nu) != purged.end()) { continue; } // skip purged nodes
+      --degree[nu];
+      if (degree[nu] == 1) { leaves.push_back(nu); }
+    }
+    for (int nv : g[v]) {
+      if (purged.find(nv) != purged.end()) { continue; } // skip purged nodes
+      --degree[nv];
+      if (degree[nv] == 1) { leaves.push_back(nv); }
+    }
+  }
+
+  // Here, we must find answer
+
+  return 0;
 }
