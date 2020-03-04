@@ -71,10 +71,10 @@ int main(int argc, char** argv) {
   ll a_mod = a[0] % p;
   ll b_mod = b[0] % p;
   if (a_mod != 0 && b_mod != 0) { // t == 0
-    cout << 1 << endl;
+    cout << 0 << endl;
   } else if ((a_mod != 0 && b_mod == 0) || (a_mod == 0 && b_mod != 0)) { // t == 1
-    cout << 2 << endl;
+    cout << 1 << endl;
   } else { // a_mod == 0 && b_mod == 0
-    cout << 3 << endl;
+    cout << 2 << endl;
   }
 }
