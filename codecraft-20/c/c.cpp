@@ -55,16 +55,19 @@ int main(int argc, char** argv) {
   //cout << setprecision(10) << fixed;
 
   ll n, m, p;
-  cin >> n >> m >> p;
+  scanf("%lld", &n);
+  scanf("%lld", &m);
+  scanf("%lld", &p);
+  // cin >> n >> m >> p;
   vector<ll> a(n);
   vector<ll> b(m);
   rep(i, n) {
-    // scanf("%lld", &a[i]);
-    cin >> a[i];
+    scanf("%lld", &a[i]);
+    // cin >> a[i];
   }
   rep(i, m) {
-    // scanf("%lld", &b[i]);
-    cin >> b[i];
+    scanf("%lld", &b[i]);
+    // cin >> b[i];
   }
 
   // printvec(a);
