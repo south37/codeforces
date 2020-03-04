@@ -49,6 +49,31 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n;
+  cin >> n;
+  string s;
+  cin >> s;
+  // Here, we want to calculate the minimum k.
+  vector<pair<string, ll>> candidates; // pair or <string, k>
+  for (int k = 1; k <= n; ++k) {
+    string c;
+    if (k == 1) {
+      c = s;
+    } else {
+      c += s.substr(k - 1);
+      string remain = s.substr(0, k-1);
+      if ((n-k+1) % 2 == 1) { // odd. reverse
+        reverse(all(remain));
+      }
+      c += remain;
+    }
+    candidates.emplace_back(c, k);
+  }
+  // Here, we have c and k
+  //
+  sort(all(candidates));
+  cout << candidates[0].first << endl;
+  cout << candidates[0].second << endl;
 }
 
 int main(int argc, char** argv) {
