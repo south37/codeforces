@@ -85,19 +85,21 @@ int main(int argc, char** argv) {
     g[y].push_back(x);
     ++degree[x];
     ++degree[y];
+    // cout << x << "," << y << endl;
   }
+  // printvec(degree);
 
-  vector<ll> leaves;
+  set<ll> leaves;
   set<ll> purged; // purged nodes
 
   rep(i, n) {
     if (degree[i] == 1) {
-      leaves.push_back(i);
+      leaves.insert(i);
     }
   }
   while (leaves.size() > 1) {
-    ll u = leaves.back(); leaves.pop_back();
-    ll v = leaves.back(); leaves.pop_back();
+    ll u = *leaves.begin(); leaves.erase(u);
+    ll v = *leaves.begin(); leaves.erase(v);
     ll w = ask(u, v);
     if (w == u || w == v) {
       answer(w);
@@ -110,16 +112,18 @@ int main(int argc, char** argv) {
     for (int nu : g[u]) {
       if (purged.find(nu) != purged.end()) { continue; } // skip purged nodes
       --degree[nu];
-      if (degree[nu] == 1) { leaves.push_back(nu); }
+      if (degree[nu] <= 1) { leaves.insert(nu); }
     }
     for (int nv : g[v]) {
       if (purged.find(nv) != purged.end()) { continue; } // skip purged nodes
       --degree[nv];
-      if (degree[nv] == 1) { leaves.push_back(nv); }
+      if (degree[nv] <= 1) { leaves.insert(nv); }
     }
   }
+  assert(leaves.size() == 1);
 
-  // Here, we must find answer
+  // Here, last leave is answer
+  answer(*leaves.begin());
 
   return 0;
 }
