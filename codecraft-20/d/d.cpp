@@ -1,4 +1,4 @@
-// 1:50am
+// ref. https://codeforces.com/blog/entry/74493
 
 #include <algorithm>
 #include <bitset>
