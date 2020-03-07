@@ -50,106 +50,34 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-vector<string> result;
+vector<string> result; // the result matrix
 vector<vector<ll>> states; // 0 .. unvisited, 1 .. intermediate, 2 .. visited and not cycle, 3 .. visited and cycle
 
 ll n;
 vector<vector<pair<ll, ll>>> input;
 int dr[4] = { 1, -1, 0, 0 }; // 0 .. D, 1 .. U, 2 .. R, 3 .. L
 int dc[4] = { 0, 0, 1, -1 };
+char dir[4] = { 'D', 'U', 'R', 'L' };
+char revDir[4] = { 'U', 'D', 'L', 'R' };
 
-// return false if not reabhable to
-bool cycleDfs(int r, int c) {
-  // cout << "cycleDfs" << endl;
-  // cout << r << "," << c << endl;
-  // cout << states[r][c] << endl;
-
-  if (states[r][c] == 1) { // cycle found
-    return true;
-  }
-  if (states[r][c] == 3) { // cycle found
-    return true;
-  }
-  if (states[r][c] == 2) { // not cycle
-    return false;
-  }
-  bool isCycle = false;
-  states[r][c] = 1;
-  for (int i = 0; i < 4; ++i) {
-    int nextR = r + dr[i];
-    int nextC = c + dc[i];
-    if (nextR < 0 || nextR >= n || nextC < 0 || nextC >= n) { continue; }
-    if (input[nextR][nextC] != mp(-1ll, -1ll)) { continue; }  // skip no-cycle
-
-    // cout << "nextR, nextC " << nextR << "," << nextC << endl;
-
-    if (cycleDfs(nextR, nextC)) {
-      isCycle = true;
-      if (i == 0) {
-        result[r][c] = 'D';
-      } else if (i == 1) {
-        result[r][c] = 'U';
-      } else if (i == 2) {
-        result[r][c] = 'R';
-      } else if (i == 3) {
-        result[r][c] = 'L';
-      }
-      break;
-    }
-  }
-  if (!isCycle) {
-    states[r][c] = 2;
-    return false;
-  } else {
-    states[r][c] = 3;
-    return true;
+void connect(int sr, int sc, int nr, int nc, char sd, char nd) {
+  result[sr][sc] = sd;
+  if (result[nr][nc] == ' ') { // { nr, nc } is not painted yet
+    result[nr][nc] = nd;
   }
 }
 
-// return false if not reabhable to
-bool dfs(int r, int c, pair<ll, ll> dest) {
-  // cout << "dfs" << endl;
-  // cout << r << "," << c << endl;
-  // cout << states[r][c] << endl;
-
-  if (r == dest.first && c == dest.second) {
-    result[r][c] = 'X';
-    return true;
-  }
-
-  if (states[r][c] == 3) { return false; }
-  if (states[r][c] == 2) { return input[r][c] == dest; }
-
-  // Here, states[r][c] == 0
-  states[r][c] = 1;
-  bool reachable = false;
-  for (int i = 0; i < 4; ++i) {
+void dfs(int r, int c, char d) {
+  if (result[r][c] != ' ') { return; } // already painted
+  result[r][c] = d;
+  rep(i, 4) {
     int nextR = r + dr[i];
     int nextC = c + dc[i];
-    if (nextR < 0 || nextR >= n || nextC < 0 || nextC >= n) { continue; }
-    if (states[nextR][nextC] == 1) { continue; } // skip cycle
-
-    // cout << "nextR, nextC " << nextR << "," << nextC << endl;
-    // cout << "dest " << dest.first << "," << dest.second << endl;
-    // cout << "input[nextR][nextR] " << input[nextR][nextC].first << "," << input[nextR][nextC].second << endl;
-
-    if (input[nextR][nextC] == dest) {
-      if (dfs(nextR, nextC, dest)) {
-        reachable = true;
-        if (i == 0) {
-          result[r][c] = 'D';
-        } else if (i == 1) {
-          result[r][c] = 'U';
-        } else if (i == 2) {
-          result[r][c] = 'R';
-        } else if (i == 3) {
-          result[r][c] = 'L';
-        }
-      }
+    if (nextR < 0 || nextR >= n || nextC < 0 || nextC >= n) { continue; } // skip
+    if (input[nextR][nextC] == input[r][c]) {
+      dfs(nextR, nextC, revDir[i]);
     }
   }
-  states[r][c] = 2;
-  return reachable;
 }
 
 int main(int argc, char** argv) {
@@ -173,35 +101,46 @@ int main(int argc, char** argv) {
     }
   }
   result.assign(n, string(n, ' '));
-  states.assign(n, vector<ll>(n));
 
-  // Here, input[i][j] contains the destination from (i, j)
-  // - (-1, -1) must make cycle.
-  // - can not move over (-1, -1).
-  // connect the components with "same destination"
+  rep(r, n) {
+    rep(c, n) {
+      if (input[r][c] == mp(-1ll, -1ll)) { // cycle
+        bool isPainted = result[r][c] != ' ';
+        rep(k, 4) {
+          if (isPainted) { continue; } // res is already true
 
-  rep(i, n) {
-    rep(j, n) {
-      if (states[i][j] >= 2) { continue; } // already visited
-
-      // Here, start dfs from (i,j)
-      if (input[i][j] == mp(-1ll, -1ll)) { // cycle
-        if (!cycleDfs(i, j)) { // not reacheable to pos
+          int nextR = r + dr[k];
+          int nextC = c + dc[k];
+          if (nextR < 0 || nextR >= n || nextC < 0 || nextC >= n) { continue; }
+          if (input[nextR][nextC] == mp(-1ll, -1ll)) {
+            connect(r, c, nextR, nextC, dir[k], revDir[k]);
+            isPainted = true;
+          }
+        }
+        if (!isPainted) {
           cout << "INVALID" << endl;
           return 0;
         }
       } else {
-        pair<ll, ll> pos = input[i][j];
-        if (!dfs(i, j, pos)) { // not reacheable to pos
-          cout << "INVALID" << endl;
-          return 0;
+        if (input[r][c] == mp(r, c)) {
+          // start dfs from target
+          dfs(r, c, 'X');
         }
       }
     }
   }
 
+  rep(r, n) {
+    rep(c, n) {
+      if (result[r][c] == ' ') { // not painted
+        cout << "INVALID" << endl;
+        return 0;
+      }
+    }
+  }
+
   cout << "VALID" << endl;
-  rep(i, n) {
-    cout << result[i] << endl;
+  rep(r, n) {
+    cout << result[r] << endl;;
   }
 }
