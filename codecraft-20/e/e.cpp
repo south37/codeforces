@@ -48,18 +48,32 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-}
-
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n, p, k;
+  cin >> n >> p >> k;
+  vector<ll> a(n);
+  rep(i, n) {
+    cin >> a[i];
   }
+  // s[i][j] .. the score of i at position j
+  vector<vector<ll>> s(n, vector<ll>(p));
+  rep(i, n) {
+    rep(j, p) {
+      cin >> s[i][j];
+    }
+  }
+
+  // dp[i][mask] .. maximum score of [0, i) with mask.
+  vector<vector<ll>> dp(n+1, vector<ll>(1<<p));
+  sort(all(a));
+  reverse(all(a));
+
+  // rep(i, n) {
+  //   rep(mask, 1<<p) {
+  //     ll ct = 0;
 }
