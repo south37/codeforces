@@ -57,9 +57,51 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n, m;
+  cin >> n >> m;
+
+  vector<ll> ans(n);
+  vector<ll> sumCnt(2*n + 1, 0); // sumCnt[i] .. [i/2]. The number of pairs (x,y) which forms x+y=i
+
+  ll remain = m;
+  ll j;
+  for (j = 0; j < n; ++j) {
+    if (remain <= sumCnt[j+1]) { break; }
+    remain -= sumCnt[j+1];
+    ans[j] = j+1;
+    rep(i, j) {
+      ++sumCnt[(i+1) + (j+1)];
+    }
   }
+  if (j == n) { // reached to last
+    cout << -1 << endl;
+    return 0;
+  }
+
+  ll x = j+1;
+  while (remain != sumCnt[x]) {
+    ++x;
+  }
+  ans[j] = x;
+
+  ll maxSum;
+  if (j == 0) { // m == 0
+    maxSum = ans[j];
+  } else {
+    maxSum = ans[j-1] + ans[j];
+  }
+  ll cur = maxSum + 1;
+  for (int i = j+1; i < n; ++i) {
+    ans[i] = cur;
+    cur += 2*(maxSum+1);
+  }
+
+  rep(i, n) {
+    cout << ans[i];
+    if (i != n-1) {
+      cout << " ";
+    }
+  }
+  cout << endl;
+  return 0;
 }
