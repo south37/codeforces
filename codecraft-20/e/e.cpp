@@ -56,10 +56,14 @@ int main(int argc, char** argv) {
 
   ll n, p, k;
   cin >> n >> p >> k;
-  vector<ll> a(n);
+  vector<P> a(n); // the pair of <audience score, index>
   rep(i, n) {
-    cin >> a[i];
+    cin >> a[i].first;
+    a[i].second = i;
   }
+  sort(all(a));
+  reverse(all(a));
+
   // s[i][j] .. the score of i at position j
   vector<vector<ll>> s(n, vector<ll>(p));
   rep(i, n) {
@@ -68,12 +72,40 @@ int main(int argc, char** argv) {
     }
   }
 
-  // dp[i][mask] .. maximum score of [0, i) with mask.
-  vector<vector<ll>> dp(n+1, vector<ll>(1<<p));
-  sort(all(a));
-  reverse(all(a));
+  // dp[i][mask] .. maximum score of [0, i) with mask. initialized by -1.
+  vector<vector<ll>> dp(n+1, vector<ll>(1<<p, -1));
+  dp[0][0] = 0;
 
-  // rep(i, n) {
-  //   rep(mask, 1<<p) {
-  //     ll ct = 0;
+  rep(i, n) {
+    ll x = a[i].second;
+
+    rep(mask, 1<<p) {
+      ll ct = 0; // The count of selected players
+      rep(j, p) {
+        if (mask & (1ll<<j)) { ++ct; }
+      }
+
+      // Try audience
+      if (dp[i][mask] != -1) {
+        ll z = i-ct; // The count of already selected audience
+
+        if (z < k) { // z haven't reached to k
+          dp[i+1][mask] = dp[i][mask] + a[i].first;
+        } else {
+          dp[i+1][mask] = dp[i][mask];
+        }
+      }
+
+      // Trye player
+      rep(j, p) {
+        ll pre_mask = mask & (~(1ll<<j));
+        if ((mask & (1ll<<j)) && dp[i][pre_mask] != -1) {
+          dp[i+1][mask] = max(dp[i+1][mask], dp[i][pre_mask] + s[x][j]);
+        }
+      }
+    }
+  }
+
+  cout << dp[n][(1<<p)-1] << endl;
+  return 0;
 }
