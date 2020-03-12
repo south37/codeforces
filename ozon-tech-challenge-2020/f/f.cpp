@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <functional>
 #include <iomanip>
@@ -8,10 +9,10 @@
 #include <map>
 #include <queue>
 #include <random>
-#include <unordered_map>
-#include <vector>
 #include <string.h>
 #include <set>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -46,8 +47,11 @@ typedef pair<ll, ll> P;
 typedef tuple<ll, ll, ll> triple;
 typedef double D;
 
-const ll INF = 1e9;
+const ll INF = 1e12;
 const ll MOD = 1000000007;  // 1e9 + 7
+
+vector<ll> a;
+ll n;
 
 void add_prime(set<ll>& pf, ll num) {
   for (ll i = 2; i*i <= num; ++i) {
@@ -63,16 +67,29 @@ void add_prime(set<ll>& pf, ll num) {
   }
 }
 
+// required operation for change a to divisable by num.
+ll solve(ll num) {
+  ll ans = 0;
+  rep(i, n) {
+    if (a[i] < num) {
+      ans += num - a[i];
+    } else {
+      ans += min(a[i]%num, num - (a[i]%num));
+    }
+  }
+  return ans;
+}
+
 int main(int argc, char** argv) {
   cin.tie(NULL);
   cout.tie(NULL);
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
   cin >> n;
-  vector<ll> a(n);
+  a.resize(n);
   vector<ll> per; // the random number container
+
   rep(i, n) {
     cin >> a[i];
     per.push_back(i);
@@ -93,8 +110,14 @@ int main(int argc, char** argv) {
   }
 
   // Debug
-  while (!pf.empty()) {
-    cout << *pf.begin() << endl;
-    pf.erase(pf.begin());
+  // while (!pf.empty()) {
+  //   cout << *pf.begin() << endl;
+  //   pf.erase(pf.begin());
+  // }
+
+  ll ans = n; // answer is at most n.
+  for (ll num : pf) {
+    ans = min(ans, solve(num));
   }
+  cout << ans << endl;
 }
