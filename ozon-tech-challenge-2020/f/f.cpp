@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include <random>
 #include <unordered_map>
 #include <vector>
 #include <string.h>
@@ -48,7 +49,18 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
+void add_prime(set<ll>& pf, ll num) {
+  for (ll i = 2; i*i <= num; ++i) {
+    if (num % i == 0) {
+      while (num % i == 0) {
+        num /= i;
+      }
+      pf.insert(i);
+    }
+  }
+  if (num > 1) {
+    pf.insert(num);
+  }
 }
 
 int main(int argc, char** argv) {
@@ -57,9 +69,32 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+  vector<ll> a(n);
+  vector<ll> per; // the random number container
+  rep(i, n) {
+    cin >> a[i];
+    per.push_back(i);
+  }
+
+  // shuffle per
+  mt19937_64 mt(chrono::steady_clock::now().time_since_epoch().count());
+  shuffle(all(per), mt);
+
+  set<ll> pf; // prime factors
+  rep(i, min(100ll, n)) {
+    ll aa = a[per[i]];
+    add_prime(pf, aa);
+    add_prime(pf, aa+1);
+    if (aa > 1) {
+      add_prime(pf, aa-1);
+    }
+  }
+
+  // Debug
+  while (!pf.empty()) {
+    cout << *pf.begin() << endl;
+    pf.erase(pf.begin());
   }
 }
