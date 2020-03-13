@@ -1,3 +1,5 @@
+// ref. https://codeforces.com/blog/entry/74459
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -50,8 +52,71 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-}
+const ll MAX_A = 1ll << 18;
+
+class UnionFind {
+public:
+  UnionFind(ll n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+
+  bool same(ll x, ll y) {
+    return root(x) == root(y);
+  }
+  void unite(ll x, ll y) {
+    x = root(x); y = root(y);
+    if (x == y) return;
+
+    --_size;
+
+    if (rnk[x] < rnk[y]) { swap(x, y); }
+    par[y] = x;
+    cnt[x] += cnt[y];
+    if (rnk[x] == rnk[y]) { ++rnk[x]; }
+  }
+  ll root(ll x) {
+    if (par[x] < 0) {
+      return x;
+    } else {
+      return par[x] = root(par[x]);
+    }
+  }
+  ll count(ll x) {
+    return cnt[root(x)];
+  }
+  ll size() {
+    return _size;
+  }
+
+private:
+  vector<ll> par;
+  vector<ll> rnk;
+  vector<ll> cnt; // The number of vertices in each connected components.
+  ll _size; // The number of connected components. Decreases by unite.
+};
+
+// int main(int argc, char** argv) {
+//   ll N, M;
+//   cin >> N >> M;
+//   UnionFind tree(N);
+//   rep(i, M) {
+//     ll p, a, b;
+//     cin >> p >> a >> b;
+//     if (p == 0) { // Connect
+//       tree.unite(a, b);
+//     } else { // Judge
+//       if (tree.same(a, b)) {
+//         cout << "Yes" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       } else {
+//         cout << "No" << endl;
+//         cout << "size: " << tree.size() << endl;
+//         cout << "count(" << a << "): " << tree.count(a) << endl;
+//         cout << "count(" << b << "): " << tree.count(b) << endl;
+//       }
+//     }
+//   }
+// }
 
 int main(int argc, char** argv) {
   cin.tie(NULL);
@@ -59,9 +124,39 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n;
+  cin >> n;
+
+  ll ans = 0;
+  vector<ll> cnt(MAX_A); // the count of each a values
+  rep(i, n) {
+    ll a;
+    cin >> a;
+    ++cnt[a];
+    ans -= a;
   }
+  ++cnt[0];
+  UnionFind uf(MAX_A);
+
+  for (ll sum = MAX_A-1; sum >= 0; --sum) {
+    // We check the (i, j) pair in which i&j == 0 && i|j == sum
+    // cf. https://codeforces.com/blog/entry/45223
+    for (ll i = sum; i > 0; i = (i-1)&sum) {
+      ll j = sum ^ i;
+      if (cnt[i] > 0 && cnt[j] > 0) { // edge exists
+        if (uf.same(i, j)) { // alreacy connected
+          continue;
+        } else {
+          // contrib .. the number of edges between cnt[i] and cnt[j].
+          ll contrib = -1;
+          contrib += (uf.root(i) == i) ? cnt[i] : 1; // if already connected, we add only one edge
+          contrib += (uf.root(j) == j) ? cnt[j] : 1;
+          uf.unite(i, j);
+          ans += 1ll * sum * contrib;
+        }
+      }
+    }
+  }
+
+  cout << ans << endl;
 }
