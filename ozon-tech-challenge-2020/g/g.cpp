@@ -56,7 +56,7 @@ const int MAX_A = 1 << 18;
 
 class UnionFind {
 public:
-  UnionFind(int n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+  UnionFind(int n) : par(n, -1), rnk(n, 0), cnt(n, 1) {}
 
   bool same(int x, int y) {
     return root(x) == root(y);
@@ -64,8 +64,6 @@ public:
   void unite(int x, int y) {
     x = root(x); y = root(y);
     if (x == y) return;
-
-    --_size;
 
     if (rnk[x] < rnk[y]) { swap(x, y); }
     par[y] = x;
@@ -82,15 +80,11 @@ public:
   int count(int x) {
     return cnt[root(x)];
   }
-  int size() {
-    return _size;
-  }
 
 private:
   vector<int> par;
   vector<int> rnk;
   vector<int> cnt; // The number of vertices in each connected components.
-  int _size; // The number of connected components. Decreases by unite.
 };
 
 // int main(int argc, char** argv) {
@@ -149,8 +143,8 @@ int main(int argc, char** argv) {
         } else {
           // contrib .. the number of edges between cnt[i] and cnt[j].
           int contrib = -1;
-          contrib += (uf.root(i) == i) ? cnt[i] : 1; // if already connected, we add only one edge
-          contrib += (uf.root(j) == j) ? cnt[j] : 1;
+          contrib += (uf.count(i) == 1) ? cnt[i] : 1; // if already connected, we add only one edge
+          contrib += (uf.count(j) == 1) ? cnt[j] : 1;
           uf.unite(i, j);
           ans += 1ll * sum * contrib;
         }
