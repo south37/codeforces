@@ -52,16 +52,16 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-const ll MAX_A = 1ll << 18;
+const int MAX_A = 1 << 18;
 
 class UnionFind {
 public:
-  UnionFind(ll n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
+  UnionFind(int n) : par(n, -1), rnk(n, 0), cnt(n, 1), _size(n) {}
 
-  bool same(ll x, ll y) {
+  bool same(int x, int y) {
     return root(x) == root(y);
   }
-  void unite(ll x, ll y) {
+  void unite(int x, int y) {
     x = root(x); y = root(y);
     if (x == y) return;
 
@@ -72,25 +72,25 @@ public:
     cnt[x] += cnt[y];
     if (rnk[x] == rnk[y]) { ++rnk[x]; }
   }
-  ll root(ll x) {
+  int root(int x) {
     if (par[x] < 0) {
       return x;
     } else {
       return par[x] = root(par[x]);
     }
   }
-  ll count(ll x) {
+  int count(int x) {
     return cnt[root(x)];
   }
-  ll size() {
+  int size() {
     return _size;
   }
 
 private:
-  vector<ll> par;
-  vector<ll> rnk;
-  vector<ll> cnt; // The number of vertices in each connected components.
-  ll _size; // The number of connected components. Decreases by unite.
+  vector<int> par;
+  vector<int> rnk;
+  vector<int> cnt; // The number of vertices in each connected components.
+  int _size; // The number of connected components. Decreases by unite.
 };
 
 // int main(int argc, char** argv) {
@@ -124,13 +124,13 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll n;
+  int n;
   cin >> n;
 
   ll ans = 0;
-  vector<ll> cnt(MAX_A); // the count of each a values
+  vector<int> cnt(MAX_A); // the count of each a values
   rep(i, n) {
-    ll a;
+    int a;
     cin >> a;
     ++cnt[a];
     ans -= a;
@@ -138,17 +138,17 @@ int main(int argc, char** argv) {
   ++cnt[0];
   UnionFind uf(MAX_A);
 
-  for (ll sum = MAX_A-1; sum >= 0; --sum) {
+  for (int sum = MAX_A-1; sum >= 0; --sum) {
     // We check the (i, j) pair in which i&j == 0 && i|j == sum
     // cf. https://codeforces.com/blog/entry/45223
-    for (ll i = sum; i > 0; i = (i-1)&sum) {
-      ll j = sum ^ i;
+    for (int i = sum; i > 0; i = (i-1)&sum) {
+      int j = sum ^ i;
       if (cnt[i] > 0 && cnt[j] > 0) { // edge exists
         if (uf.same(i, j)) { // alreacy connected
           continue;
         } else {
           // contrib .. the number of edges between cnt[i] and cnt[j].
-          ll contrib = -1;
+          int contrib = -1;
           contrib += (uf.root(i) == i) ? cnt[i] : 1; // if already connected, we add only one edge
           contrib += (uf.root(j) == j) ? cnt[j] : 1;
           uf.unite(i, j);
