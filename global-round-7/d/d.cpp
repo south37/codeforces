@@ -101,8 +101,8 @@ void search(const string& text, const string& pattern, vector<int>& result) {
 pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
   ll n = s.size();
 
-  vector<ll> leftLenMap(n); // max length at pos[i].
-  vector<ll> rightLenMap(n); // max length at pos[i].
+  vector<ll> leftLenMap(n, 1); // max length at pos[i].
+  vector<ll> rightLenMap(n, 1); // max length at pos[i].
   // vector<P> ans;
   rep(i, n) { // outer loop
     // Here, we calculate all candidates from s[i].
