@@ -50,52 +50,6 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-vector<int> build_z(const string& s) {
-  int n = s.size();
-  vector<int> z(n, 0);
-  int l = -1, r = -1;
-  for (int i = 1; i < n; ++i) {
-    if (i <= r) {
-      z[i] = min<int>(r - i + 1, z[i - l]);
-    }
-    while (i + z[i] < n && s[i + z[i]] == s[z[i]]) {
-      ++z[i];
-    }
-    if (i + z[i] - 1 > r) {
-      r = i + z[i] - 1;
-      l = i;
-    }
-  }
-  return z;
-}
-
-void search(const string& text, const string& pattern, vector<int>& result) {
-  vector<int> z = build_z(pattern + "$" + text);
-
-  int p = pattern.length();
-  for (int i = p + 1; i < z.size(); ++i) {
-    if (z[i] == p) {
-      result.push_back(i-p-1);
-    }
-  }
-}
-
-// int main(int argc, char** argv) {
-//   string s, t;
-//   cin >> s;
-//   cin >> t;
-//
-//   vector<int> matches;
-//   search(s, t, matches);
-//
-//   for (auto e : matches) {
-//     cout << e << endl;
-//   }
-//
-//   cout << s << endl;
-//   cout << t << endl;
-// }
-
 // return the max length from each position.
 // vector<P> calcAllParin(string& s) {
 pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
@@ -169,31 +123,6 @@ void solve() {
   vector<ll>& rightLenMap = p.second;
   // cout << "leftLenMap: "; printvec(leftLenMap);
   // cout << "rightLenMap: "; printvec(rightLenMap);
-
-  // vector<P> parins = calcAllParin(s);
-  // set<P> sortedParins; // sorted by left.
-  // for (auto& p : parins) {
-  //   sortedParins.insert({ p.first - p.second, p.first }); // { left, pos }
-  // }
-  // vector<ll> lenMap(n); // max length at pos i.
-  // for (auto& p : parins) {
-  //   ll pos = p.first;
-  //   ll len = p.second;
-  //   ll left = pos - len;
-  //   lenMap[left] = max(lenMap[left],
-
-  // Here, we search the match of prefix ans suffix.
-  // string preS = s.substr(0, s.size()/2);
-  // string sufS = s.substr(s.size()/2);
-  // string t = sufS;
-  // reverse(all(t));
-  // t += "$";
-  // t += preS;
-  // cout << "t: " << t << endl;
-  // // Here t = rev s + "$" + s
-  // vector<int> z = build_z(t);
-  // cout << "z: "; printvec(z);
-  // z contains the length of match of prefix and suffix.
 
   // Here, we want to calculate the max length of same "pre" and "suf" of s.
   ll maxLen = calcMaxPreAndSuffs(s);
