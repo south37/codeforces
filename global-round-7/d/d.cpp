@@ -55,8 +55,21 @@ const ll MOD = 1000000007;  // 1e9 + 7
 pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
   ll n = s.size();
 
-  vector<ll> leftLenMap(n, 1); // max length at pos[i].
-  vector<ll> rightLenMap(n, 1); // max length at pos[i].
+  vector<ll> leftLenMap(n); // max length at pos[i].
+  vector<ll> rightLenMap(n); // max length at pos[i].
+  rep(i, n) {
+    ll l = i;
+    ll r = i;
+
+    if ((n-1-r) > l) { // r is far than l. l is near. l is valid
+      leftLenMap[l] = 1;
+    } else if ((n-1-r) == l) { // distance is same
+      leftLenMap[l] = 1;
+      rightLenMap[r] = 1;
+    } else { // l is far. r is near. r is valid.
+      rightLenMap[r] = 1;
+    }
+  }
   // vector<P> ans;
   rep(i, n) { // outer loop
     // Here, we calculate all candidates from s[i].
