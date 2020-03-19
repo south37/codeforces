@@ -128,6 +128,9 @@ void solve() {
   ll maxLen = calcMaxPreAndSuffs(s);
   // cout << "maxLen: " << maxLen << endl;
 
+  string revS = s; // reverse of s
+  reverse(all(revS));
+
   string ans;
   rep(len, maxLen + 1) {
     // Here, z[i] is the match of prefix and suffix
@@ -153,7 +156,7 @@ void solve() {
     {
       ll parinLen = rightLenMap[n-1-len];
       string nowAns = pre;
-      nowAns += s.substr(n-1-len-parinLen+1, parinLen); // (n-1-len-parinLen2, n-1-len]
+      nowAns += revS.substr(len, parinLen);
       string suf = pre;
       reverse(all(suf));
       nowAns += suf;
