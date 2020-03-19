@@ -48,10 +48,75 @@ typedef tuple<ll, ll, ll> triple;
 typedef double D;
 
 const ll INF = 1e9;
-const ll MOD = 1000000007;  // 1e9 + 7
+/// const ll MOD = 1000000007;  // 1e9 + 7
+const ll MOD = 998244353;
 
-void solve() {
-}
+// Mod int
+// cf. https://www.youtube.com/watch?v=1Z6ofKN03_Y
+struct mint {
+  ll x;
+  mint(ll x = 0) : x((x + MOD) % MOD) {}
+  mint& operator+= (const mint a) {
+    if ((x += a.x) >= MOD) x %= MOD;
+    return *this;
+  }
+  mint operator+ (const mint a) const {
+    mint res(*this);
+    return res += a;
+  }
+  mint& operator-= (const mint a) {
+    if ((x += MOD - a.x) >= MOD) x %= MOD;
+    return *this;
+  }
+  mint operator- (const mint a) const {
+    mint res(*this);
+    return res -= a;
+  }
+  mint& operator*= (const mint a) {
+    (x *= a.x) %= MOD;
+    return *this;
+  }
+  mint operator* (const mint a) const {
+    mint res(*this);
+    return res *= a;
+  }
+  mint pow(ll t) const {
+    if (!t) { return 1; }
+    mint a = pow(t >> 1);
+    a *= a;
+    if (t & 1) a *= *this;
+    return a;
+  }
+
+  // for prime mod
+  mint inv() const {
+    return pow(MOD-2);
+  }
+  mint& operator/= (const mint a) {
+    return (*this) *= a.inv();
+  }
+  mint operator/ (const mint a) const {
+    mint res(*this);
+    return res /= a;
+  }
+};
+
+// kint main(int argc, char** argv) {
+// k  // int p;
+// k  // cin >> p;
+// k
+// k  MOD = 13;
+// k  mint p(10);
+// k  cout << (p + 15).x << endl;   // 12 (25 % 13)
+// k  cout << (p - 15).x << endl;   // 8  (-5 % 13)
+// k  cout << (p * 2).x << endl;    // 7  (20 % 13)
+// k  cout << (p.pow(3)).x << endl; // 12 (1000 % 13)
+// k  cout << (p / 3).x << endl;    // 12 (12 * 3 = 10 (36 % 13))
+// k
+// k  mint p2(-3);
+// k  cout << p2.x << endl; // 10 (-3 % 13)
+// k}
+
 
 int main(int argc, char** argv) {
   cin.tie(NULL);
@@ -59,9 +124,28 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
-  rep(i, t) {
-    solve();
+  ll n, k;
+  cin >> n >> k;
+  vector<ll> p(n);
+  rep(i, n) {
+    cin >> p[i];
   }
+  // Here, we want know the position of top k.
+  // k in [n-k+1, n]
+  ll sum = 0;
+  vector<ll> positions;
+  rep(i, n) {
+    if (p[i] > n-k) {
+      positions.push_back(i);
+      sum += p[i];
+    }
+  }
+  mint ans(1);
+  // we want to check all pair in positions
+  for (int i = 0; i < positions.size() - 1; ++i) {
+    ll l = positions[i];
+    ll r = positions[i+1];
+    ans *= (r-l);
+  }
+  cout << sum << " " << ans.x << endl;
 }
