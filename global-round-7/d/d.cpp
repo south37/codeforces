@@ -70,8 +70,13 @@ pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
         // cout << "l: " << l << endl;
         // cout << "r: " << r << endl;
         // cout << "len: " << len << endl;
-        leftLenMap[l] = max(leftLenMap[l], len*2+1); // update lenMap
-        rightLenMap[r] = max(rightLenMap[r], len*2+1); // update lenMap
+        ll pre_len = max(l, n-1-r);
+        if (r <= (n-1-pre_len)) { // l is valid
+          leftLenMap[l] = max(leftLenMap[l], len*2+1); // update lenMap
+        }
+        if (l >= pre_len) { // r is valid
+          rightLenMap[r] = max(rightLenMap[r], len*2+1); // update lenMap
+        }
 
         --l;
         ++r;
@@ -86,8 +91,13 @@ pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
       ll l = i; ll r = i+1;
       ll len = 1;
       while (l >= 0 && r <= n-1 && s[l] == s[r]) {
-        leftLenMap[l] = max(leftLenMap[l], len*2);
-        rightLenMap[r] = max(rightLenMap[r], len*2);
+        ll pre_len = max(l, n-1-r);
+        if (r <= (n-1-pre_len)) { // l is valid
+          leftLenMap[l] = max(leftLenMap[l], len*2);
+        }
+        if (l >= pre_len) { // r is valid
+          rightLenMap[r] = max(rightLenMap[r], len*2);
+        }
 
         --l;
         ++r;
