@@ -167,8 +167,8 @@ void solve() {
   auto p = calcAllParin(s);
   vector<ll>& leftLenMap = p.first;
   vector<ll>& rightLenMap = p.second;
-  cout << "leftLenMap: "; printvec(leftLenMap);
-  cout << "rightLenMap: "; printvec(rightLenMap);
+  // cout << "leftLenMap: "; printvec(leftLenMap);
+  // cout << "rightLenMap: "; printvec(rightLenMap);
 
   // vector<P> parins = calcAllParin(s);
   // set<P> sortedParins; // sorted by left.
