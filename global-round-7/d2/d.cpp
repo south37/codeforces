@@ -50,135 +50,71 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-// rollinghash with mod(2**64)
-struct rollinghash {
-  // mod is 2**64 (max of ull + 1)
-  static const ull base1 = 1000000007;
-  vector<ull> _hash, _power;
-
-  rollinghash(const string& s) { init(s); }
-  void init(const string& s) {
-    int n = s.size();
-    _hash.resize(n+1);
-    _power.assign(n+1, 1);
-    rep(i, n) {
-      _hash[i+1] = _hash[i] * base1 + s[i];
-      _power[i+1] = _power[i] * base1;
+vector<int> build_z(const string& s) {
+  int n = s.size();
+  vector<int> z(n, 0);
+  int l = -1, r = -1;
+  for (int i = 1; i < n; ++i) {
+    if (i <= r) {
+      z[i] = min<int>(r - i + 1, z[i - l]);
+    }
+    while (i + z[i] < n && s[i + z[i]] == s[z[i]]) {
+      ++z[i];
+    }
+    if (i + z[i] - 1 > r) {
+      r = i + z[i] - 1;
+      l = i;
     }
   }
+  return z;
+}
 
-  // get hash of s[left:right]
-  inline ull get(int l, int r) const {
-    ull res1 = _hash[r] - _hash[l] * _power[r-l];
-    return res1;
-  }
-
-  // get lcp of s[a:] and t[b:]
-  inline int getlcp(int a, int b) const {
-    int len = min((int)_hash.size()-a, (int)_hash.size()-b);
-    int low = 0, high = len;
-    while (high - low > 1) {
-      int mid = (low + high) >> 1;
-      if (get(a, a+mid) != get(b, b+mid)) high = mid;
-      else low = mid;
-    }
-    return low;
-  }
-};
-
+// void search(const string& text, const string& pattern, vector<int>& result) {
+//   vector<int> z = build_z(pattern + "$" + text);
+//
+//   int p = pattern.length();
+//   for (int i = p + 1; i < z.size(); ++i) {
+//     if (z[i] == p) {
+//       result.push_back(i-p-1);
+//     }
+//   }
+// }
+//
 // int main(int argc, char** argv) {
-//   string S("abcabc");
+//   string s, t;
+//   cin >> s;
+//   cin >> t;
 //
-//   RollingHash rh(S);
+//   vector<int> matches;
+//   search(s, t, matches);
 //
-//   cout << (rh.get(0, 2) == rh.get(3, 5)) << endl; // abc == abc: true
-//   cout << (rh.get(0, 2) == rh.get(3, 4)) << endl; // abc == ab: false
+//   for (auto e : matches) {
+//     cout << e << endl;
+//   }
 //
-//   cout << rh.getLCP(0, 3) << endl; // abc, abc: 3
-//   cout << rh.getLCP(1, 4) << endl; // bc, bc: 2
-//   cout << rh.getLCP(0, 4) << endl; // abc, bc: 0
+//   cout << s << endl;
+//   cout << t << endl;
 // }
 
-
-// return the max length from each position.
-// vector<P> calcAllParin(string& s) {
-pair<vector<ll>, vector<ll>> calcAllParin(string& s) {
-  string revS = s;
-  reverse(all(s));
-  string t = s;
-  t += "$";
-  t += revS;
-  RollingHash rh(t); // rolling hash of t
-
+string calcPalin(string& s) {
   ll n = s.size();
 
-  vector<ll> leftLenMap(n); // max length at pos[i].
-  vector<ll> rightLenMap(n); // max length at pos[i].
-  rep(i, n) {
-    ll l = i;
-    ll r = i;
+  string t = s;
+  t += "$";
+  string revS = s;
+  reverse(all(revS));
+  t += revS;
 
-    if ((n-1-r) > l) { // r is far than l. l is near. l is valid
-      leftLenMap[l] = 1;
-    } else if ((n-1-r) == l) { // distance is same
-      leftLenMap[l] = 1;
-      rightLenMap[r] = 1;
-    } else { // l is far. r is near. r is valid.
-      rightLenMap[r] = 1;
+  vector<int> z = build_z(t);
+  ll len = 0;
+  // Here, find the longest len where i+len == 2*n+1
+  for (int i = n+1; i <= 2*n; ++i) {
+    if (i+z[i] == 2*n+1) { // palindrom found
+      len = max<ll>(len, z[i]);
     }
   }
-  // vector<P> ans;
-  rep(i, n) { // outer loop
-    // Here, we calculate all candidates from s[i].
-    // try (l,center,r) case
-    {
-      ll l = i - 1; ll r = i + 1;
-      ll len = 1;
-      while (l >= 0 && r <= n-1 && s[l] == s[r]) {
-        // cout << "s[l], s[r]: " << s[l] << "," << s[r] << endl;
-        // cout << "i: " << i << endl;
-        // cout << "l: " << l << endl;
-        // cout << "r: " << r << endl;
-        // cout << "len: " << len << endl;
-        if ((n-1-r) > l) { // r is far than l
-          leftLenMap[l] = max(leftLenMap[l], len*2+1); // update lenMap
-        } else if ((n-1-r) == l) { // distance is same
-          rightLenMap[r] = max(rightLenMap[r], len*2+1); // update lenMap
-          leftLenMap[l] = max(leftLenMap[l], len*2+1); // update lenMap
-        } else { // l is far
-          rightLenMap[r] = max(rightLenMap[r], len*2+1); // update lenMap
-        }
 
-        --l;
-        ++r;
-        ++len;
-      }
-    }
-    // Here, l < 0 or r >= n or s[l] != s[r]
-    // ans.emplace_back(i, len);
-
-    // try (l,r) case
-    {
-      ll l = i; ll r = i+1;
-      ll len = 1;
-      while (l >= 0 && r <= n-1 && s[l] == s[r]) {
-        if ((n-1-r) > l) { // r is far than l
-          leftLenMap[l] = max(leftLenMap[l], len*2); // update lenMap
-        } else if ((n-1-r) == l) { // distance is same
-          rightLenMap[r] = max(rightLenMap[r], len*2); // update lenMap
-          leftLenMap[l] = max(leftLenMap[l], len*2); // update lenMap
-        } else { // l is far
-          rightLenMap[r] = max(rightLenMap[r], len*2); // update lenMap
-        }
-
-        --l;
-        ++r;
-        ++len;
-      }
-    }
-  }
-  // return ans;
-  return { leftLenMap, rightLenMap };
+  return s.substr(0, len);
 }
 
 // return the all possible length of "pre" and "suff"
@@ -194,60 +130,26 @@ ll calcMaxPreAndSuffs(string& s) {
   return len;
 }
 
-
 void solve() {
   string s;
   cin >> s;
-
   ll n = s.size();
-  auto p = calcAllParin(s);
-  vector<ll>& leftLenMap = p.first;
-  vector<ll>& rightLenMap = p.second;
-  // cout << "leftLenMap: "; printvec(leftLenMap);
-  // cout << "rightLenMap: "; printvec(rightLenMap);
 
-  // Here, we want to calculate the max length of same "pre" and "suf" of s.
-  ll maxLen = calcMaxPreAndSuffs(s);
-  // cout << "maxLen: " << maxLen << endl;
-
-  string revS = s; // reverse of s
-  reverse(all(revS));
-
-  string ans;
-  rep(len, maxLen + 1) {
-    // Here, z[i] is the match of prefix and suffix
-    // We only need to calculate the maximum parindrom in s[k..]
-    // ll len = z[i]; // the length of match.
-    string pre = s.substr(0, len);
-
-    // Here, we should check "left" and "right"
-    // 1. left
-    {
-      ll parinLen = leftLenMap[len]; // max length of parindrom from s[len]
-      string nowAns = pre;
-      nowAns += s.substr(len, parinLen);
-      string suf = pre;
-      reverse(all(suf));
-      nowAns += suf;
-      if (nowAns.size() > ans.size()) {
-        ans = nowAns;
-      }
-    }
-
-    // 2. right
-    {
-      ll parinLen = rightLenMap[n-1-len];
-      string nowAns = pre;
-      nowAns += revS.substr(len, parinLen);
-      string suf = pre;
-      reverse(all(suf));
-      nowAns += suf;
-      if (nowAns.size() > ans.size()) {
-        ans = nowAns;
-      }
-    }
+  ll preLen = calcMaxPreAndSuffs(s);
+  string pre = s.substr(0, preLen);
+  cout << pre; // print pre
+  string t = s.substr(preLen, n - 2*preLen); // substring
+  {
+    string a = calcPalin(t); // palindrom from prefix
+    reverse(all(t));
+    string b = calcPalin(t); // palindrom from suffix
+    if (a.size() < b.size()) { swap(a, b); }
+    // Here, a.size() >= b.size()
+    cout << a;
   }
-  cout << ans << endl;
+  reverse(all(pre));
+  cout << pre; // print suf
+  cout << endl;
 }
 
 int main(int argc, char** argv) {
