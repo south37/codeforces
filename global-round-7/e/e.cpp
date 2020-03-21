@@ -91,13 +91,13 @@ public:
 
 private:
   void update_one(int v, int x) {
-    add[v] += x;
+    add[v] += x; // should be added to t later.
     t[v] += x;
   }
 
   int n; // The size of source data. The power of 2.
   vector<int> add;
-  vector<int> t; // t[v] .. the minimum value in v.
+  vector<int> t; // t[v] .. the minimum value in v. (the number of bombs on the suffix) - (number of values >= x of suffix).
 };
 
 int main() {
@@ -135,6 +135,6 @@ int main() {
     if (i < n-1) {
       cout << ' ';
     }
-    st.update(0, q[i] + 1, 1); // revert state
+    st.update(0, q[i] + 1, 1); // add bomb
   }
 }
