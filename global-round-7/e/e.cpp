@@ -61,14 +61,15 @@ public:
     t = vector<int>(2*n-1);
   }
 
-  void update(int k, int x) {
-    _update(0, 0, k, 0, n, x);
+  void update(int l, int r, int x) {
+    _update(0, l, r, 0, n, x);
   }
 
   // target: [l, r). area: [tl, tr).
+  // v corresponds to [tl, tr).
   void _update(int v, int l, int r, int tl, int tr, int x) {
     if (tl >= r || tr <= l) { return; } // not in range
-    if (tl >= l && tr <= r) {
+    if (tl >= l && tr <= r) { // [tl, tr) is in [l, r)
       update_one(v, x);
     } else {
       if (add[v]) {
@@ -96,7 +97,7 @@ private:
 
   int n; // The size of source data. The power of 2.
   vector<int> add;
-  vector<int> t;
+  vector<int> t; // t[v] .. the minimum value in v.
 };
 
 int main() {
@@ -118,11 +119,11 @@ int main() {
 
   SegTree st(n);
   auto decrease = [&] (int x) {
-    st.update(revP[x] + 1, -1);
+    st.update(0, revP[x] + 1, -1);
     if (st.query() >= 0) {
       return true;
     } else {
-      st.update(revP[x] + 1, 1); // revert state
+      st.update(0, revP[x] + 1, 1); // revert state
       return false;
     }
   };
@@ -134,6 +135,6 @@ int main() {
     if (i < n-1) {
       cout << ' ';
     }
-    st.update(q[i] + 1, 1); // revert state
+    st.update(0, q[i] + 1, 1); // revert state
   }
 }
