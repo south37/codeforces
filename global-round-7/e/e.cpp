@@ -56,8 +56,9 @@ public:
   SegTree(int _n) {
     n = 1;
     while (n < _n) { n *= 2; }
-    add = vector<int>(2 * n - 1);
-    t = vector<int>(2 * n - 1);
+    n *= 2;
+    add = vector<int>(2*n-1);
+    t = vector<int>(2*n-1);
   }
 
   void update(int k, int x) {
@@ -70,7 +71,12 @@ public:
     if (tl >= l && tr <= r) {
       update_one(v, x);
     } else {
-      push(v);
+      if (add[v]) {
+        update_one(v*2+1, add[v]);
+        update_one(v*2+2, add[v]);
+        add[v] = 0;
+      }
+
       _update(v*2+1, l, r, tl, (tl+tr)/2, x);
       _update(v*2+1, l, r, (tl+tr)/2, tr, x);
       t[v] = min(t[v*2+1], t[v*2+2]);
@@ -86,14 +92,6 @@ private:
   void update_one(int v, int x) {
     add[v] += x;
     t[v] += x;
-  }
-
-  void push(int v) {
-    if (add[v]) {
-      update_one(v*2+1, add[v]);
-      update_one(v*2+2, add[v]);
-      add[v] = 0;
-    }
   }
 
   int n; // The size of source data. The power of 2.
