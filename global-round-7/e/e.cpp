@@ -78,7 +78,7 @@ public:
       }
 
       _update(v*2+1, l, r, tl, (tl+tr)/2, x);
-      _update(v*2+1, l, r, (tl+tr)/2, tr, x);
+      _update(v*2+2, l, r, (tl+tr)/2, tr, x);
       t[v] = min(t[v*2+1], t[v*2+2]);
     }
   }
@@ -99,24 +99,21 @@ private:
   vector<int> t;
 };
 
-int main(int argc, char** argv) {
-  cin.tie(NULL);
-  cout.tie(NULL);
-  ios_base::sync_with_stdio(false);
-  //cout << setprecision(10) << fixed;
-
-  ll n;
+int main() {
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+  int n;
   cin >> n;
-  vector<ll> p(n);
-  vector<ll> revP(n); // idx of the value in p.
-  vector<ll> q(n);
+
+  vector<int> p(n), q(n);
+  vector<int> revP(n + 1);
   rep(i, n) {
     cin >> p[i];
     revP[p[i]] = i;
   }
   rep(i, n) {
     cin >> q[i];
-    --q[i]; // 0-indexed
+    --q[i];
   }
 
   SegTree st(n);
@@ -125,18 +122,18 @@ int main(int argc, char** argv) {
     if (st.query() >= 0) {
       return true;
     } else {
-      st.update(revP[x] + 1, 1); // revert
+      st.update(revP[x] + 1, 1); // revert state
       return false;
     }
   };
+
   int x = n;
   rep(i, n) {
     while (decrease(x)) { --x; }
     cout << x;
     if (i < n-1) {
-      cout << " ";
+      cout << ' ';
     }
-    st.update(q[i] + 1, 1);
+    st.update(q[i] + 1, 1); // revert state
   }
-  cout << endl;
 }
