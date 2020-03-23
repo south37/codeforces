@@ -98,38 +98,23 @@ int main(int argc, char** argv) {
   }
 
   string cycle;
-  // Here, we start cycle. up n-1, right m-1, down n-2, left m-2, ...
-  int widthDir = 0; // 0 means right, 1 means left.
-  int verDir = 0; // 0 means up, 1 means down.
-  ll widthLen = m-1;
-  ll verLen = n;
-  while (verLen > 0 || widthLen > 0) {
-    rep(iter, verLen) {
-      if (verDir == 0) {
+  int dir = 0; // 0 means up, 1 means down
+  rep(iter, m) {
+    rep(i, n-1) {
+      if (dir == 0) {
         cycle += 'U';
       } else {
         cycle += 'D';
       }
     }
-    // flip
-    verDir = (verDir == 0) ? 1 : 0;
-    // shrink
-    --verLen;
 
-    rep(iter, widthLen) {
-      if (widthDir == 0) {
-        cycle += 'R';
-      } else {
-        cycle += 'L';
-      }
+    if (iter < m-1) {
+      cycle += 'R';
     }
-    // flip
-    widthDir = (widthDir == 0) ? 1 : 0;
-    // shrink
-    --widthLen;
+    dir = (dir == 0) ? 1 : 0;
   }
 
-  ans += cycle.substr(1);
+  ans += cycle;
   cout << ans.size() << endl;
   cout << ans << endl;
 }
