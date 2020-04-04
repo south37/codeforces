@@ -51,26 +51,26 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve(ll b) {
-  vector<ll> ans(b);
+  string ans(' ', b);
   rep(i, b) {
     cout << (i+1) << endl;
     cout << std::flush;
-    ll digit;
-    cin >> digit; // 0 or 1
+    char digit;
+    cin >> digit; // '0' or '1'
     ans[i] = digit;
   }
 
-  rep(i, b) {
-    cout << ('0' + ans[i]);
-  }
-  cout << endl;
+  cout << ans << endl;
   cout << std::flush;
 
-  string res;
+  char res;
   cin >> res;
-  if (res == "Y") { // correct answer
+  if (res == 'Y') { // correct answer
     return;
   } else { // invalid answer
+    cout << "Our answer is below. This is wrong." << endl;
+    cout << ans << endl;
+    cout << std::flush;
     abort();
   }
 }
