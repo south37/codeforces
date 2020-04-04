@@ -119,7 +119,7 @@ bool backtrack(vector<ll>& traces, ll i, ll k, ll pre, ll sum){
   ll n = traces.size();
   if (i == n) { // reached to last
     // Do check the validness
-    cout << "traces: "; printvec(traces);
+    // cout << "traces: "; printvec(traces);
     return searchAns(traces, k);
   }
   if (i == n-1) {
