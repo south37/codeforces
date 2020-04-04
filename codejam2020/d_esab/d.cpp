@@ -51,13 +51,15 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve(ll b) {
-  string ans(' ', b);
+  string ans(b, ' ');
   rep(i, b) {
     cout << (i+1) << endl;
     cout << std::flush;
     char digit;
     cin >> digit; // '0' or '1'
     ans[i] = digit;
+
+    // cerr << "digit: " << digit << endl;
   }
 
   cout << ans << endl;
@@ -83,6 +85,8 @@ int main(int argc, char** argv) {
 
   ll t, b;
   cin >> t >> b;
+  // cerr << "t: " << t << endl;
+  // cerr << "b: " << b << endl;
   rep(i, t) {
     //cout << "Case #" << (i+1) << ": ";
     solve(b);
