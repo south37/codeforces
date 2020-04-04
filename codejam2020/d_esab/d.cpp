@@ -143,29 +143,85 @@ void solve(ll b) {
 
   // Here, sameId or diffId > 0.
   if (sameId == -1) { // Here, all elements have different
-    // Here, we consider only B=20.
-    // TODO(south37) Consider B=100
-    rep(i, b/2) {
+    char diffLeft = checkDigit(diffId);
+
+    int i = 0;
+    while (tryCnt % 10 != 0) {
       ans[i] = checkDigit(i);
+      ++i;
     }
-    rep(i, b/2) {
-      if (ans[i] == '0') {
-        ans[b-1-i] = '1';
+
+    // Here, flip and
+    while (true) {
+      bool allCalculated = true;
+      rep(j, b) {
+        if (ans[j] == ' ') { // not yet calculated
+          allCalculated = false;
+        }
+      }
+      if (allCalculated) { break; }
+
+      char diffLeft2 = checkDigit(diffId);
+      // Here, we can distinguish the operation by check the { same, same2 }  and { diff, diff2 }
+
+      bool diffChange = diffLeft != diffLeft2;
+      diffLeft = diffLeft2;
+
+      if (diffChange) {
+        flip(ans);
       } else {
-        ans[b-1-i] = '0';
+        // Do nothing
+      }
+
+      int j = 0;
+      while (tryCnt % 10 != 0 && j < b) {
+        if (ans[j] == ' ') { // not yet calculated
+          ans[j] = checkDigit(j);
+        }
+        ++j;
       }
     }
     bool res = submitResult(ans);
     if (res) { return; } else { abort(); }
   }
   if (diffId == -1) { // diffId == -1. Here. all elements have same
-    // Here, we consider only B=20.
-    // TODO(south37) Consider B=100
-    rep(i, b/2) {
+    char sameLeft = checkDigit(sameId);
+
+    int i = 0;
+    while (tryCnt % 10 != 0) {
       ans[i] = checkDigit(i);
+      ++i;
     }
-    rep(i, b/2) {
-      ans[b-1-i] = ans[i];
+
+    // Here, flip and
+    while (true) {
+      bool allCalculated = true;
+      rep(j, b) {
+        if (ans[j] == ' ') { // not yet calculated
+          allCalculated = false;
+        }
+      }
+      if (allCalculated) { break; }
+
+      char sameLeft2 = checkDigit(sameId);
+      // Here, we can distinguish the operation by check the { same, same2 }  and { diff, diff2 }
+
+      bool sameChange = sameLeft != sameLeft2;
+      sameLeft = sameLeft2;
+
+      if (sameChange) {
+        flip(ans);
+      } else {
+        // Do nothing
+      }
+
+      int j = 0;
+      while (tryCnt % 10 != 0 && j < b) {
+        if (ans[j] == ' ') { // not yet calculated
+          ans[j] = checkDigit(j);
+        }
+        ++j;
+      }
     }
     bool res = submitResult(ans);
     if (res) { return; } else { abort(); }
