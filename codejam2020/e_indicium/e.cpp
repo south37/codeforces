@@ -89,10 +89,10 @@ bool backtrackAns(vector<ll>& traces, ll r, ll k) {
     if (isDuplicated) {
       continue; // try next permutation
     } else {
+      rep(c, n) { elements[c].insert(ans[r][c]); }
       bool res = backtrackAns(traces, r + 1, k);
-      if (res) {
-        return true;
-      }
+      rep(c, n) { elements[c].erase(ans[r][c]); } // revert
+      if (res) { return true; }
       // Here, try next permutation
     }
   } while (next_permutation(all(otherRow)));
