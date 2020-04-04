@@ -119,11 +119,14 @@ bool backtrack(vector<ll>& traces, ll i, ll k, ll pre, ll sum){
   ll n = traces.size();
   if (i == n) { // reached to last
     // Do check the validness
+    cout << "traces: "; printvec(traces);
     return searchAns(traces, k);
   }
   if (i == n-1) {
     ll now = k - sum;
+    traces[i] = now;
     if (now < pre) { return false; } // not valid
+    if (now > n) { return false; } // not valid
     return backtrack(traces, i+1, k, now, k);
   }
 
