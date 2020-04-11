@@ -111,7 +111,7 @@ void solve() {
             // cout << "p: " << p << endl;
             // cout << "ans["<<j<<"]: " << "\"" << ans[j] << "\"" << endl;
             // cout << "p["<<j<<"]: " <<p[j] << endl;
-            // cout << "*"; // print *
+            cout << "*"; // print *
             return;
           }
           // OK
