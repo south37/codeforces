@@ -114,6 +114,8 @@ void solve() {
   while (!q.empty()) {
     ans += sum;
     ll sz = q.size();
+    set<P> updated; // updated positions
+
     rep(iter, sz) {
       auto p = q.front(); q.pop();
       int r = p.first;
@@ -128,11 +130,20 @@ void solve() {
         ll skill = p.second;
         if (nextR < 0) { continue; } // invalid
         neibers[nextR][nextC][i] = neibers[r][c][i]; // update neiber
+        updated.insert({ nextR, nextC });
+      }
+    }
 
-        // Check the average skill
-        if (skill_is_lower(neibers, nextR, nextC)) {
-          q.emplace(nextR, nextC);
-        }
+    // Next, check all updated positions
+    while (updated.size() > 0) {
+      auto iter = updated.begin();
+      updated.erase(iter);
+      auto p = *iter;
+      int r = p.first;
+      int c = p.second;
+      // Check the average skill
+      if (skill_is_lower(neibers, r, c)) {
+        q.emplace(r, c);
       }
     }
   }
