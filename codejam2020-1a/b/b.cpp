@@ -86,6 +86,7 @@ void solve() {
         break;
       }
     }
+    --r; // decrease.
     // Here, we do small remaining
     while (remain > 0) {
       ++r;
