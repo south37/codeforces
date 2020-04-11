@@ -50,12 +50,7 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-  ll n;
-  cin >> n;
-  // Here, we calculate all case.
-  // start from (0, 0). (n, k) is nCk.
-
+void solve_for_small_n(ll n) {
   if (n == 1) {
     cout << "1 1" << endl;
     return;
@@ -94,6 +89,20 @@ void solve() {
       ++r;
     }
   }
+}
+
+void solve() {
+  ll n;
+  cin >> n;
+  // Here, we calculate all case.
+  // start from (0, 0). (n, k) is nCk.
+
+  if (n <= 1000) {
+    solve_for_small_n(n);
+    return;
+  }
+
+  // Here, we consider large n.
 }
 
 int main(int argc, char** argv) {
