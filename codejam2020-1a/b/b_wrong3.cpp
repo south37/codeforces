@@ -97,7 +97,7 @@ void solve() {
   // Here, we calculate all case.
   // start from (0, 0). (n, k) is nCk.
 
-  if (n <= 1000) {
+  if (n <= 1) {
     solve_for_small_n(n);
     return;
   }
@@ -128,10 +128,14 @@ void solve() {
   // we fetch center number in greedy way.
   ll remain = n;
   ll r = 0;
+  ll offset = 0;
+  ll lastR = 0;
+  ll lastK;
   while (remain > 0) {
     assert(r <= 33);
 
-    ll k = r/2;
+    ll k = r/2 - offset;
+    if (k < 0) { break; }
 
     // Here, we calculate rCk
     // ll cont = comb[r];
@@ -141,43 +145,27 @@ void solve() {
     ll cont = pascal[r][k];
     cout << "remain: " << remain << endl;
     cout << r<<"C"<<k<<": " << cont << endl;
-    if (remain < cont * 2) {
-      break;
+    if (remain <= cont * 3 / 2) {
+      r = lastR-1;
+      ++offset; // change offset
+      continue;
     } else { // remain >= cont
+      lastR = r;
+      lastK = k;
       cout << r + 1 << " " << k + 1 << endl;
       remain -= cont;
     }
     ++r;
   }
   // Here, r is not printed yet.
-  --r;
-  ll k = r / 2;
-  // Here, we get contribution from (r-1,k-1)
-  while (remain > 0) {
-    --r;
-    --k;
-    if (k >= 0) {
-      // Calc rCk
-      ll cont = pascal[r][k];
-      // ll cont = comb[r];
-      // cont *= fact[r];
-      // cont /= fact[k];
-      // cont /= fact[r-k];
+  r = lastR;
+  ll k = lastK;
 
-      assert(remain >= cont);
-      cout << "remain: " << remain << endl;
-      cout << r<<"C"<<k<<": " << cont << endl;
-      cout << r + 1 << " " << k + 1 << endl;
-      remain -= cont;
-    } else { // k < 0
-      break;
-    }
-  }
   // Here, r is remaining, but k reached to 0.
   // we start from (r, 0) and go along (r+i, 0)
   ll i = 0;
   while (remain > 0) {
-    cout << r + 1<< " 1" << endl;
+    cout << r + 1 << " 1" << endl;
     remain -= 1;
     ++r;
   }
