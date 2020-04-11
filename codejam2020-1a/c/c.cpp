@@ -81,21 +81,25 @@ void solve() {
       for (int rr = r-1; rr >= 0; --rr) {
         if (mat[rr][c] > 0) { // found
           founds.push_back(mat[rr][c]);
+          break;
         }
       }
       for (int rr = r+1; rr < h; ++rr) {
         if (mat[rr][c] > 0) { // found
           founds.push_back(mat[rr][c]);
+          break;
         }
       }
       for (int cc = c-1; cc >= 0; --cc) {
         if (mat[r][cc] > 0) { // found
           founds.push_back(mat[r][cc]);
+          break;
         }
       }
       for (int cc = c+1; cc < w; ++cc) {
         if (mat[r][cc] > 0) { // found
           founds.push_back(mat[r][cc]);
+          break;
         }
       }
       // Here, founds has neibors
@@ -112,7 +116,6 @@ void solve() {
     if (!changed) {
       break;
     } else {
-      // ans += roundSum;
       rep(r, h) rep(c, w) {
         if (eliminated[r][c]) {
           mat[r][c] = 0;
