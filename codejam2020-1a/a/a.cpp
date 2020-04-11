@@ -61,28 +61,39 @@ void solve() {
   // We need to check only prefix and suffics
   vector<string> pres;
   vector<string> sufs;
+  vector<string> middles;
   rep(i, n) {
     string& p = pattern[i];
-    ll m = p.size();
 
-    ll j = 0;
-    while (j < m) {
-      if (p[j] == '*') {
+    vector<string> splitted;
+    ll pos = 0;
+    while (true) {
+      auto found = p.find('*', pos);
+      if (found == string::npos) { // reached to last
+        splitted.push_back(p.substr(pos));
         break;
+      } else {
+        splitted.push_back(p.substr(pos, found-pos));
+        pos = found + 1; // skip '*'
       }
-      ++j;
     }
-    // Here, j is *
+    // cout << "splitted size: " << splitted.size() << endl;
+    // cout << "splitted: "; printvec(splitted);
 
-    pres.push_back(p.substr(0, j));
-    string suffix = p.substr(j+1);
-    // cout << "\"" << p.substr(0, j) << "\"" << endl;
-    // cout << "\"" << suffix << "\"" << endl;
-    reverse(all(suffix));
-    sufs.push_back(suffix);
+    // Here, j is *
+    pres.push_back(splitted[0]);
+    sufs.push_back(splitted[splitted.size()-1]);
+    for (int i = 1; i < splitted.size()-1; ++i) {
+      middles.push_back(splitted[i]);
+    }
   }
   // cout << "pres: "; printvec(pres);
   // cout << "sufs: "; printvec(sufs);
+
+  // Here, we treat sufs in reversed format
+  for (auto& suf : sufs) {
+    reverse(all(suf));
+  }
 
   vector<string> PreAndSufAns(2);
   vector<vector<string>> PreAndSuf;
@@ -124,6 +135,9 @@ void solve() {
 
   // Here, ans has valid string
   string ans = PreAndSufAns[0];
+  for (auto& middle : middles) {
+    ans += middle;
+  }
   reverse(all(PreAndSufAns[1]));
   ans += PreAndSufAns[1];
 
