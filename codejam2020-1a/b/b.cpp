@@ -94,7 +94,7 @@ void solve() {
     }
   }
   // Here, all information is calclated
-  cout << "used:"; printvec(used);
+  // cout << "used:"; printvec(used);
 
   ll remain = n;
   int dir = 0;
@@ -114,7 +114,7 @@ void solve() {
   }
 
   // Here, remain may remaining
-  ll r = 30;
+  ll r = 31;
   while (remain > 0) {
     if (dir == 0) {
       cout << r+1 << " " << 1 << endl;
