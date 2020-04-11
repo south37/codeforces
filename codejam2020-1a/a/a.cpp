@@ -114,15 +114,13 @@ void solve() {
 
     // Here, ans is the longest pattern.
     // Check the sameness of them
-    ll m = ans.size();
-    rep(i, m) {
-      rep(j, n) {
-        auto& p = pattern[j];
-        // cout << "p: " << p << endl;
-        // cout << "p.size: " << p.size() << endl;
+    rep(i, n) {
+      auto& p = pattern[i];
+      // cout << "p: " << p << endl;
+      // cout << "p.size: " << p.size() << endl;
 
-        if (i >= p.size()) { continue; } // p is short. skip
-        if (ans[i] != p[i]) { // not match. invalid case.
+      rep(j, p.size()) {
+        if (ans[j] != p[j]) { // not match.
           cout << "*"; // print '*'
           return;
         }
