@@ -57,31 +57,68 @@ void solve() {
   rep(i, n) {
     cin >> pattern[i];
   }
-  // Here, we solve only for test set 1.
-  // We need to check only suffics
+  // Here, we solve only for test set 2.
+  // We need to check only prefix and suffics
+  vector<string> pres;
+  vector<string> sufs;
   rep(i, n) {
-    reverse(all(pattern[i]));
-  }
-
-  string ans(pattern[0].substr(0, pattern[0].size()-1)); // cut '*'
-  for (int i = 1; i < n; ++i) {
     string& p = pattern[i];
-    // Check the match
-    ll m = p.size()-1;
-    rep(j, m) {
-      if (ans.size()-1 >= j) { // ok
-        if (ans[j] != p[j]) { //not match
-          cout << "*"; // print *
-          return;
+    ll m = p.size();
+
+    ll j = 0;
+    while (j < m) {
+      if (p[j] == '*') {
+        break;
+      }
+      ++j;
+    }
+    // Here, j is *
+
+    pres.push_back(p.substr(0, j));
+    string suffix = p.substr(j+1);
+    reverse(all(suffix));
+    sufs.push_back(suffix);
+  }
+  // cout << "pres:"; printvec(pres);
+  // cout << "sufs:"; printvec(sufs);
+
+  vector<string> PreAndSufAns(2);
+  vector<vector<string>> PreAndSuf;
+  PreAndSuf.push_back(pres);
+  PreAndSuf.push_back(sufs);
+
+  rep(k, 2) {
+    string& ans = PreAndSufAns[k];
+    vector<string> pattern = PreAndSuf[k];
+    if (pattern[0].size() > 0) {
+      ans = pattern[0];
+    }
+    // cout << "ans: " << endl;
+
+    for (int i = 1; i < n; ++i) {
+      string& p = pattern[i];
+      // cout <<"pattern:" << p << endl;
+      // Check the match
+      ll m = p.size();
+      rep(j, m) {
+        if (ans.size()-1 >= j) { // ok
+          if (ans[j] != p[j]) { //not match
+            cout << "*"; // print *
+            return;
+          }
+          // OK
+        } else {
+          ans.push_back(p[j]);
         }
-        // OK
-      } else {
-        ans.push_back(p[j]);
       }
     }
   }
+
   // Here, ans has valid string
-  reverse(all(ans));
+  string ans = PreAndSufAns[0];
+  reverse(all(PreAndSufAns[1]));
+  ans += PreAndSufAns[1];
+
   cout << ans;
 }
 
