@@ -76,11 +76,13 @@ void solve() {
 
     pres.push_back(p.substr(0, j));
     string suffix = p.substr(j+1);
+    // cout << "\"" << p.substr(0, j) << "\"" << endl;
+    // cout << "\"" << suffix << "\"" << endl;
     reverse(all(suffix));
     sufs.push_back(suffix);
   }
-  // cout << "pres:"; printvec(pres);
-  // cout << "sufs:"; printvec(sufs);
+  // cout << "pres: "; printvec(pres);
+  // cout << "sufs: "; printvec(sufs);
 
   vector<string> PreAndSufAns(2);
   vector<vector<string>> PreAndSuf;
@@ -89,11 +91,12 @@ void solve() {
 
   rep(k, 2) {
     string& ans = PreAndSufAns[k];
-    vector<string> pattern = PreAndSuf[k];
-    if (pattern[0].size() > 0) {
-      ans = pattern[0];
-    }
-    // cout << "ans: " << endl;
+    vector<string>& pattern = PreAndSuf[k];
+    // cout << "pattern:"; printvec(pattern);
+    // cout << "pattern size:" << pattern.size() << endl;
+    ans = pattern[0];
+    // cout << "ans: " << ans << endl;
+    // cout << "ans size: " << ans.size() << endl;
 
     for (int i = 1; i < n; ++i) {
       string& p = pattern[i];
@@ -101,9 +104,14 @@ void solve() {
       // Check the match
       ll m = p.size();
       rep(j, m) {
-        if (ans.size()-1 >= j) { // ok
+        if ((ll)(ans.size()-1) >= j) { // ok
           if (ans[j] != p[j]) { //not match
-            cout << "*"; // print *
+            // cout << "ans: " << ans << endl;
+            // cout << "ans size: " << ans.size() << endl;
+            // cout << "p: " << p << endl;
+            // cout << "ans["<<j<<"]: " << "\"" << ans[j] << "\"" << endl;
+            // cout << "p["<<j<<"]: " <<p[j] << endl;
+            // cout << "*"; // print *
             return;
           }
           // OK
