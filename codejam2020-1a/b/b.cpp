@@ -51,6 +51,37 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n;
+  cin >> n;
+  // Here, we calculate all case.
+  // start from (0, 0). (n, k) is nCk.
+
+  if (n == 1) {
+    cout << "1 1" << endl;
+    return;
+  } else if (n == 2) {
+    cout << "1 1" << endl;
+    cout << "2 1" << endl;
+    return;
+  } else if (n == 3) {
+    cout << "1 1" << endl;
+    cout << "2 1" << endl;
+    cout << "3 1" << endl;
+    return;
+  } else { // n >= 4
+    cout << "1 1" << endl;
+    cout << "2 1" << endl;
+    cout << "3 2" << endl;
+    ll remain = n - 4;
+    // Here, our position is (2, 1)
+    // start from here, and increment in greedy way
+    rep(i, remain) {
+      ll r = 2 + i;
+      ll k = 0;
+      cout << r + 1 << " " << k + 1 << endl;
+    }
+    return;
+  }
 }
 
 int main(int argc, char** argv) {
@@ -63,7 +94,7 @@ int main(int argc, char** argv) {
   cin >> t;
   rep(i, t) {
     cout << "Case #" << (i+1) << ": ";
-    solve();
     cout << endl;
+    solve();
   }
 }
