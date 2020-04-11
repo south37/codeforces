@@ -52,10 +52,10 @@ const ll MOD = 1000000007;  // 1e9 + 7
 
 // 0,      1,   2,     3
 // bottom, top, right, left
-int dr[4]   = { 1, -1, 0, 0 };
-int dc[4]   = { 0, 0, 1, -1 };
-int revD[4] = { -1, 1, 0, 0 };
-int revC[4] = { 0, 0, -1, 1 };
+// int dr[4]   = { 1, -1, 0, 0 };
+// int dc[4]   = { 0, 0, 1, -1 };
+// int revD[4] = { -1, 1, 0, 0 };
+// int revC[4] = { 0, 0, -1, 1 };
 
 vector<vector<ll>> mat;
 
