@@ -105,29 +105,26 @@ void solve() {
     vector<string>& pattern = PreAndSuf[k];
     // cout << "pattern:"; printvec(pattern);
     // cout << "pattern size:" << pattern.size() << endl;
-    ans = pattern[0];
+    rep(i, n) {
+      if (ans.size() < pattern[i].size()) {
+        ans = pattern[i];
+      }
+    }
     // cout << "ans: " << ans << endl;
-    // cout << "ans size: " << ans.size() << endl;
 
-    for (int i = 1; i < n; ++i) {
-      string& p = pattern[i];
-      // cout <<"pattern:" << p << endl;
-      // Check the match
-      ll m = p.size();
-      rep(j, m) {
-        if ((ll)(ans.size()-1) >= j) { // ok
-          if (ans[j] != p[j]) { //not match
-            // cout << "ans: " << ans << endl;
-            // cout << "ans size: " << ans.size() << endl;
-            // cout << "p: " << p << endl;
-            // cout << "ans["<<j<<"]: " << "\"" << ans[j] << "\"" << endl;
-            // cout << "p["<<j<<"]: " <<p[j] << endl;
-            cout << "*"; // print *
-            return;
-          }
-          // OK
-        } else {
-          ans.push_back(p[j]);
+    // Here, ans is the longest pattern.
+    // Check the sameness of them
+    ll m = ans.size();
+    rep(i, m) {
+      rep(j, n) {
+        auto& p = pattern[j];
+        // cout << "p: " << p << endl;
+        // cout << "p.size: " << p.size() << endl;
+
+        if (i >= p.size()) { continue; } // p is short. skip
+        if (ans[i] != p[i]) { // not match. invalid case.
+          cout << "*"; // print '*'
+          return;
         }
       }
     }
