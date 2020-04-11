@@ -102,41 +102,22 @@ void solve() {
     return;
   }
 
-  vector<ll> comb(34); // 33C16 = 1e9. we need only this
-  comb[0]  = 1;
-  comb[1]  = 1;
-  comb[2]  = 2;
-  comb[3]  = 3;
-  comb[4]  = 6;
-  comb[5]  = 10;
-  comb[6]  = 20;
-  comb[7]  = 35;
-  comb[8]  = 70;
-  comb[9]  = 126;
-  comb[10] = 252;
-  comb[11] = 462;
-  comb[12] = 924;
-  comb[13] = 1716;
-  comb[14] = 3432;
-  comb[15] = 6435;
-  comb[16] = 12870;
-  comb[17] = 24310;
-  comb[18] = 48620;
-  comb[19] = 92378;
-  comb[20] = 184756;
-  comb[21] = 352716;
-  comb[22] = 705432;
-  comb[23] = 1352078;
-  comb[24] = 2704156;
-  comb[25] = 5200300;
-  comb[26] = 10400600;
-  comb[27] = 20058300;
-  comb[28] = 40116600;
-  comb[29] = 77558760;
-  comb[30] = 155117520;
-  comb[31] = 300540195;
-  comb[32] = 601080390;
-  comb[33] = 1166803110;
+  vector<vector<ll>> pascal(34); // 33C16 > 1e9. we need only this
+  pascal[0].resize(1);
+  pascal[0][0] = 1;
+  rep(r, 34) {
+    pascal[r].resize(r+1);
+    pascal[r][0] = 1;
+    pascal[r][pascal[r].size()-1] = 1;
+    for (int k = 1; k < pascal[r].size()-1; ++k) {
+      pascal[r][k] = pascal[r-1][k-1] + pascal[r-1][k];
+    }
+  }
+
+  // For Debug
+  // rep(r, 34) {
+  //   printvec(pascal[r]);
+  // }
 
   // vector<ll> fact(41); // 40C20 = 1e11. we need only this
   // fact[0] = 1;
@@ -153,10 +134,12 @@ void solve() {
     ll k = r/2;
 
     // Here, we calculate rCk
-    ll cont = comb[r];
+    // ll cont = comb[r];
     // cont *= fact[r];
     // cont /= fact[k];
     // cont /= fact[r-k];
+    ll cont = pascal[r][k];
+    cout << "remain: " << remain << endl;
     cout << r<<"C"<<k<<": " << cont << endl;
     if (remain < cont * 2) {
       break;
@@ -175,12 +158,15 @@ void solve() {
     --k;
     if (k >= 0) {
       // Calc rCk
-      ll cont = comb[r];
+      ll cont = pascal[r][k];
+      // ll cont = comb[r];
       // cont *= fact[r];
       // cont /= fact[k];
       // cont /= fact[r-k];
 
       assert(remain >= cont);
+      cout << "remain: " << remain << endl;
+      cout << r<<"C"<<k<<": " << cont << endl;
       cout << r + 1 << " " << k + 1 << endl;
       remain -= cont;
     } else { // k < 0
