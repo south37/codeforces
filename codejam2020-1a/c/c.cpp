@@ -50,79 +50,93 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+// 0,      1,   2,     3
+// bottom, top, right, left
+int dr[4]   = { 1, -1, 0, 0 };
+int dc[4]   = { 0, 0, 1, -1 };
+int revD[4] = { -1, 1, 0, 0 };
+int revC[4] = { 0, 0, -1, 1 };
+
+vector<vector<ll>> mat;
+
+bool skill_is_lower(vector<vector<vector<pair<P, ll>>>>& neibers, int r, int c) {
+  vector<ll> skills;
+  rep(i, 4) {
+    if (neibers[r][c][i].second > 0) {
+      skills.push_back(neibers[r][c][i].second);
+    }
+  }
+  if (skills.size() == 0) { return false; }
+
+  ll avg = 0;
+  for (int skill : skills) { avg += skill; }
+  return (avg > skills.size() * mat[r][c]);  // mat[r][c] is lower than average of neibers
+}
+
 void solve() {
   ll h, w;
   cin >> h >> w;
-  vector<vector<ll>> mat(h, vector<ll>(w));
+  mat.assign(h, vector<ll>(w));
+  ll sum = 0;
   rep(r, h) {
     rep(c, w) {
       cin >> mat[r][c];
+      sum += mat[r][c];
     }
   }
-  // Here, mat has all information
-  // we calculate in greedy way
+
+  queue<pair<ll, ll>> q; // eliminate q
+
+  // neibers[r][c] .. neibers or (r, c)
+  vector<vector<vector<pair<P, ll>>>> neibers(h, vector<vector<pair<P, ll>>>(w, vector<pair<P, ll>>(4, pair<P, ll>({ -1, -1 }, -1))));
+  rep(r, h) {
+    rep(c, w) {
+      if (r > 0) {
+        neibers[r][c][1] = pair<P, ll>({ r-1, c }, mat[r-1][c]); // top
+      }
+      if (r < h-1) {
+        neibers[r][c][0] = pair<P, ll>({ r+1, c }, mat[r+1][c]); // bottom
+      }
+      if (c > 0) {
+        neibers[r][c][3] = pair<P, ll>({ r, c-1 }, mat[r][c-1]); // left
+      }
+      if (c < w-1) {
+        neibers[r][c][2] = pair<P, ll>({ r, c+1 }, mat[r][c+1]); // right
+      }
+
+      if (skill_is_lower(neibers, r, c)) {
+        q.emplace(r, c);
+      }
+    }
+  }
+
   ll ans = 0;
-  while(true) {
-    bool changed = false;
-    ll roundSum = 0;
-    // calculate sum
-    rep(r, h) rep(c, w) { roundSum += mat[r][c]; }
-    ans += roundSum;
+  while (!q.empty()) {
+    ans += sum;
+    ll sz = q.size();
+    rep(iter, sz) {
+      auto p = q.front(); q.pop();
+      int r = p.first;
+      int c = p.second;
+      sum -= mat[r][c]; // eliminate
+      // Here, check neibers
+      rep(i, 4) {
+        auto p = neibers[r][c][i^1];
+        P pos = p.first;
+        ll nextR = pos.first;
+        ll nextC = pos.second;
+        ll skill = p.second;
+        if (nextR < 0) { continue; } // invalid
+        neibers[nextR][nextC][i] = neibers[r][c][i]; // update neiber
 
-    vector<vector<bool>> eliminated(h, vector<bool>(w));
-
-    // eiliminate
-    rep(r, h) rep(c, w) {
-      if (mat[r][c] == 0) { continue; } // skip eliminated onem
-
-      // Here, we search all neibers;
-      // find small r
-      vector<ll> founds;
-      for (int rr = r-1; rr >= 0; --rr) {
-        if (mat[rr][c] > 0) { // found
-          founds.push_back(mat[rr][c]);
-          break;
-        }
-      }
-      for (int rr = r+1; rr < h; ++rr) {
-        if (mat[rr][c] > 0) { // found
-          founds.push_back(mat[rr][c]);
-          break;
-        }
-      }
-      for (int cc = c-1; cc >= 0; --cc) {
-        if (mat[r][cc] > 0) { // found
-          founds.push_back(mat[r][cc]);
-          break;
-        }
-      }
-      for (int cc = c+1; cc < w; ++cc) {
-        if (mat[r][cc] > 0) { // found
-          founds.push_back(mat[r][cc]);
-          break;
-        }
-      }
-      // Here, founds has neibors
-      if (founds.size() == 0) { continue; } // skip if no neiber
-      ll average = 0;
-      for (ll found : founds) { average += found; }
-      if (average > founds.size() * mat[r][c]) { // too small
-        // cout << "(r,c): " << r << "," << c << endl;
-        // cout << "average: " << average << endl;
-        changed = true;
-        eliminated[r][c] = true;
-      }
-    }
-    if (!changed) {
-      break;
-    } else {
-      rep(r, h) rep(c, w) {
-        if (eliminated[r][c]) {
-          mat[r][c] = 0;
+        // Check the average skill
+        if (skill_is_lower(neibers, nextR, nextC)) {
+          q.emplace(nextR, nextC);
         }
       }
     }
   }
+  ans += sum;
   cout << ans;
 }
 
