@@ -116,18 +116,24 @@ void solve() {
     ll sz = q.size();
     set<P> updated; // updated positions
 
-    rep(iter, sz) {
+    // cout << "sum: " << sum << endl;
+    // cout << "q.size(): " << q.size() << endl;
+    // printtree(mat);
+
+    while (!q.empty()) {
       auto p = q.front(); q.pop();
       int r = p.first;
       int c = p.second;
-      sum -= mat[r][c]; // eliminate
+      // eliminate (r, c)
+      sum -= mat[r][c];
+      mat[r][c] = 0;
+
       // Here, check neibers
       rep(i, 4) {
         auto p = neibers[r][c][i^1];
         P pos = p.first;
         ll nextR = pos.first;
         ll nextC = pos.second;
-        ll skill = p.second;
         if (nextR < 0) { continue; } // invalid
         neibers[nextR][nextC][i] = neibers[r][c][i]; // update neiber
         updated.insert({ nextR, nextC });
@@ -141,6 +147,8 @@ void solve() {
       auto p = *iter;
       int r = p.first;
       int c = p.second;
+      if (mat[r][c] == 0) { continue; } // skip erased one.
+
       // Check the average skill
       if (skill_is_lower(neibers, r, c)) {
         q.emplace(r, c);
