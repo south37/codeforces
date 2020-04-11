@@ -89,9 +89,9 @@ void solve() {
     --r; // decrease.
     // Here, we do small remaining
     while (remain > 0) {
-      ++r;
       cout << r + 1 << " " << 1 << endl; // (r, 0)
       --remain;
+      ++r;
     }
   }
 }
