@@ -51,6 +51,38 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n;
+  cin >> n;
+  vector<string> pattern(n);
+  rep(i, n) {
+    cin >> pattern[i];
+  }
+  // Here, we solve only for test set 1.
+  // We need to check only suffics
+  rep(i, n) {
+    reverse(all(pattern[i]));
+  }
+
+  string ans(pattern[0].substr(0, pattern[0].size()-1)); // cut '*'
+  for (int i = 1; i < n; ++i) {
+    string& p = pattern[i];
+    // Check the match
+    ll m = p.size()-1;
+    rep(j, m) {
+      if (ans.size()-1 >= j) { // ok
+        if (ans[j] != p[j]) { //not match
+          cout << "*"; // print *
+          return;
+        }
+        // OK
+      } else {
+        ans.push_back(p[j]);
+      }
+    }
+  }
+  // Here, ans has valid string
+  reverse(all(ans));
+  cout << ans;
 }
 
 int main(int argc, char** argv) {
