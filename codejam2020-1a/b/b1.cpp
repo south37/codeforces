@@ -71,27 +71,16 @@ void solve() {
   } else { // n >= 4
     cout << "1 1" << endl;
     cout << "2 1" << endl;
-    cout << "3 2" << endl; // (2, 1)
+    cout << "3 2" << endl;
     ll remain = n - 4;
     // Here, our position is (2, 1)
     // start from here, and increment in greedy way
-    ll r = 2;
-    while (remain > 0) {
-      // Here, we do "(r, 1)" pair. It is rC1 = r.
-      ++r;
-      if (remain >= r) {
-        remain -= r;
-        cout << r + 1 << " " << 2 << endl;
-      } else { // reached to small remaining
-        break;
-      }
+    rep(i, remain) {
+      ll r = 2 + i;
+      ll k = 0;
+      cout << r + 1 << " " << k + 1 << endl;
     }
-    // Here, we do small remaining
-    while (remain > 0) {
-      ++r;
-      cout << r + 1 << " " << 1 << endl; // (r, 0)
-      --remain;
-    }
+    return;
   }
 }
 
