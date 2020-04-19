@@ -82,53 +82,114 @@ void prints() {
   }
 }
 
-int dx[4] = { 1, -1, 0, 0 };
-int dy[4] = { 0, 0, 1, -1 };
-string pattern = "EWNS";
-
 void solve() {
   ll x, y;
   cin >> x >> y;
-  // try all case
-  ll s = abs(x) + abs(y);
-  vector<ll> nums;
+  if ((x+y) % 2 == 0) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+  xChanged = false;
+  yChanged = false;
+  // Here, x+y is odd
+  if (x < 0) {
+    x *= -1;
+    xChanged = true;
+  }
+  if (y < 0) {
+    y *= -1;
+    yChanged = true;
+  }
+  // Here, x >= 0 && y >= 0
+
+  ll s = x+y;
+  // cout << "s:" << s << endl;
+
   ll n = 1;
   while (n < s) {
-    nums.push_back(n);
     n *= 2;
+    //cout << "n:" << n << endl;
   }
-  // Here, n >= s
-  if (n != 1) {
+  // Here, n >= s and n is 2^k
+  if (s != 1) {
     n /= 2;
   }
-  // Here, we try all case of nums
+  // cout << "n:" << n << endl;
+
+  // Here, n < s
+  // we use until n
+  vector<ll> nums;
+  ll sum = 0;
+  {
+    ll i = 1;
+    while (i <= n) {
+      nums.push_back(i);
+      sum += i;
+      i *= 2;
+    }
+    // Here, i == n*2
+  }
+  // cout << "nums: "; printvec(nums);
+
+  ll diff = (sum - s) / 2;
+  // cout << "diff:" << diff << endl;
+
+  // we make diff
   ll m = nums.size();
+  vector<bool> minuses(m);
+  // cout << "m: " << m << endl;
+  for (int i = m-1; i >= 0; --i) {
+    // cout << "i: " << i << endl;
+    if (diff >= nums[i]) {
+      diff -= nums[i];
+      nums[i] *= -1;
+      minuses[i] = true;
+    }
+  }
+  // Here, minuses is calculated
+  // cout << "nums: "; printvec(nums);
+  // cout << "minuses: "; printvec(minuses);
+
+  bool found = false;
+  ll pattern = -1;
+  // We want to make x from nums and minuses
   rep(i, 1ll<<m) {
-    rep(j, 1ll<<m) {
-      ll xx = 0;
-      ll yy = 0;
-      string ps;
-      // Here, i and j represents pattern
-      rep(k, m) {
-        ll dir = 0;
-        if (i & 1ll<<k) {
-          dir += 1;
-        }
-        if (j & 1ll<<k) {
-          dir += 2;
-        }
-        // Here, dir is 0-3
-        xx += dx[dir];
-        yy += dy[dir];
-        ps += pattern[dir];
+    ll nowx = 0;
+    rep(j, m) {
+      if (i & 1ll<<j) {
+        nowx += nums[j];
       }
-      if (xx == x && yy == y) {
-        cout << pattern << endl;
-        return;
+    }
+    // cout << "nowx: " << nowx << endl;
+    if (x == nowx) {
+      found = true;
+      pattern = i;
+      break;
+    }
+  }
+
+  if (!found) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+
+  // print result
+  rep(i, m) {
+    if (pattern & 1ll<<i) { // x
+      if (minuses[i]) {
+        printw();
+      } else {
+        printe();
+      }
+    } else {
+      if (minuses[i]) {
+        prints();
+      } else {
+        printn();
       }
     }
   }
-  cout << "IMPOSSIBLE" << endl;
+  cout << endl;
 }
 
 int main(int argc, char** argv) {
