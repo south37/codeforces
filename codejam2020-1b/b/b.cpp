@@ -50,19 +50,27 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+const ll N = 1e9;
+
 string checkResult(ll x, ll y) {
   // cerr << "testcase: " << testcase << endl;
   // cerr << "idx: " << idx << endl;
   // cerr << flush;
 
+  cerr << "x y: " << endl;
+  cerr << x << " " << y << endl;
+  cerr << flush;
+
   cout << x << " " << y << endl;
   cout << std::flush;
   string res;
   cin >> res; // '0' or '1'
+
+  cerr << "res: " << res << endl;
+  cerr << flush;
+
   return res;
 }
-
-ll N = 1e9;
 
 ll calcLeft(ll y) {
   ll left;
@@ -81,6 +89,7 @@ ll calcLeft(ll y) {
     }
     // Here, r is ok
     left = r;
+    // cerr << "left: " << left << endl;
   }
   return left;
 }
@@ -103,6 +112,7 @@ ll calcRight(ll y) {
       // Here, r is ok
       right = l;
     }
+    // cerr << "right: " << right << endl;
     return right;
 }
 
@@ -110,6 +120,8 @@ ll calcRight(ll y) {
 ll g(ll y) {
   ll left = calcLeft(y);
   ll right = calcRight(y);
+  // cerr << "y: " << y << endl;
+  // cerr << "diameter: " << right - left << endl;
   return right - left;
 }
 
@@ -132,9 +144,20 @@ void solve() {
   // check left in binary search
   // Do 3-min in y-direction
 
-  ll l = -105;
-  ll r = 105;
-  rep(iter, 10) {
+  // cerr << "a: " << a << endl;
+  // cerr << "b: " << b << endl;
+
+  {
+    ll l = calcLeft(N-200);
+    ll r = calcRight(N-200);
+    cerr << "l: " << l << endl;
+    cerr << "r: " << r << endl;
+  }
+
+
+  ll l = -55;
+  ll r = 55;
+  while (r-l > 2) {
     ll c1 = (l*2+r)/3;
     ll c2 = (l+r*2)/3;
     if (g(c1) > g(c2)) {
@@ -142,9 +165,13 @@ void solve() {
     } else {
       r = c2;
     }
+    cerr << "l: " << l << endl;
+    cerr << "r: " << r << endl;
   }
   // Here, l is the result
-  hit_center(l);
+  ll y = (r+l)/2;
+  cerr << "y: " << y << endl;
+  hit_center(y);
 }
 
 int main(int argc, char** argv) {
@@ -156,7 +183,7 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #" << (i+1) << ": ";
+    // cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }
