@@ -101,6 +101,8 @@ void solve() {
   if (n != 1) {
     n /= 2;
   }
+  // printvec(nums);
+
   // Here, we try all case of nums
   ll m = nums.size();
   rep(i, 1ll<<m) {
@@ -117,13 +119,17 @@ void solve() {
         if (j & 1ll<<k) {
           dir += 2;
         }
+        // cout << "dir: " << dir << endl;
         // Here, dir is 0-3
-        xx += dx[dir];
-        yy += dy[dir];
+        xx += (1ll<<k) * dx[dir];
+        yy += (1ll<<k) * dy[dir];
         ps += pattern[dir];
       }
+      // cout << "xx: " << xx << endl;
+      // cout << "yy: " << yy << endl;
+      // cout << "ps: " << ps << endl;
       if (xx == x && yy == y) {
-        cout << pattern << endl;
+        cout << ps << endl;
         return;
       }
     }
