@@ -51,6 +51,9 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
+  ll n;
+  cin >> n;
+  cout << n << endl;
 }
 
 int main(int argc, char** argv) {
@@ -62,6 +65,7 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
+    cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }

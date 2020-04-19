@@ -50,10 +50,146 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+bool xChanged = false;
+bool yChanged = false;
+
+void printw() {
+  if (xChanged) {
+    cout << "E";
+  } else {
+    cout << "W";
+  }
+}
+void printe() {
+  if (xChanged) {
+    cout << "W";
+  } else {
+    cout << "E";
+  }
+}
+void printn() {
+  if (xChanged) {
+    cout << "S";
+  } else {
+    cout << "N";
+  }
+}
+void prints() {
+  if (xChanged) {
+    cout << "N";
+  } else {
+    cout << "S";
+  }
+}
+
 void solve() {
-  ll n;
-  cin >> n;
-  cout << n << endl;
+  ll x, y;
+  cin >> x >> y;
+  if ((x+y) % 2 == 0) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+  xChanged = false;
+  yChanged = false;
+  // Here, x+y is odd
+  if (x < 0) {
+    x *= -1;
+    xChanged = true;
+  }
+  if (y < 0) {
+    y *= -1;
+    yChanged = true;
+  }
+  // Here, x >= 0 && y >= 0
+
+  ll s = x+y;
+  // cout << "s:" << s << endl;
+
+  ll n = 1;
+  while (n < s) {
+    n *= 2;
+    //cout << "n:" << n << endl;
+  }
+  // Here, n >= s and n is 2^k
+  if (s != 1) {
+    n /= 2;
+  }
+  // cout << "n:" << n << endl;
+
+  // Here, n < s
+  // we use until n
+  vector<ll> nums;
+  ll sum = 0;
+  {
+    ll i = 1;
+    while (i <= n) {
+      nums.push_back(i);
+      sum += i;
+      i *= 2;
+    }
+    // Here, i == n*2
+  }
+  // cout << "nums: "; printvec(nums);
+
+  ll diff = (sum - s) / 2;
+  // cout << "diff:" << diff << endl;
+
+  // we make diff
+  ll m = nums.size();
+  vector<bool> minuses(m);
+  // cout << "m: " << m << endl;
+  for (int i = m-1; i >= 0; --i) {
+    // cout << "i: " << i << endl;
+    if (diff >= nums[i]) {
+      diff -= nums[i];
+      nums[i] *= -1;
+      minuses[i] = true;
+    }
+  }
+  // Here, minuses is calculated
+  // cout << "nums: "; printvec(nums);
+  // cout << "minuses: "; printvec(minuses);
+
+  bool found = false;
+  ll pattern = -1;
+  // We want to make x from nums and minuses
+  rep(i, 1ll<<m) {
+    ll nowx = 0;
+    rep(j, m) {
+      if (i & 1ll<<j) {
+        nowx += nums[j];
+      }
+    }
+    // cout << "nowx: " << nowx << endl;
+    if (x == nowx) {
+      found = true;
+      pattern = i;
+      break;
+    }
+  }
+
+  if (!found) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+
+  // print result
+  rep(i, m) {
+    if (pattern & 1ll<<i) { // x
+      if (minuses[i]) {
+        printw();
+      } else {
+        printe();
+      }
+    } else {
+      if (minuses[i]) {
+        prints();
+      } else {
+        printn();
+      }
+    }
+  }
+  cout << endl;
 }
 
 int main(int argc, char** argv) {
