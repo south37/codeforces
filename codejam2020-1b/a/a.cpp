@@ -86,11 +86,27 @@ int dx[4] = { 1, -1, 0, 0 };
 int dy[4] = { 0, 0, 1, -1 };
 string pattern = "EWNS";
 
+void printone(int x, int y) {
+  if (x == 1) {
+    cout << "E" << endl;
+  } else if (x == -1) {
+    cout << "W" << endl;
+  } else if (y == 1) {
+    cout << "N" << endl;
+  } else {
+    cout << "S" << endl;
+  }
+}
+
 void solve() {
   ll x, y;
   cin >> x >> y;
   // try all case
   ll s = abs(x) + abs(y);
+  if (s == 1) {
+    printone(x, y);
+    return;
+  }
   vector<ll> nums;
   ll n = 1;
   while (n < s) {
@@ -98,9 +114,7 @@ void solve() {
     n *= 2;
   }
   // Here, n >= s
-  if (n != 1) {
-    n /= 2;
-  }
+  // n /= 2;
   // printvec(nums);
 
   // Here, we try all case of nums
