@@ -1,3 +1,5 @@
+// ref. https://codingcompetitions.withgoogle.com/codejam/submissions/000000000019fef2/U251a2U
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
