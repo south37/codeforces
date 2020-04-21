@@ -1,3 +1,5 @@
+// ref. https://codingcompetitions.withgoogle.com/codejam/submissions/000000000019fef2/U251a2U
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -50,128 +52,70 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-const ll N = 1e9;
+const ll M = 1e9;
 
-string checkResult(ll x, ll y) {
-  // cerr << "testcase: " << testcase << endl;
-  // cerr << "idx: " << idx << endl;
-  // cerr << flush;
-
-  cerr << "x y: " << endl;
-  cerr << x << " " << y << endl;
-  cerr << flush;
-
+string check(ll x, ll y) {
   cout << x << " " << y << endl;
-  cout << std::flush;
   string res;
-  cin >> res; // '0' or '1'
-
-  cerr << "res: " << res << endl;
-  cerr << flush;
-
+  cin >> res;
   return res;
 }
 
-ll calcLeft(ll y) {
-  ll left;
-  {
-    ll l = -N-1;
-    ll r = -N+105;
-    // found the boundary of [f, t]
-    while (r - l > 1) {
-      ll m = (r+l) / 2;
-      string res = checkResult(m, y);
-      if (res == "HIT") {
-        r = m;
-      } else {
-        l = m;
-      }
-    }
-    // Here, r is ok
-    left = r;
-    // cerr << "left: " << left << endl;
-  }
-  return left;
-}
-
-ll calcRight(ll y) {
-    ll right;
-    {
-      ll l = N-105;
-      ll r = N+1;
-      // found the boundary of [t, f]
-      while (r - l > 1) {
-        ll m = (r+l) / 2;
-        string res = checkResult(m, y);
-        if (res == "HIT") {
-          l = m;
-        } else {
-          r = m;
-        }
-      }
-      // Here, r is ok
-      right = l;
-    }
-    // cerr << "right: " << right << endl;
-    return right;
-}
-
-// return the diameter at y
-ll g(ll y) {
-  ll left = calcLeft(y);
-  ll right = calcRight(y);
-  // cerr << "y: " << y << endl;
-  // cerr << "diameter: " << right - left << endl;
-  return right - left;
-}
-
-void hit_center(ll y) {
-  ll left = calcLeft(y);
-  ll right = calcRight(y);
-  ll x = (left + right)/2;
-  string res = checkResult(x, y);
+bool finish = false;
+bool f(ll x, ll y) {
+  if (finish) { return true; }
+  string res = check(x, y);
   if (res == "CENTER") {
-    return;
-  } else {
-    // Here, invalid
-    abort();
+    finish = true;
+    return true;
   }
+  if (res == "HIT") { return true; }
+  return false;
 }
 
 void solve() {
-  ll a, b;
-  cin >> a >> b;
-  // check left in binary search
-  // Do 3-min in y-direction
-
-  // cerr << "a: " << a << endl;
-  // cerr << "b: " << b << endl;
-
-  {
-    ll l = calcLeft(N-200);
-    ll r = calcRight(N-200);
-    cerr << "l: " << l << endl;
-    cerr << "r: " << r << endl;
-  }
-
-
-  ll l = -55;
-  ll r = 55;
-  while (r-l > 2) {
-    ll c1 = (l*2+r)/3;
-    ll c2 = (l+r*2)/3;
-    if (g(c1) > g(c2)) {
-      l = c1;
-    } else {
-      r = c2;
+  finish = false;
+  for (ll sx = -M/2; sx <= M/2; sx += M/2) {
+    for (ll sy = -M/2; sy <= M/2; sy += M/2) {
+      if (f(sx, sy)) { // hit
+        ll lx, ly, rx, ry;
+        {
+          ll l = -M-1, r = sx;
+          while (r-l>1) {
+            ll c = (l+r)/2;
+            if (f(c,sy)) { r = c; } else { l = c; }
+          }
+          lx = r; // left boundary of hit
+        }
+        {
+          ll l = sx, r = M+1;
+          while (r-l>1) {
+            ll c = (l+r)/2;
+            if (f(c,sy)) { l = c; } else { r = c; }
+          }
+          rx = l; // right boundary of hit
+        }
+        {
+          ll l = -M-1, r = sy;
+          while (r-l>1) {
+            ll c = (l+r)/2;
+            if (f(sx,c)) { r = c; } else { l = c; }
+          }
+          ly = r; // bottom boundary of hit
+        }
+        {
+          ll l = sy, r = M+1;
+          while (r-l>1) {
+            ll c = (l+r)/2;
+            if (f(sx,c)) { l = c; } else { r = c; }
+          }
+          ry = l; // top boundary of hit
+        }
+        f ((lx+rx)/2, (ly+ry)/2); // shoot to center
+        return;
+      }
     }
-    cerr << "l: " << l << endl;
-    cerr << "r: " << r << endl;
   }
-  // Here, l is the result
-  ll y = (r+l)/2;
-  cerr << "y: " << y << endl;
-  hit_center(y);
 }
 
 int main(int argc, char** argv) {
@@ -180,8 +124,8 @@ int main(int argc, char** argv) {
   ios_base::sync_with_stdio(false);
   //cout << setprecision(10) << fixed;
 
-  ll t;
-  cin >> t;
+  ll t, a, b;
+  cin >> t >> a >> b;
   rep(i, t) {
     // cout << "Case #" << (i+1) << ": ";
     solve();
