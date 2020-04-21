@@ -1,3 +1,5 @@
+// ref. https://codingcompetitions.withgoogle.com/codejam/submissions/000000000019fef2/U251a2U
+
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -51,9 +53,43 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
-  ll n;
-  cin >> n;
-  cout << n << endl;
+  ll r, s;
+  cin >> r >> s;
+  vector<ll> a;
+  rep(i, s) rep(j, r) {
+    a.push_back(j+1);
+  }
+  vector<pair<ll, ll>> ans;
+  auto add = [&](ll x, ll y) {
+    ans.emplace_back(x, y);
+    vector<ll> tmp(x);
+    // Here, simulate the swap
+    rep(i,x) tmp[i] = a[i];
+    rep(i,y) a[i] = a[i+x];
+    rep(i,x) a[i+y] = tmp[i];
+  };
+  while (true) {
+    ll i = 0;
+    ll fa = a[0]; // first element of a
+    while (a[i] == fa) { ++i; }
+    ll si = i; // a[si-1] == fa
+    while (i < a.size() && a[i] != fa) { ++i; }
+    if (i == a.size()) { break; } // reached to last
+    if (i == a.size()-1) { // last element is same with fa.
+      add(si, a.size()-si);
+      break;
+    }
+    ll ba = a[i+1];
+    int j = i-1; // a[j] != fa
+    while (a[j] != ba) { --j; }
+    // Here, a[j] == ba
+    ++j;
+    add(j, i+1-j); //
+  }
+  cout << ans.size() << endl;
+  for (auto& p : ans) {
+    cout << p.fr << " " << p.sc << endl;
+  }
 }
 
 int main(int argc, char** argv) {
