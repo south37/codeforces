@@ -50,10 +50,59 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+bool allsame(string& t) {
+  char c = t[0];
+  bool ans = true;
+  rep(i, t.size()) {
+    if (t[i] != c) {
+      ans = false;
+    }
+  }
+  return ans;
+}
+
+string zigzag(string& t) {
+  ll n = t.size();
+  char c = t[0];
+  char left, right;
+  if (c == '0') {
+    left = '0';
+    right = '1';
+  } else {
+    left = '1';
+    right = '0';
+  }
+
+  ll len = 0;
+  ll i = 0;
+  while (i < n) {
+    if (i < n-1 && t[i] == left && t[i+1] == right) {
+      ++len;
+      i = i+2;
+    } else {
+      ++len;
+      ++i;
+    }
+  }
+  // Here, i == n.
+  string ans;
+  rep(iter, len) {
+    ans += left;
+    ans += right;
+  }
+  return ans;
+}
+
 void solve() {
-  ll n;
-  cin >> n;
-  cout << n << endl;
+  string t;
+  cin >> t;
+  if (allsame(t)) {
+    cout << t << endl;
+  } else {
+    // print zig-zag
+    string s = zigzag(t);
+    cout << s << endl;
+  }
 }
 
 int main(int argc, char** argv) {
@@ -65,7 +114,6 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }

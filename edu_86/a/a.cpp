@@ -55,15 +55,12 @@ void solve() {
   cin >> x >> y;
   ll a, b;
   cin >> a >> b;
-  if (x > y) {
-    swap(x, y);
-  }
   // Here, x <= y
   ll ans = 0;
   ll diff = abs(y-x);
   ans += a*diff;
   ll remain = min(abs(x), abs(y));
-  ans += b*remain;
+  ans += min(2*a, b)*remain;
   cout << ans << endl;
 }
 
