@@ -82,14 +82,11 @@ void solve() {
     rng[0] = l-1;
     rng[1] = rr;
     rep(k, 2) {
-      ll r = rng[k];
+      ll v = rng[k];
 
-      ll kr = r / x;
-      ll rCnt = kr * a + a-1; // calculated
-      // Here, decrease over estimated one.
-      ll overed = max((a * kr + a-1) - r, 0ll);
-      rCnt -= overed;
-      ans[k] = rCnt;
+      ll cnt = v / g;
+      ll res = (a-1) + cnt*a - max(0ll, (g*cnt+a-1) - v);
+      ans[k] = res;
     }
     cout << (rng[1]-rng[0]) - (ans[1] - ans[0]);
     if (iter < q-1) {
