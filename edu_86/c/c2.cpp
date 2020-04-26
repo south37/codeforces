@@ -63,11 +63,11 @@ void solve() {
     swap(a, b);
   }
   // Here, a >= b
-  ll g = gcd(a, b);
-  ll aa = a/g;
-  ll bb = b/g;
+  ll gg = gcd(a, b);
+  ll aa = a/gg;
+  ll bb = b/gg;
   // Here, aa and bb are prime
-  ll x = aa*bb*g;
+  ll g = aa*bb*gg;
 
   // cout << "a: " << a << endl;
   // cout << "b: " << b << endl;
