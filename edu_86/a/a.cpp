@@ -51,9 +51,20 @@ const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
 void solve() {
-  ll n;
-  cin >> n;
-  cout << n << endl;
+  ll x, y;
+  cin >> x >> y;
+  ll a, b;
+  cin >> a >> b;
+  if (x > y) {
+    swap(x, y);
+  }
+  // Here, x <= y
+  ll ans = 0;
+  ll diff = abs(y-x);
+  ans += a*diff;
+  ll remain = min(abs(x), abs(y));
+  ans += b*remain;
+  cout << ans << endl;
 }
 
 int main(int argc, char** argv) {
@@ -65,7 +76,6 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }

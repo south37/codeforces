@@ -50,10 +50,53 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+int gcd(int a, int b) {
+  if (a < b) { swap(a, b); }
+  if (b == 0) { return a; }
+  return gcd(b, a % b);
+}
+
 void solve() {
-  ll n;
-  cin >> n;
-  cout << n << endl;
+  ll a, b, q;
+  cin >> a >> b >> q;
+  if (a < b) {
+    swap(a, b);
+  }
+  // Here, a >= b
+  ll g = gcd(a, b);
+  ll aa = a/g;
+  ll bb = b/g;
+  // Here, aa and bb are prime
+  ll x = aa*bb*g;
+
+  // cout << "a: " << a << endl;
+  // cout << "b: " << b << endl;
+  // cout << "g: " << g << endl;
+  // cout << "x: " << x << endl;
+
+  rep(iter, q) {
+    ll l, rr;
+    cin >> l >> rr;
+    vector<ll> ans(2);
+    vector<ll> rng(2);
+    rng[0] = l-1;
+    rng[1] = rr;
+    rep(k, 2) {
+      ll r = rng[k];
+
+      ll kr = r / x;
+      ll rCnt = kr * a + a-1; // calculated
+      // Here, decrease over estimated one.
+      ll overed = max((a * kr + a-1) - r, 0ll);
+      rCnt -= overed;
+      ans[k] = rCnt;
+    }
+    cout << (rng[1]-rng[0]) - (ans[1] - ans[0]);
+    if (iter < q-1) {
+      cout << " ";
+    }
+  }
+  cout << endl;
 }
 
 int main(int argc, char** argv) {
@@ -65,7 +108,6 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }
