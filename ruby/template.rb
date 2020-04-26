@@ -1,7 +1,6 @@
 def main
   t = gets.chomp.to_i
   t.times {
-    print "Case ##{i+1}: "
     solve
   }
 end
