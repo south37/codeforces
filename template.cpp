@@ -65,7 +65,6 @@ int main(int argc, char** argv) {
   ll t;
   cin >> t;
   rep(i, t) {
-    cout << "Case #" << (i+1) << ": ";
     solve();
   }
 }
