@@ -50,13 +50,10 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-  ll n, d;
-  cin >> n >> d;
-  vector<ll> a(n);
-  rep(i,n) {
-    cin >> a[i];
-  }
+ll n, d;
+vector<ll> a(n);
+
+void solve3() {
   map<ll,ll> cnts;
   rep(i,n) {
     ++cnts[a[i]];
@@ -104,6 +101,27 @@ void solve() {
     }
   }
   cout << 2 << endl;
+}
+
+void solve() {
+  cin >> n >> d;
+  a.resize(n);
+  rep(i,n) {
+    cin >> a[i];
+  }
+
+  if (d <= 3) {
+    solve3();
+    return;
+  }
+  // Here, d > 3
+  map<ll,ll> cnts;
+  rep(i,n) {
+    ++cnts[a[i]];
+  }
+
+  rep(i, d) { // i cut
+  }
 }
 
 int main(int argc, char** argv) {
