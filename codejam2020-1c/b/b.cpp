@@ -106,6 +106,8 @@ void solve() {
       ll q = p.first;
       string r = p.second;
       for (char c : r) { usedC.insert(c); }
+      string& M = r;
+      ll m = r.size();
       // r is string representation of v. 1 <= v <= q.
       // cout << "q: " << q << endl;
       // cout << "r: " << r << endl;
@@ -139,22 +141,78 @@ void solve() {
         continue;
       }
 
+      vector<ll> ds; // vector representation of m.
+      while (q > 0) {
+        ds.push_back(q%10);
+        q /= 10;
+      }
+      reverse(all(ds));
+
       // Here, q >= 10.
       // // Consider only 2 digits.
-      ll d0 = q%10; ll d1 = q/10;
-      if (mp[d0] == '$' && mp[d1] == '$') { continue; } // both is undetermined
-      if (mp[d0] != '$' && mp[d1] != '$') { continue; } // both is determined
-      // Here, only one value is undetermined
+      ll id = -1;
+      ll cnt = 0;
+      rep(k,m) {
+        ll d = q; // digit at k.
+        rep(iter,k) { d /= 10; }
+        d %= 10;
+        if (mp[d] == '$') { ++cnt; id = k; }
+      }
+      if (cnt == 0) { continue; } // already determined.
+      if (cnt > 1) { // too unknown
+        nex.push_back({ q, r });
+        continue;
+      }
+      // Here, cnt == 1. we consider this case.
 
-      rep(k,2) {
-        ll d = (k == 0) ? d0 : d1;
-        if (mp[d] != '$') { continue; } // already determined
-        ll c = r[k];
+      // Here, id is position from right at r.
+      bool same = false;  // r and ds is ame at [0,prev)
+      if (m == ds.size()) {
+        same = true;
+        rep(i, m-id) {
+          if (ds[i] != M[i]) { same = false; }
+        }
+      }
+
+      ll d = q; // digit at k.
+      rep(iter,k) { d /= 10; }
+      d %= 10;
+      assert(mp[d] == '$');
+      char c = r[m-1-k];
+      if (revMp.find(c) != revMp.end()) { continue; } // already found
+
+      if (!same) { // must consider 0to9.
+        ll q = 9;
+        ll k = id;
+
+        ll id = -1;
+
+        // TODO
+        ll id = -1; // not found id.
+        ll cnt = 0; // not found count
+        for (ll i = 1; i <= q; ++i) {
+          if (mp[i] == '$') { ++cnt; id = i; }
+        }
+        if (cnt == 0) { // all values are found
+          continue;
+        }
+        if (cnt == 1) { // Here, only one value is undertermined
+          mp[id] = c;
+          revMp[c] = id;
+          continue;
+        }
+        // Here, cnt > 1. we can not determine.
+      } else { // Here, consider only small values.
+        ll k = id;
+
+        ll d = q; // digit at k.
+        rep(iter,k) { d /= 10; }
+        d %= 10;
+        assert(mp[d] == '$');
+
+        // Consider d.
+        char c = r[m-1-k];
         if (revMp.find(c) != revMp.end()) { continue; } // already found
-
-        ll qd = q; // digit at k from right.
-        rep(iter,k) { qd /= 10; }
-        qd %= 10;
 
         ll id = -1; // not found id.
         ll cnt = 0; // not found count
@@ -165,7 +223,6 @@ void solve() {
           continue;
         }
         if (cnt == 1) { // Here, only one value is undertermined
-          char c = r[k]; // characgter at k from right.
           mp[id] = c;
           revMp[c] = id;
           continue;
