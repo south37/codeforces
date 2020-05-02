@@ -69,13 +69,18 @@ void solve() {
   }
   // cout << remain.size() << endl;
 
-  while (true) {
+  sort(all(remain));
+  // Here, remain is sorted by q.
+
+  while (remain.size() > 0) {
     {
       ll remain = 0;
       rep(i,10) {
-        if (mp[i] == '$') { ++remain; }
+        if (mp[i] == '$') {
+          ++remain;
+        }
       }
-      if (remain == 0) { break; }
+      if (remain == 0) { break; } // already ok.
 
       if (remain == 1 && usedC.size() == 10) { // Here, remain is left one.
         rep(i,10) {
@@ -91,55 +96,86 @@ void solve() {
       }
     }
 
-    cout << "mp: " << mp << endl;
+    vector<pair<ll,string>> nex;
+
+    // For Debug
+    // cout << "mp: " << mp << endl;
+    // cout << "remain.size: " << remain.size() << endl;
 
     for (auto& p : remain) {
       ll q = p.first;
-      string& M = p.second;
-      ll m = M.size();
-      rep(i,m) {
-        usedC.insert(M[i]);
-      }
+      string r = p.second;
+      for (char c : r) { usedC.insert(c); }
+      // r is string representation of v. 1 <= v <= q.
       // cout << "q: " << q << endl;
-      // cout << "M: " << M << endl;
-
-      // 1 <= value <= q.
-      // respnse is M.
+      // cout << "r: " << r << endl;
 
       if (q <= 9) {
-        ll d = q;
-        ll c = M[0];
-        mp[d] = c;
-        revMp[c] = d;
+        assert(r.size() == 1);
+        if (revMp.find(r[0]) != revMp.end()) { continue; } // already found
+
+        // Here, we check remaining
+        ll cnt = 0; // not found count
+        for (ll i = 1; i <= q; ++i) {
+          if (mp[i] == '$') { ++cnt; }
+        }
+        if (cnt == 0) { // all values are found.
+          continue;
+        }
+        if (cnt == 1) {
+          // Here, r[0] is exactly same.
+          char c = r[0];
+          for (ll i = 1; i <= q; ++i) {
+            if (mp[i] == '$') {
+              mp[i] = c;
+              revMp[c] = i;
+            }
+          }
+          continue;
+        }
+
+        // Else, we don't have much information
+        nex.push_back({ q, r });
         continue;
       }
 
-      vector<ll> ds(m, -1); // -1 is unknown
-      rep(i,m) {
-        char c = M[i];
-        if (revMp.find(c) != revMp.end()) {
-          ll d = revMp[c];
-          ds[i] = d;
+      // Here, q >= 10.
+      // // Consider only 2 digits.
+      ll d0 = q%10; ll d1 = q/10;
+      if (mp[d0] == '$' && mp[d1] == '$') { continue; } // both is undetermined
+      if (mp[d0] != '$' && mp[d1] != '$') { continue; } // both is determined
+      // Here, only one value is undetermined
+
+      rep(k,2) {
+        ll d = (k == 0) ? d0 : d1;
+        if (mp[d] != '$') { continue; } // already determined
+        ll c = r[k];
+        if (revMp.find(c) != revMp.end()) { continue; } // already found
+
+        ll qd = q; // digit at k from right.
+        rep(iter,k) { qd /= 10; }
+        qd %= 10;
+
+        ll id = -1; // not found id.
+        ll cnt = 0; // not found count
+        for (ll i = 1; i <= q; ++i) {
+          if (mp[i] == '$') { ++cnt; id = i; }
         }
+        if (cnt == 0) { // all values are found
+          continue;
+        }
+        if (cnt == 1) { // Here, only one value is undertermined
+          char c = r[k]; // characgter at k from right.
+          mp[id] = c;
+          revMp[c] = id;
+          continue;
+        }
+        // Here, cnt > 1. we can not determine.
       }
 
-      if (ds[0] == -1) {
-        // Here, ok if ds[1..-1] is known
-        bool ok = true;
-        for (ll i = 1; i < m; ++i) {
-          if (ds[i] == -1) { ok = false; }
-        }
-        if (ok) { // Here, ds[0] is same with first digit of q.
-          cout << "ds:"; printvec(ds);
-          char c = M[0];
-          ll d = q;
-          rep(iter, m-1) { d/=10; }
-          // Here, n is first digit.
-          mp[d] = c;
-          revMp[c] = d;
-        }
-      }
+      nex.push_back({ q, r });
     }
+    swap(remain, nex);
   }
   cout << mp << endl;
 }
