@@ -50,9 +50,43 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
+string dir = "ENWS";
+ll dx[4] = { 1, 0, -1, 0 };
+ll dy[4] = { 0, 1, 0, -1 };
+
 void solve() {
-  ll n;
-  cin >> n;
+  ll x, y;
+  cin >> x >> y;
+  string M;
+  cin >> M;
+  ll m = M.size();
+  vector<ll> dirs(m);
+  rep(i,m) {
+    rep(j,4) {
+      if (dir[j] == M[i]) {
+        dirs[i] = j;
+        break;
+      }
+    }
+  }
+  // printvec(dirs);
+
+  // Here, dirs has directions. start from (x,y);
+  if (x == 0 && y == 0) {
+    cout << 0 << endl;
+    return;
+  }
+  rep(i,m) {
+    ll d = dirs[i];
+
+    x += dx[d];
+    y += dy[d];
+    if (abs(x) + abs(y) <= i+1) { // can reach
+      cout << i+1 << endl;
+      return;
+    }
+  }
+  cout << "IMPOSSIBLE" << endl;
 }
 
 int main(int argc, char** argv) {
@@ -66,6 +100,5 @@ int main(int argc, char** argv) {
   rep(i, t) {
     cout << "Case #" << (i+1) << ": ";
     solve();
-    cout << endl;
   }
 }
