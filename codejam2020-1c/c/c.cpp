@@ -79,11 +79,15 @@ void solve() {
       return;
     }
     if (cnts.size() > 1) {
+      ll i = 0;
+      ll sz = cnts.size();
       for (auto& p : cnts) {
+        if (i == sz-1) { break; } // reached to last. no more larger value
         if (p.second+1 >= d) { // ok
           cout << 1 << endl;
           return;
         }
+        ++i;
       }
 
       for (auto& p : cnts) {
