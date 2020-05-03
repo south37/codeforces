@@ -1,5 +1,3 @@
-// ref. https://codingcompetitions.withgoogle.com/codejam/submissions/000000000019fef4/bWFyb29u
-
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -52,53 +50,78 @@ typedef double D;
 const ll INF = 1e9;
 const ll MOD = 1000000007;  // 1e9 + 7
 
-void solve() {
-  ll n, d;
-  cin >> n >> d;
-  vector<ll> a(n);
+ll n, d;
+vector<ll> a(n);
+
+void solve3() {
+  map<ll,ll> cnts;
   rep(i,n) {
-    cin >> a[i];
+    ++cnts[a[i]];
   }
-  sort(all(a), greater<ll>()); // decreasing order
-  ll ans=d;
-  for (ll q=1; q<=d; ++q) {
-    vector<ll> b=a;
-    for (auto&v:b) { v*=q; }
-    vector<P> ls; // pair of <v/x, x> where v = values in b.
-    // Here, try all cut cases.
-    for (auto v:b) {
-      for (ll x=1; x <= min(v,d); ++x) { // x .. count of cut. e.g. 3 -> (1,3). required operation is x-1.
-        if (v%x==0) {
-          ls.emplace_back(v/x,x);
+
+  // try 0
+  {
+    // Here, we try cut0, cut1, cut2
+    for (auto& p : cnts) {
+      if (p.second >= d) { // ok
+        cout << 0 << endl;
+        return;
+      }
+    }
+  }
+  // try 1
+  {
+    if (d <= 2) { // slice to 2.
+      cout << 1 << endl;
+      return;
+    }
+    if (cnts.size() > 1) {
+      ll i = 0;
+      ll sz = cnts.size();
+      for (auto& p : cnts) {
+        if (i == sz-1) { break; } // reached to last. no more larger value
+        if (p.second+1 >= d) { // ok
+          cout << 1 << endl;
+          return;
+        }
+        ++i;
+      }
+
+      for (auto& p : cnts) {
+        ll now = 2*p.first; // p is divided
+        // cout << "p.first: " << p.first << endl;
+        // cout << "p.second: " << p.second << endl;
+        // cout << "d: " << d << endl;
+
+        if (cnts.find(now) != cnts.end() && p.second + 2 >= d) {
+          cout << 1 << endl;
+          return;
         }
       }
     }
-    sort(all(ls)); // increasing order.
-    for (int i=0;i<ls.size();) {
-      ll cnt=0, j=i, ok=0; // ok is "the effective count of equal division".
-      // Here, calculate the count with "same first" values.
-      while (j<ls.size() && ls[i].first == ls[j].first) {
-        cnt += ls[j].second;
-        if (cnt <= d) { ++ok; }
-        ++j;
-      }
-      // Here, j == ls.size() or ls[j].first != ls[i].first
-      ll v = ls[i].first;
-
-      ll s=0; // available count by v.
-      for (auto w:b) {
-        ll u=w/v; // available cut.
-        if (u == 0) { break; } // too small.
-        s += u;
-        if (s >= d) { break; }
-      }
-      if (s >= d) {
-        chmin(ans, d-ok);
-      }
-      i=j;
-    }
   }
-  cout << ans << endl;
+  cout << 2 << endl;
+}
+
+void solve() {
+  cin >> n >> d;
+  a.resize(n);
+  rep(i,n) {
+    cin >> a[i];
+  }
+
+  if (d <= 3) {
+    solve3();
+    return;
+  }
+  // Here, d > 3
+  map<ll,ll> cnts;
+  rep(i,n) {
+    ++cnts[a[i]];
+  }
+
+  rep(i, d) { // i cut
+  }
 }
 
 int main(int argc, char** argv) {
