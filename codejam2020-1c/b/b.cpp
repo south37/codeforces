@@ -74,7 +74,7 @@ void solve() {
   vector<pair<ll,char>> w; // count=>char
   for (auto& p:cnt) { w.emplace_back(p.second,p.first); }
   sort(all(w)); // decreasing order.
-  // Here, lower value is frequent.
+  // Here, lower value is more frequent.
   rep(i,9) { ans[9-i]=w[i].second; }
   for (char c:app) {
     if (cnt.count(c)==0) {
